@@ -1,0 +1,20 @@
+[
+  {
+    "id": "career-1",
+    "title": "Frontend Developer",
+    "type": "Full Time",
+    "location": "Hyderabad",
+    "experience": "1-3 Years",
+    "description": "Build responsive web interfaces using React, Next.js, and Tailwind CSS.",
+    "status": "Open"
+  },
+  {
+    "id": "career-2",
+    "title": "UI/UX Designer",
+    "type": "Full Time",
+    "location": "Hyderabad / Remote",
+    "experience": "1-2 Years",
+    "description": "Design clean, practical web and mobile experiences for business users.",
+    "status": "Open"
+  }
+]

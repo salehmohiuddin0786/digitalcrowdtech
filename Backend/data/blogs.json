@@ -1,0 +1,20 @@
+[
+  {
+    "id": "blog-1",
+    "title": "How a modern website helps local businesses win more leads",
+    "category": "Web Development",
+    "date": "June 2026",
+    "excerpt": "A practical look at speed, mobile design, trust signals, and clear calls to action for Indian businesses.",
+    "content": "Modern websites help customers understand your services quickly, trust your brand, and contact your team without friction.",
+    "status": "Published"
+  },
+  {
+    "id": "blog-2",
+    "title": "SEO basics every growing brand should fix first",
+    "category": "SEO",
+    "date": "June 2026",
+    "excerpt": "Start with pages, keywords, metadata, local search, and content that answers real customer questions.",
+    "content": "A good SEO foundation begins with clear page titles, useful content, local listings, and fast mobile performance.",
+    "status": "Draft"
+  }
+]
