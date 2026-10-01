@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Briefcase, FileText, MessagesSquare, Plus } from "lucide-react";
+import { Briefcase, FileText, MessagesSquare, Plus, ArrowRight, Layers } from "lucide-react";
 import AdminLayout from "../AdminLayout";
 import { getBlogs, getCareers, getQueries, verifyAdmin } from "../adminData";
 
-const AdminDashboardPage = () => {
+export default function AdminDashboardPage() {
   const router = useRouter();
   const [counts, setCounts] = useState({ blogs: 0, careers: 0, queries: 0 });
 
@@ -18,7 +18,11 @@ const AdminDashboardPage = () => {
         return;
       }
 
-      const [blogs, careers, queries] = await Promise.all([getBlogs(), getCareers(), getQueries()]);
+      const [blogs, careers, queries] = await Promise.all([
+        getBlogs().catch(() => []),
+        getCareers().catch(() => []),
+        getQueries().catch(() => []),
+      ]);
       setCounts({ blogs: blogs.length, careers: careers.length, queries: queries.length });
     };
 
@@ -29,50 +33,84 @@ const AdminDashboardPage = () => {
 
   return (
     <AdminLayout>
-      <main className="mx-auto max-w-7xl px-4 py-10 md:px-8">
+      <main className="mx-auto max-w-7xl px-4 py-8 md:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-950">Dashboard</h1>
-          <p className="mt-2 text-slate-600">Manage website content and customer queries.</p>
+          <h1 className="text-2xl font-bold text-white">Management Console</h1>
+          <p className="mt-1 text-xs text-slate-400">
+            Overview of inquiries, published articles, and system assets.
+          </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <FileText className="h-10 w-10 text-blue-600" />
-            <h2 className="mt-5 text-2xl font-bold text-slate-950">Blogs</h2>
-            <p className="mt-2 text-slate-600">{counts.blogs} blog posts saved.</p>
-            <div className="mt-6 flex gap-3">
-              <Link href="/admin/blogs" className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white">
-                View Blogs
-              </Link>
-              <Link href="/admin/blogs?mode=new" className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700">
-                <Plus className="h-4 w-4" />
-                Add Blog
+        <div className="grid gap-6 md:grid-cols-3">
+          {/* Queries */}
+          <section className="rounded-2xl border border-white/10 bg-[#090D16] p-6 shadow-xl flex flex-col justify-between">
+            <div>
+              <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center mb-4">
+                <MessagesSquare className="h-5 w-5" />
+              </div>
+              <h2 className="text-xl font-bold text-white">Client Inquiries</h2>
+              <p className="mt-1 text-xs text-slate-400">
+                {counts.queries} inquiries recorded in database.
+              </p>
+            </div>
+            <div className="mt-6 pt-4 border-t border-white/5">
+              <Link
+                href="/admin/queries"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-400 hover:text-blue-300"
+              >
+                <span>Manage Inquiries & Status</span>
+                <ArrowRight size={13} />
               </Link>
             </div>
           </section>
 
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <Briefcase className="h-10 w-10 text-blue-600" />
-            <h2 className="mt-5 text-2xl font-bold text-slate-950">Career</h2>
-            <p className="mt-2 text-slate-600">{counts.careers} career openings saved.</p>
-            <div className="mt-6 flex gap-3">
-              <Link href="/admin/careers" className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white">
-                View Careers
+          {/* Blogs */}
+          <section className="rounded-2xl border border-white/10 bg-[#090D16] p-6 shadow-xl flex flex-col justify-between">
+            <div>
+              <div className="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-4">
+                <FileText className="h-5 w-5" />
+              </div>
+              <h2 className="text-xl font-bold text-white">Articles & Insights</h2>
+              <p className="mt-1 text-xs text-slate-400">
+                {counts.blogs} published engineering guides.
+              </p>
+            </div>
+            <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
+              <Link
+                href="/admin/blogs"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-cyan-400 hover:text-cyan-300"
+              >
+                <span>View Articles</span>
+                <ArrowRight size={13} />
               </Link>
-              <Link href="/admin/careers?mode=new" className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700">
-                <Plus className="h-4 w-4" />
-                Add Career
+              <Link
+                href="/admin/blogs?mode=new"
+                className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-semibold text-slate-300 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10"
+              >
+                <Plus size={12} />
+                <span>New</span>
               </Link>
             </div>
           </section>
 
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <MessagesSquare className="h-10 w-10 text-blue-600" />
-            <h2 className="mt-5 text-2xl font-bold text-slate-950">Queries</h2>
-            <p className="mt-2 text-slate-600">{counts.queries} customer messages saved.</p>
-            <div className="mt-6">
-              <Link href="/admin/queries" className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white">
-                View Queries
+          {/* Career */}
+          <section className="rounded-2xl border border-white/10 bg-[#090D16] p-6 shadow-xl flex flex-col justify-between">
+            <div>
+              <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center mb-4">
+                <Briefcase className="h-5 w-5" />
+              </div>
+              <h2 className="text-xl font-bold text-white">Careers & Hiring</h2>
+              <p className="mt-1 text-xs text-slate-400">
+                {counts.careers} roles configured.
+              </p>
+            </div>
+            <div className="mt-6 pt-4 border-t border-white/5">
+              <Link
+                href="/admin/careers"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-400 hover:text-indigo-300"
+              >
+                <span>View Careers Manager</span>
+                <ArrowRight size={13} />
               </Link>
             </div>
           </section>
@@ -80,6 +118,4 @@ const AdminDashboardPage = () => {
       </main>
     </AdminLayout>
   );
-};
-
-export default AdminDashboardPage;
+}

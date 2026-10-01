@@ -1,20 +1,25 @@
 "use client";
 
+import React from "react";
 import { usePathname } from "next/navigation";
 import Header from "./Header";
 import Footer from "./Footer";
+import WhatsAppFloat from "./WhatsAppFloat";
 
-const SiteChrome = ({ children }) => {
+export default function SiteChrome({ children }) {
   const pathname = usePathname();
-  const isAdminRoute = pathname.startsWith("/admin");
+  const isAdmin = pathname.startsWith("/admin");
+
+  if (isAdmin) {
+    return <div className="min-h-screen bg-[#07090E] text-slate-100">{children}</div>;
+  }
 
   return (
-    <>
-      {!isAdminRoute && <Header />}
-      <main className="flex-1">{children}</main>
-      {!isAdminRoute && <Footer />}
-    </>
+    <div className="min-h-screen flex flex-col bg-[#07090E] text-slate-100 selection:bg-blue-600 selection:text-white">
+      <Header />
+      <main className="flex-1 flex flex-col">{children}</main>
+      <WhatsAppFloat />
+      <Footer />
+    </div>
   );
-};
-
-export default SiteChrome;
+}

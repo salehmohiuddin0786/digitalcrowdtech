@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Lock, Mail } from "lucide-react";
+import Link from "next/link";
+import { Lock, Mail, ArrowLeft, ShieldCheck } from "lucide-react";
 import { ADMIN_EMAIL, isAdminLoggedIn, loginAdmin } from "./adminData";
 
-const AdminLoginPage = () => {
+export default function AdminLoginPage() {
   const router = useRouter();
   const [form, setForm] = useState({ email: ADMIN_EMAIL, password: "" });
   const [error, setError] = useState("");
@@ -25,64 +26,91 @@ const AdminLoginPage = () => {
     try {
       await loginAdmin(form.email, form.password);
       router.replace("/admin/dashboard");
-    } catch (error) {
-      setError(error.message || "Invalid admin email or password.");
+    } catch (err) {
+      setError(err.message || "Invalid admin email or password.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-4">
-      <form onSubmit={handleSubmit} className="w-full max-w-md rounded-2xl bg-white p-8 shadow-2xl">
-        <div className="mb-8">
-          <p className="text-sm font-semibold text-blue-600">DigitalCrowdTech</p>
-          <h1 className="mt-2 text-3xl font-bold text-slate-950">Admin Login</h1>
-          <p className="mt-2 text-sm text-slate-500">Sign in to manage blogs and careers.</p>
+    <main className="flex min-h-screen items-center justify-center bg-[#07090E] px-4 tech-grid-bg">
+      <div className="w-full max-w-md">
+        <div className="mb-6">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white transition"
+          >
+            <ArrowLeft size={13} />
+            <span>Return to Website</span>
+          </Link>
         </div>
 
-        <div className="space-y-5">
-          <label className="block">
-            <span className="mb-2 block text-sm font-semibold text-slate-700">Email</span>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
-              <input
-                type="email"
-                value={form.email}
-                onChange={(event) => setForm({ ...form, email: event.target.value })}
-                className="w-full rounded-xl border border-slate-300 py-3 pl-11 pr-4 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                required
-              />
-            </div>
-          </label>
-
-          <label className="block">
-            <span className="mb-2 block text-sm font-semibold text-slate-700">Password</span>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
-              <input
-                type="password"
-                value={form.password}
-                onChange={(event) => setForm({ ...form, password: event.target.value })}
-                className="w-full rounded-xl border border-slate-300 py-3 pl-11 pr-4 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                placeholder="Enter admin password"
-                required
-              />
-            </div>
-          </label>
-        </div>
-
-        {error && <p className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
-
-        <button
-          disabled={isSubmitting}
-          className="mt-6 w-full rounded-xl bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:opacity-70"
+        <form
+          onSubmit={handleSubmit}
+          className="rounded-2xl bg-[#090D16] border border-white/10 p-8 shadow-2xl space-y-6"
         >
-          {isSubmitting ? "Logging in..." : "Login"}
-        </button>
-      </form>
+          <div className="space-y-1">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[11px] font-mono bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-2">
+              <ShieldCheck size={12} />
+              <span>Admin Authentication</span>
+            </div>
+            <h1 className="text-2xl font-bold text-white tracking-tight">Admin Sign In</h1>
+            <p className="text-xs text-slate-400">
+              Manage client inquiries, blogs, and agency settings.
+            </p>
+          </div>
+
+          <div className="space-y-4 text-xs">
+            <div>
+              <label className="block font-semibold uppercase tracking-wider text-slate-300 mb-2">
+                Admin Email
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-500" />
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  className="w-full rounded-xl bg-[#0F1422] border border-white/10 py-3 pl-10 pr-4 text-white text-xs outline-none focus:border-blue-500 transition"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block font-semibold uppercase tracking-wider text-slate-300 mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-500" />
+                <input
+                  type="password"
+                  value={form.password}
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                  className="w-full rounded-xl bg-[#0F1422] border border-white/10 py-3 pl-10 pr-4 text-white text-xs outline-none focus:border-blue-500 transition"
+                  placeholder="Enter admin password"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          {error && (
+            <p className="rounded-xl bg-red-500/10 border border-red-500/20 p-3 text-xs text-red-300">
+              {error}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full rounded-xl bg-blue-600 hover:bg-blue-500 py-3 text-xs font-bold text-white transition disabled:opacity-60 shadow-lg shadow-blue-600/30"
+          >
+            {isSubmitting ? "Authenticating..." : "Sign In to Admin Portal"}
+          </button>
+        </form>
+      </div>
     </main>
   );
-};
-
-export default AdminLoginPage;
+}

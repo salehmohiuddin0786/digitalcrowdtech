@@ -2,8 +2,12 @@ node_modules/
 .next/
 dist/
 build/
+coverage/
 logs/
 *.log
 .env
+.env.*
+!.env.example
 *.zip
 .git-backup/
+.DS_Store
