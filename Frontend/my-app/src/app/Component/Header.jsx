@@ -22,9 +22,11 @@ import ShimmerButton from "./ShimmerButton";
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-  const dropdownRef = useRef(null);
+  const servicesDropdownRef = useRef(null);
+  const aboutDropdownRef = useRef(null);
 
   // Close mobile and dropdown menus on navigation
   const [prevPathname, setPrevPathname] = useState(pathname);
@@ -32,13 +34,17 @@ export default function Header() {
     setPrevPathname(pathname);
     setMobileOpen(false);
     setServicesOpen(false);
+    setAboutOpen(false);
   }
 
-  // Handle outside click for services dropdown
+  // Handle outside click for dropdown menus
   useEffect(() => {
     function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (servicesDropdownRef.current && !servicesDropdownRef.current.contains(event.target)) {
         setServicesOpen(false);
+      }
+      if (aboutDropdownRef.current && !aboutDropdownRef.current.contains(event.target)) {
+        setAboutOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -54,20 +60,25 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Streamlined primary navigation links (Home is represented by Logo to eliminate crowding)
+  // Streamlined primary navigation links
   const navLinks = [
-    { name: "Services", href: "/services", hasDropdown: true },
+    { name: "Services", href: "/services", dropdownType: "services" },
     { name: "Projects", href: "/projects" },
+    { name: "About & Portfolio", href: "/about", dropdownType: "about" },
     { name: "Pricing", href: "/pricing" },
     { name: "Process", href: "/process" },
-    { name: "About", href: "/about" },
     { name: "Blog", href: "/blog" },
   ];
 
-  const isLinkActive = (href, hasDropdown) => {
-    if (href === "/") return pathname === "/";
-    if (hasDropdown) return pathname.startsWith("/services") || pathname.startsWith("/service");
-    return pathname.startsWith(href);
+  const isLinkActive = (item) => {
+    if (item.href === "/") return pathname === "/";
+    if (item.dropdownType === "services") {
+      return pathname.startsWith("/services") || pathname.startsWith("/service");
+    }
+    if (item.dropdownType === "about") {
+      return pathname.startsWith("/about") || pathname.startsWith("/portfolio");
+    }
+    return pathname.startsWith(item.href);
   };
 
   return (
@@ -121,13 +132,14 @@ export default function Header() {
             aria-label="Main Navigation"
           >
             {navLinks.map((item) => {
-              const active = isLinkActive(item.href, item.hasDropdown);
+              const active = isLinkActive(item);
 
-              if (item.hasDropdown) {
+              // Services Dropdown
+              if (item.dropdownType === "services") {
                 return (
                   <div
                     key={item.name}
-                    ref={dropdownRef}
+                    ref={servicesDropdownRef}
                     className="relative"
                     onMouseEnter={() => setServicesOpen(true)}
                     onMouseLeave={() => setServicesOpen(false)}
@@ -152,7 +164,7 @@ export default function Header() {
                       />
                     </button>
 
-                    {/* Services Dropdown Menu (Motion Primitives Floating Glass Card) */}
+                    {/* Services Dropdown Menu */}
                     {servicesOpen && (
                       <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2.5 w-80 z-50 animate-in fade-in zoom-in-95 duration-150">
                         <div className="bg-[#0B1220]/95 [html.light_&]:bg-white/95 backdrop-blur-xl border border-[#26344F] [html.light_&]:border-slate-200 rounded-2xl shadow-2xl p-2.5">
@@ -168,6 +180,7 @@ export default function Header() {
                             <Link
                               key={service.id}
                               href={`/services/${service.slug}`}
+                              onClick={() => setServicesOpen(false)}
                               className="group block px-3 py-2 rounded-xl hover:bg-white/5 [html.light_&]:hover:bg-slate-50 transition-colors"
                             >
                               <div className="flex items-center justify-between">
@@ -188,9 +201,112 @@ export default function Header() {
                           <div className="pt-2 mt-1 border-t border-[#26344F]/60 [html.light_&]:border-slate-100">
                             <Link
                               href="/services"
+                              onClick={() => setServicesOpen(false)}
                               className="flex items-center justify-between px-3 py-1.5 text-xs font-bold text-[#2F7DE1] hover:text-[#2F7DE1]/80 rounded-lg hover:bg-[#2F7DE1]/10 transition-colors"
                             >
                               <span>Explore All Services</span>
+                              <ArrowRight size={13} />
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              // Combined About & Portfolio Dropdown
+              if (item.dropdownType === "about") {
+                return (
+                  <div
+                    key={item.name}
+                    ref={aboutDropdownRef}
+                    className="relative"
+                    onMouseEnter={() => setAboutOpen(true)}
+                    onMouseLeave={() => setAboutOpen(false)}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setAboutOpen(!aboutOpen)}
+                      className={`flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-full transition-all duration-200 ${
+                        active
+                          ? "bg-[#2F7DE1] text-white shadow-sm shadow-blue-500/30"
+                          : "text-slate-300 [html.light_&]:text-[#40484C] hover:text-white [html.light_&]:hover:text-[#0A2540] hover:bg-white/10 [html.light_&]:hover:bg-slate-200"
+                      }`}
+                      aria-expanded={aboutOpen}
+                      aria-haspopup="true"
+                    >
+                      <span>{item.name}</span>
+                      <ChevronDown
+                        size={12}
+                        className={`transition-transform duration-200 ${
+                          aboutOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+
+                    {/* About & Portfolio Dropdown Menu */}
+                    {aboutOpen && (
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2.5 w-76 z-50 animate-in fade-in zoom-in-95 duration-150">
+                        <div className="bg-[#0B1220]/95 [html.light_&]:bg-white/95 backdrop-blur-xl border border-[#26344F] [html.light_&]:border-slate-200 rounded-2xl shadow-2xl p-2.5 space-y-1">
+                          <div className="px-3 py-2 border-b border-[#26344F]/60 [html.light_&]:border-slate-100 mb-1 flex items-center justify-between">
+                            <span className="text-[11px] font-bold text-[#8494AD] [html.light_&]:text-[#64748B] uppercase tracking-wider">
+                              Company &amp; Work
+                            </span>
+                            <span className="text-[10px] text-[#2F7DE1] font-medium flex items-center gap-1">
+                              <Sparkles size={11} /> Verified
+                            </span>
+                          </div>
+
+                          <Link
+                            href="/about"
+                            onClick={() => setAboutOpen(false)}
+                            className="group block px-3 py-2.5 rounded-xl hover:bg-white/5 [html.light_&]:hover:bg-slate-50 transition-colors"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Briefcase size={14} className="text-[#2F7DE1]" />
+                                <span className="text-xs font-semibold text-white [html.light_&]:text-[#0A2540] group-hover:text-[#2F7DE1] transition-colors">
+                                  About Us
+                                </span>
+                              </div>
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/15 text-blue-400 border border-blue-500/30">
+                                Agency
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-[#8494AD] [html.light_&]:text-[#64748B] line-clamp-1 mt-1 pl-5">
+                              Engineering team, ethos &amp; Hyderabad roots.
+                            </p>
+                          </Link>
+
+                          <Link
+                            href="/portfolio"
+                            onClick={() => setAboutOpen(false)}
+                            className="group block px-3 py-2.5 rounded-xl hover:bg-white/5 [html.light_&]:hover:bg-slate-50 transition-colors"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Layers size={14} className="text-[#F87000]" />
+                                <span className="text-xs font-semibold text-white [html.light_&]:text-[#0A2540] group-hover:text-[#F87000] transition-colors">
+                                  Engineering Portfolio
+                                </span>
+                              </div>
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#F87000]/15 text-[#F87000] border border-[#F87000]/30">
+                                Live Systems
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-[#8494AD] [html.light_&]:text-[#64748B] line-clamp-1 mt-1 pl-5">
+                              Ruchi Bazzar, School ERP &amp; live architectures.
+                            </p>
+                          </Link>
+
+                          <div className="pt-2 mt-1 border-t border-[#26344F]/60 [html.light_&]:border-slate-100">
+                            <Link
+                              href="/portfolio#inquiry-form"
+                              onClick={() => setAboutOpen(false)}
+                              className="flex items-center justify-between px-3 py-1.5 text-xs font-bold text-[#2F7DE1] hover:text-[#2F7DE1]/80 rounded-lg hover:bg-[#2F7DE1]/10 transition-colors"
+                            >
+                              <span>Request Portfolio Consultation</span>
                               <ArrowRight size={13} />
                             </Link>
                           </div>
@@ -274,17 +390,6 @@ export default function Header() {
               >
                 Home
               </Link>
-              <Link
-                href="/about"
-                className={`px-3 py-2 text-sm font-semibold rounded-xl ${
-                  pathname === "/about"
-                    ? "bg-[#2F7DE1]/15 text-[#2F7DE1]"
-                    : "text-slate-200 [html.light_&]:text-[#0A2540] hover:bg-white/5"
-                }`}
-              >
-                About
-              </Link>
-
               {/* Mobile Services Accordion */}
               <div>
                 <button
@@ -304,6 +409,7 @@ export default function Header() {
                   <div className="pl-3 pr-2 py-1.5 space-y-1 bg-[#101A2E]/50 [html.light_&]:bg-slate-50 rounded-xl mt-1 border-l-2 border-[#2F7DE1] ml-2">
                     <Link
                       href="/services"
+                      onClick={() => setMobileOpen(false)}
                       className="block px-3 py-1.5 text-xs font-bold text-[#2F7DE1]"
                     >
                       All Services Overview →
@@ -312,6 +418,7 @@ export default function Header() {
                       <Link
                         key={s.id}
                         href={`/services/${s.slug}`}
+                        onClick={() => setMobileOpen(false)}
                         className="block px-3 py-1.5 text-xs text-slate-300 [html.light_&]:text-[#40484C] hover:text-white rounded"
                       >
                         {s.title}
@@ -328,6 +435,7 @@ export default function Header() {
 
               <Link
                 href="/projects"
+                onClick={() => setMobileOpen(false)}
                 className={`px-3 py-2 text-sm font-semibold rounded-xl ${
                   pathname.startsWith("/projects")
                     ? "bg-[#2F7DE1]/15 text-[#2F7DE1]"
@@ -336,6 +444,43 @@ export default function Header() {
               >
                 Projects
               </Link>
+
+              {/* Mobile About & Portfolio Accordion */}
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setAboutOpen(!aboutOpen)}
+                  className="w-full flex items-center justify-between px-3 py-2 text-sm font-semibold text-slate-200 [html.light_&]:text-[#0A2540] rounded-xl hover:bg-white/5"
+                >
+                  <span>About &amp; Portfolio</span>
+                  <ChevronDown
+                    size={15}
+                    className={`transition-transform duration-200 ${
+                      aboutOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                {aboutOpen && (
+                  <div className="pl-3 pr-2 py-1.5 space-y-1 bg-[#101A2E]/50 [html.light_&]:bg-slate-50 rounded-xl mt-1 border-l-2 border-[#2F7DE1] ml-2">
+                    <Link
+                      href="/about"
+                      onClick={() => setMobileOpen(false)}
+                      className="flex items-center justify-between px-3 py-1.5 text-xs text-slate-300 [html.light_&]:text-[#40484C] hover:text-white rounded"
+                    >
+                      <span>About Us</span>
+                      <span className="text-[10px] text-blue-400 font-medium">Agency</span>
+                    </Link>
+                    <Link
+                      href="/portfolio"
+                      onClick={() => setMobileOpen(false)}
+                      className="flex items-center justify-between px-3 py-1.5 text-xs text-slate-300 [html.light_&]:text-[#40484C] hover:text-white rounded"
+                    >
+                      <span>Engineering Portfolio</span>
+                      <span className="text-[10px] text-[#F87000] font-medium">Live Systems</span>
+                    </Link>
+                  </div>
+                )}
+              </div>
               <Link
                 href="/pricing"
                 className={`px-3 py-2 text-sm font-semibold rounded-xl ${

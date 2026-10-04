@@ -16,9 +16,11 @@ import {
   Users,
   ShieldCheck,
   ChevronRight,
+  Sparkles,
 } from "lucide-react";
 import SectionHeading from "../../Component/SectionHeading";
 import { getProjectBySlug } from "../../data/projects";
+import ProjectArchitectureDiagram from "../../Component/ProjectArchitectureDiagram";
 
 export const metadata = {
   title: "Ruchi Bazzar Case Study | Digital Crowd Technologies",
@@ -33,12 +35,14 @@ export default function RuchiBazzarCaseStudyPage() {
   const project = getProjectBySlug("ruchi-bazzar");
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col bg-transparent">
       {/* HERO */}
-      <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 overflow-hidden tech-grid-bg border-b border-white/5">
+      <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 overflow-hidden border-b border-white/10 [html.light_&]:border-slate-200">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-[#F87000]/20 to-[#0050B0]/15 blur-[120px] pointer-events-none -z-10 rounded-full" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-orange-500/10 border border-orange-500/20 text-orange-400 mb-6">
-            <span>Case Study</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-orange-500/10 border border-orange-500/20 text-[#F87000] mb-6 backdrop-blur-md">
+            <Sparkles size={13} />
+            <span>Production Case Study</span>
           </div>
 
           <div className="w-16 h-16 rounded-2xl bg-white p-2 mx-auto mb-6 shadow-xl shadow-orange-500/10 flex items-center justify-center">
@@ -51,12 +55,12 @@ export default function RuchiBazzarCaseStudyPage() {
             />
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white [html.light_&]:text-[#0A2540] tracking-tight leading-tight">
             Ruchi Bazzar <br />
-            <span className="text-gradient-brand">Hyperlocal Food & Delivery Ecosystem</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F87000] to-[#2F7DE1]">Hyperlocal Food &amp; Delivery Ecosystem</span>
           </h1>
 
-          <p className="mt-6 text-base sm:text-lg text-slate-300 leading-relaxed">
+          <p className="mt-6 text-base sm:text-lg text-slate-300 [html.light_&]:text-slate-600 leading-relaxed">
             A full-stack monorepo connecting customers, restaurant merchants, delivery riders, and superadmin operators into one synchronized real-time platform.
           </p>
 
@@ -64,7 +68,7 @@ export default function RuchiBazzarCaseStudyPage() {
             {project.technologies.map((tech) => (
               <span
                 key={tech}
-                className="px-3 py-1 text-xs font-mono rounded-lg bg-white/5 text-slate-300 border border-white/10"
+                className="px-3 py-1 text-xs font-mono rounded-lg bg-white/5 [html.light_&]:bg-slate-100 text-slate-300 [html.light_&]:text-slate-700 border border-white/10 [html.light_&]:border-slate-200"
               >
                 {tech}
               </span>
@@ -74,22 +78,22 @@ export default function RuchiBazzarCaseStudyPage() {
       </section>
 
       {/* OVERVIEW & PROBLEM */}
-      <section className="py-20 bg-[#07090E] border-b border-white/5">
+      <section className="py-20 bg-transparent border-b border-white/10 [html.light_&]:border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
             {/* The Business Problem */}
-            <div className="p-8 rounded-2xl bg-[#090D16] border border-white/10 space-y-4">
+            <div className="p-8 rounded-3xl glass-card-premium space-y-4">
               <span className="text-xs font-mono font-bold text-red-400 uppercase tracking-wider block">
                 01. The Business Problem
               </span>
-              <h2 className="text-xl sm:text-2xl font-bold text-white">
-                Aggregator Commissions & Fragmented Order Dispatch
+              <h2 className="text-xl sm:text-2xl font-bold text-white [html.light_&]:text-[#0A2540]">
+                Aggregator Commissions &amp; Fragmented Order Dispatch
               </h2>
-              <p className="text-sm text-slate-300 leading-relaxed">
+              <p className="text-sm text-slate-300 [html.light_&]:text-slate-600 leading-relaxed">
                 Local restaurants and hyperlocal merchants struggle with two major challenges:
               </p>
-              <ul className="space-y-2.5 text-xs sm:text-sm text-slate-400">
+              <ul className="space-y-2.5 text-xs sm:text-sm text-slate-400 [html.light_&]:text-slate-600">
                 <li className="flex items-start gap-2">
                   <span className="text-red-400 font-bold">•</span>
                   <span>Exorbitant aggregator marketplace commissions of 20% to 35% on every meal sold.</span>
@@ -106,17 +110,17 @@ export default function RuchiBazzarCaseStudyPage() {
             </div>
 
             {/* The Engineering Solution */}
-            <div className="p-8 rounded-2xl bg-[#090D16] border border-white/10 space-y-4">
+            <div className="p-8 rounded-3xl glass-card-premium space-y-4">
               <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider block">
                 02. The Engineering Solution
               </span>
-              <h2 className="text-xl sm:text-2xl font-bold text-white">
+              <h2 className="text-xl sm:text-2xl font-bold text-white [html.light_&]:text-[#0A2540]">
                 A Unified Monorepo with Real-Time WebSockets
               </h2>
-              <p className="text-sm text-slate-300 leading-relaxed">
+              <p className="text-sm text-slate-300 [html.light_&]:text-slate-600 leading-relaxed">
                 Digital Crowd Technologies architected a complete custom delivery ecosystem featuring four synchronized Next.js web applications sharing a high-performance Express/Sequelize API and MySQL database.
               </p>
-              <ul className="space-y-2.5 text-xs sm:text-sm text-slate-400">
+              <ul className="space-y-2.5 text-xs sm:text-sm text-slate-400 [html.light_&]:text-slate-600">
                 <li className="flex items-start gap-2">
                   <CheckCircle2 size={16} className="text-emerald-400 shrink-0 mt-0.5" />
                   <span>Customer web app with mobile OTP sign-in, live dish customization, cart, and order tracking.</span>
@@ -136,34 +140,40 @@ export default function RuchiBazzarCaseStudyPage() {
         </div>
       </section>
 
-      {/* ARCHITECTURE OVERVIEW */}
-      <section className="py-20 bg-[#05070B] border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* INTERACTIVE ARCHITECTURE OVERVIEW */}
+      <section className="py-20 bg-transparent border-b border-white/10 [html.light_&]:border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           <SectionHeading
-            badge="Technical Architecture"
-            title="Monorepo Structure & System Architecture"
-            subtitle="How data and real-time events flow across the Ruchi Bazzar ecosystem."
+            badge="Interactive System Diagram"
+            title="Live Monorepo &amp; Event-Driven Architecture"
+            subtitle="Explore how data and real-time Socket.io events flow across the Ruchi Bazzar ecosystem."
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          {/* Embedded Interactive Diagram */}
+          <div className="max-w-5xl mx-auto">
+            <ProjectArchitectureDiagram projectId="ruchi-bazzar" />
+          </div>
+
+          {/* 4 Monorepo Package Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-6">
             {project.architecture.clientApps.map((app, i) => (
-              <div key={i} className="p-6 rounded-2xl bg-[#090D16] border border-white/10 space-y-2">
+              <div key={i} className="p-6 rounded-2xl glass-card-premium space-y-2">
                 <span className="text-[10px] font-mono text-blue-400 uppercase tracking-wider block">
                   Package 0{i + 1}
                 </span>
-                <h3 className="text-base font-bold text-white">{app.name}</h3>
+                <h3 className="text-base font-bold text-white [html.light_&]:text-[#0A2540]">{app.name}</h3>
                 <span className="text-xs font-mono text-cyan-400 block">{app.tech}</span>
-                <p className="text-xs text-slate-400 leading-relaxed pt-1">{app.desc}</p>
+                <p className="text-xs text-slate-400 [html.light_&]:text-slate-600 leading-relaxed pt-1">{app.desc}</p>
               </div>
             ))}
           </div>
 
-          <div className="p-8 rounded-2xl bg-[#0B0F19] border border-white/10 grid grid-cols-1 md:grid-cols-2 gap-8 text-xs sm:text-sm">
+          <div className="p-8 rounded-3xl glass-card-premium grid grid-cols-1 md:grid-cols-2 gap-8 text-xs sm:text-sm">
             <div>
               <span className="text-xs font-mono font-bold text-cyan-400 uppercase block mb-1">
                 Backend Architecture
               </span>
-              <p className="text-slate-300 leading-relaxed">
+              <p className="text-slate-300 [html.light_&]:text-slate-600 leading-relaxed">
                 {project.architecture.backend}
               </p>
             </div>
@@ -171,7 +181,7 @@ export default function RuchiBazzarCaseStudyPage() {
               <span className="text-xs font-mono font-bold text-indigo-400 uppercase block mb-1">
                 Database Schema
               </span>
-              <p className="text-slate-300 leading-relaxed">
+              <p className="text-slate-300 [html.light_&]:text-slate-600 leading-relaxed">
                 {project.architecture.database}
               </p>
             </div>
@@ -180,7 +190,7 @@ export default function RuchiBazzarCaseStudyPage() {
       </section>
 
       {/* COMPLETE FEATURE LIST */}
-      <section className="py-20 bg-[#07090E] border-b border-white/5">
+      <section className="py-20 bg-transparent border-b border-white/10 [html.light_&]:border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
             badge="Production Capabilities"
@@ -190,9 +200,9 @@ export default function RuchiBazzarCaseStudyPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
             {project.features.map((feat, i) => (
-              <div key={i} className="p-4 rounded-xl bg-[#0B0F19] border border-white/10 flex items-start gap-3">
+              <div key={i} className="p-4 rounded-2xl glass-card-premium flex items-start gap-3">
                 <CheckCircle2 size={16} className="text-blue-400 shrink-0 mt-0.5" />
-                <span className="text-xs sm:text-sm text-slate-300">{feat}</span>
+                <span className="text-xs sm:text-sm text-slate-300 [html.light_&]:text-slate-700">{feat}</span>
               </div>
             ))}
           </div>
@@ -200,21 +210,21 @@ export default function RuchiBazzarCaseStudyPage() {
       </section>
 
       {/* DEVELOPMENT CHALLENGES */}
-      <section className="py-20 bg-[#05070B] border-b border-white/5">
+      <section className="py-20 bg-transparent border-b border-white/10 [html.light_&]:border-slate-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
             badge="Engineering Insights"
-            title="Development Challenges & Solutions"
+            title="Development Challenges &amp; Solutions"
             subtitle="Real technical problems encountered during development and how we solved them."
           />
 
           <div className="space-y-6">
             {project.challenges.map((c, i) => (
-              <div key={i} className="p-6 rounded-2xl bg-[#090D16] border border-white/10 space-y-2">
-                <h3 className="text-base font-bold text-white">
+              <div key={i} className="p-6 rounded-2xl glass-card-premium space-y-2">
+                <h3 className="text-base font-bold text-white [html.light_&]:text-[#0A2540]">
                   Challenge: {c.challenge}
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-400 [html.light_&]:text-slate-600 leading-relaxed">
                   <strong className="text-blue-400 font-semibold">Solution: </strong>
                   {c.solution}
                 </p>
@@ -225,22 +235,24 @@ export default function RuchiBazzarCaseStudyPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-[#07090E] text-center">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
-            Need an E-Commerce or Delivery Platform?
-          </h2>
-          <p className="text-sm text-slate-400">
-            We have the real architecture and engineering experience to build and launch your custom delivery or transactional platform.
-          </p>
-          <div className="pt-4">
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-xl shadow-lg transition"
-            >
-              <span>Discuss Your E-Commerce Platform</span>
-              <ArrowRight size={15} />
-            </Link>
+      <section className="py-20 bg-transparent text-center">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="p-8 sm:p-12 rounded-3xl glass-card-premium shadow-2xl space-y-4">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white [html.light_&]:text-[#0A2540]">
+              Need a Similar Custom Platform?
+            </h2>
+            <p className="text-sm text-slate-300 [html.light_&]:text-slate-600 max-w-xl mx-auto">
+              Custom Web Applications starting from ₹9,999. Final pricing depends on project requirements. We engineer complete frontend, backend APIs, relational database, and real-time event buses.
+            </p>
+            <div className="pt-4">
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-full shadow-lg transition"
+              >
+                <span>Discuss Your Platform</span>
+                <ArrowRight size={15} />
+              </Link>
+            </div>
           </div>
         </div>
       </section>

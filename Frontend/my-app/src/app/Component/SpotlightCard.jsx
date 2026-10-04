@@ -27,7 +27,7 @@ export function SpotlightCard({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl border border-[#26344F]/80 [html.light_&]:border-slate-200 bg-[#16223A]/70 [html.light_&]:bg-white transition-all duration-300 group ${className}`}
+      className={`relative overflow-hidden rounded-2xl border border-white/10 [html.light_&]:border-slate-200/90 bg-[#0B1528]/55 [html.light_&]:bg-white/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.37)] hover:border-[#2F7DE1]/40 transition-all duration-300 group ${className}`}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => {

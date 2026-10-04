@@ -6,13 +6,14 @@ export async function POST(request) {
   try {
     const body = await request.json();
 
-    const name = String(body.name || "").trim();
+    const name = String(body.name || body.fullName || "").trim();
     const email = String(body.email || "").trim();
     const phone = String(body.phone || "").trim();
-    const service = String(body.service || "Business Website").trim();
+    const service = String(body.service || body.projectType || "Business Website").trim();
     const budget = String(body.budget || "Under ₹10,000").trim();
-    const businessName = String(body.businessName || "").trim();
+    const businessName = String(body.businessName || body.company || "").trim();
     const message = String(body.message || "").trim();
+    const source = String(body.source || (body.projectType || body.fullName ? "Portfolio" : "Website")).trim();
 
     if (!name) {
       return NextResponse.json({ ok: false, message: "Please enter your name." }, { status: 400 });
@@ -37,6 +38,7 @@ export async function POST(request) {
       budget,
       subject: `${service} Inquiry - ${name}`,
       message,
+      source,
       status: "New",
       mailStatus: "Pending",
       createdAt: new Date().toISOString(),
@@ -51,7 +53,15 @@ export async function POST(request) {
       const backendRes = await fetch(`${backendUrl}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify({
+          ...body,
+          name,
+          businessName,
+          service,
+          source,
+          budget,
+          message,
+        }),
         signal: controller.signal,
       });
       clearTimeout(timeoutId);

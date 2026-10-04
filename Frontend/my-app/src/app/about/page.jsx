@@ -79,7 +79,7 @@ export default function AboutPage() {
       </section>
 
       {/* 2. WHO WE ARE & WHAT WE DO */}
-      <section className="py-20 bg-[#07090E] border-b border-white/5">
+      <section className="py-20 bg-transparent border-b border-white/10 [html.light_&]:border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             
@@ -87,28 +87,28 @@ export default function AboutPage() {
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase bg-blue-500/10 border border-blue-500/20 text-blue-400">
                 <span>Who We Are</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white [html.light_&]:text-[#0A2540]">
                 An Engineering-Led Agency Built on Integrity
               </h2>
-              <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+              <p className="text-sm sm:text-base text-slate-300 [html.light_&]:text-slate-600 leading-relaxed">
                 Digital Crowd Technologies was established with a straightforward premise: modern businesses need dependable, capable digital partners who communicate transparently and build robust software that works.
               </p>
-              <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+              <p className="text-sm sm:text-base text-slate-300 [html.light_&]:text-slate-600 leading-relaxed">
                 Unlike corporate brokers who subcontract work or rely on fragile, cracked website templates, our engineering team directly designs, codes, tests, and deploys every application from our Hyderabad base. We specialize in end-to-end full-stack development, bridging the gap between attractive visual design and complex backend database architecture.
               </p>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-6 p-8 rounded-3xl glass-card-premium shadow-xl">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
                 <span>What We Do</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white [html.light_&]:text-[#0A2540]">
                 From Business Websites to Custom Software
               </h2>
-              <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+              <p className="text-sm sm:text-base text-slate-300 [html.light_&]:text-slate-600 leading-relaxed">
                 We handle the entire digital product spectrum:
               </p>
-              <ul className="space-y-3 text-sm text-slate-300">
+              <ul className="space-y-3 text-sm text-slate-300 [html.light_&]:text-slate-600">
                 <li className="flex items-start gap-2.5">
                   <CheckCircle2 size={16} className="text-blue-400 shrink-0 mt-0.5" />
                   <span><strong>Business Websites:</strong> Fast, responsive, conversion-focused websites starting from ₹4,999.</span>
@@ -133,26 +133,26 @@ export default function AboutPage() {
       </section>
 
       {/* 3. MISSION & VISION */}
-      <section className="py-20 bg-[#05070B] border-b border-white/5">
+      <section className="py-20 bg-transparent border-b border-white/10 [html.light_&]:border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             
-            <div className="p-8 rounded-2xl bg-[#090D16] border border-white/10 space-y-4">
+            <div className="p-8 rounded-3xl glass-card-premium space-y-4 shadow-xl">
               <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center">
                 <Target size={24} />
               </div>
-              <h3 className="text-xl font-bold text-white">Our Mission</h3>
-              <p className="text-sm text-slate-300 leading-relaxed">
+              <h3 className="text-xl font-bold text-white [html.light_&]:text-[#0A2540]">Our Mission</h3>
+              <p className="text-sm text-slate-300 [html.light_&]:text-slate-600 leading-relaxed">
                 To equip small businesses, startups, schools, and growing enterprises with dependable, secure, and modern digital software without the typical agency delays, inflated costs, or technical lock-in.
               </p>
             </div>
 
-            <div className="p-8 rounded-2xl bg-[#090D16] border border-white/10 space-y-4">
+            <div className="p-8 rounded-3xl glass-card-premium space-y-4 shadow-xl">
               <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center">
                 <Compass size={24} />
               </div>
-              <h3 className="text-xl font-bold text-white">Our Vision</h3>
-              <p className="text-sm text-slate-300 leading-relaxed">
+              <h3 className="text-xl font-bold text-white [html.light_&]:text-[#0A2540]">Our Vision</h3>
+              <p className="text-sm text-slate-300 [html.light_&]:text-slate-600 leading-relaxed">
                 To become Hyderabad and India&apos;s most respected, honest software solutions partner, known for technical authenticity, zero fake claims, and software that drives tangible business growth.
               </p>
             </div>
@@ -162,7 +162,7 @@ export default function AboutPage() {
       </section>
 
       {/* 4. OUR DEVELOPMENT APPROACH */}
-      <section className="py-20 bg-[#07090E] border-b border-white/5">
+      <section className="py-20 bg-transparent border-b border-white/10 [html.light_&]:border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
             badge="Methodology"
@@ -174,12 +174,12 @@ export default function AboutPage() {
             {approaches.map((app, idx) => (
               <div
                 key={idx}
-                className="p-6 rounded-2xl bg-[#0B0F19] border border-white/10 hover:border-blue-500/30 transition"
+                className="p-6 rounded-2xl glass-card-premium hover:border-blue-500/40 transition shadow-md"
               >
-                <h3 className="text-base font-bold text-white mb-2">
+                <h3 className="text-base font-bold text-white [html.light_&]:text-[#0A2540] mb-2">
                   {app.title}
                 </h3>
-                <p className="text-sm text-slate-400 leading-relaxed">
+                <p className="text-sm text-slate-400 [html.light_&]:text-slate-600 leading-relaxed">
                   {app.desc}
                 </p>
               </div>
@@ -189,7 +189,7 @@ export default function AboutPage() {
       </section>
 
       {/* 5. TEAM & LEADERSHIP */}
-      <section className="py-20 bg-[#05070B] border-b border-white/5">
+      <section className="py-20 bg-transparent border-b border-white/10 [html.light_&]:border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
             badge="Real Engineering Team"
@@ -201,7 +201,7 @@ export default function AboutPage() {
             {COMPANY.leadership.map((member) => (
               <div
                 key={member.name}
-                className="p-8 rounded-2xl bg-[#090D16] [html.light_&]:bg-white border border-white/10 [html.light_&]:border-slate-200 text-center space-y-4 shadow-xl hover:border-blue-500/30 transition-all duration-300 flex flex-col justify-between"
+                className="p-8 rounded-3xl glass-card-premium text-center space-y-4 shadow-xl hover:border-blue-500/40 transition-all duration-300 flex flex-col justify-between"
               >
                 <div className="space-y-4">
                   <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-blue-600 to-[#2F7DE1] text-white font-mono text-2xl font-bold flex items-center justify-center mx-auto shadow-lg shadow-blue-500/20">
@@ -223,7 +223,7 @@ export default function AboutPage() {
                   </p>
                 </div>
 
-                <div className="pt-4 border-t border-white/5 [html.light_&]:border-slate-100 flex items-center justify-center">
+                <div className="pt-4 border-t border-white/10 [html.light_&]:border-slate-200 flex items-center justify-center">
                   <a
                     href={member.linkedin}
                     target="_blank"
@@ -241,22 +241,24 @@ export default function AboutPage() {
       </section>
 
       {/* 6. CALL TO ACTION */}
-      <section className="py-16 bg-[#07090E] text-center">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
-            Ready to Discuss Your Project?
-          </h2>
-          <p className="text-sm text-slate-400">
-            Tell us about your requirements and we&apos;ll schedule a direct technical consultation.
-          </p>
-          <div className="pt-4">
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-xl shadow-lg transition"
-            >
-              <span>Start Your Project</span>
-              <ArrowRight size={15} />
-            </Link>
+      <section className="py-20 bg-transparent text-center">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="p-8 sm:p-12 rounded-3xl glass-card-premium shadow-2xl space-y-4">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white [html.light_&]:text-[#0A2540]">
+              Ready to Discuss Your Project?
+            </h2>
+            <p className="text-sm text-slate-300 [html.light_&]:text-slate-600 max-w-xl mx-auto">
+              Tell us about your requirements and we&apos;ll schedule a direct technical consultation.
+            </p>
+            <div className="pt-4">
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-full shadow-lg transition"
+              >
+                <span>Start Your Project</span>
+                <ArrowRight size={15} />
+              </Link>
+            </div>
           </div>
         </div>
       </section>

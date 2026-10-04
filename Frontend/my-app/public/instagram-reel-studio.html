@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Crowd Technologies | Instagram Reel Generator & Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #07090E;
+      --card-bg: #0B1220;
+      --primary-blue: #2F7DE1;
+      --primary-orange: #F87000;
+      --text-white: #FFFFFF;
+      --text-muted: #8494AD;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px;
+      overflow-x: hidden;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    h1 span.blue { color: var(--primary-blue); }
+    h1 span.orange { color: var(--primary-orange); }
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+    .studio-container {
+      display: flex;
+      flex-direction: column;
+      lg-flex-direction: row;
+      align-items: center;
+      gap: 28px;
+      max-width: 1000px;
+      width: 100%;
+    }
+    @media (min-width: 860px) {
+      .studio-container {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: center;
+      }
+    }
+    .reel-wrapper {
+      position: relative;
+      width: 360px;
+      height: 640px;
+      border-radius: 28px;
+      border: 3px solid rgba(47, 125, 225, 0.4);
+      box-shadow: 0 20px 50px -10px rgba(0, 80, 176, 0.4), 0 0 30px -5px rgba(248, 112, 0, 0.2);
+      overflow: hidden;
+      background: #000;
+      flex-shrink: 0;
+    }
+    canvas#reelCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .controls-panel {
+      flex: 1;
+      max-width: 480px;
+      background: #0D1424;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(47, 125, 225, 0.15);
+      border: 1px solid rgba(47, 125, 225, 0.3);
+      color: #60A5FA;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      width: fit-content;
+    }
+    .timeline-bar {
+      width: 100%;
+      height: 8px;
+      background: #1A2438;
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+    }
+    .timeline-progress {
+      height: 100%;
+      background: linear-gradient(90deg, #2F7DE1, #F87000);
+      width: 0%;
+      transition: width 0.05s linear;
+    }
+    .button-group {
+      display: flex;
+      gap: 12px;
+    }
+    .btn {
+      flex: 1;
+      padding: 14px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #F87000, #FF8A24);
+      color: #FFFFFF;
+      box-shadow: 0 4px 14px rgba(248, 112, 0, 0.35);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(248, 112, 0, 0.5);
+    }
+    .btn-secondary {
+      background: #16223A;
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .btn-secondary:hover {
+      background: #1E2D4A;
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .info-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 13px;
+      color: #C5CEDD;
+      line-height: 1.5;
+    }
+    .info-box strong {
+      color: #FFFFFF;
+    }
+    .status-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #34D399;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1><span class="blue">Digital</span> <span class="orange">Crowd</span> Tech — Instagram Reel Studio</h1>
+    <p class="subtitle">Automatic 9:16 Vertical Video Generator with Synced Tech Audio for Instagram Reels & Stories</p>
+  </header>
+
+  <div class="studio-container">
+    <!-- Reel Phone Frame -->
+    <div class="reel-wrapper">
+      <canvas id="reelCanvas" width="1080" height="1920"></canvas>
+    </div>
+
+    <!-- Controls Panel -->
+    <div class="controls-panel">
+      <div class="badge">9:16 • 1080x1920 • 60 FPS • Full HD</div>
+
+      <div>
+        <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">Instagram Reel: Agency Showcase</h2>
+        <p style="font-size: 13px; color: var(--text-muted);">
+          18-second punchy motion graphics video highlighting full-stack engineering, real projects (Ruchi Bazzar & School ERP), and transparent pricing from ₹4,999.
+        </p>
+      </div>
+
+      <div class="timeline-bar" id="timelineBar">
+        <div class="timeline-progress" id="timelineProgress"></div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8494AD;">
+        <span id="timeCurrent">00:00</span>
+        <span id="timeDuration">00:18</span>
+      </div>
+
+      <div class="button-group">
+        <button id="playBtn" class="btn btn-secondary">
+          <span id="playIcon">▶</span>
+          <span id="playLabel">Preview Reel</span>
+        </button>
+
+        <button id="exportBtn" class="btn btn-primary">
+          <span>🎬</span>
+          <span id="exportLabel">Record & Download Reel</span>
+        </button>
+      </div>
+
+      <div id="statusContainer" class="status-text">
+        <span style="width: 8px; height: 8px; border-radius: 50%; background: #34D399; display: inline-block;"></span>
+        <span id="statusMessage">Ready to play or export</span>
+      </div>
+
+      <div class="info-box">
+        <strong>📱 Best Practices for Posting to Instagram:</strong><br>
+        1. Click <b>"Record & Download Reel"</b> to get the complete video file.<br>
+        2. Set the cover image using <a href="/instagram-reel-cover.jpg" target="_blank" style="color: #F87000; text-decoration: underline;">instagram-reel-cover.jpg</a>.<br>
+        3. Caption: <i>"We Design. We Develop. We Deploy. Full-Stack Web Development & Custom Software in Hyderabad. Starting from ₹4,999. Visit digitalcrowdtech.in"</i><br>
+        4. Hashtags: <code>#hyderabadtech #webdevelopment #smallbusinessindia #reactjs #nextjs #fullstackagency</code>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("reelCanvas");
+    const ctx = canvas.getContext("2d");
+    const playBtn = document.getElementById("playBtn");
+    const exportBtn = document.getElementById("exportBtn");
+    const playLabel = document.getElementById("playLabel");
+    const playIcon = document.getElementById("playIcon");
+    const timelineProgress = document.getElementById("timelineProgress");
+    const timeCurrent = document.getElementById("timeCurrent");
+    const statusMessage = document.getElementById("statusMessage");
+
+    const TOTAL_DURATION = 18; // 18 seconds
+    let isPlaying = false;
+    let isRecording = false;
+    let currentTime = 0;
+    let lastTimestamp = 0;
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let audioCtx = null;
+    let audioDest = null;
+
+    // Initialize Web Audio API Synth
+    function initAudio() {
+      if (audioCtx) return;
+      try {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        audioDest = audioCtx.createMediaStreamDestination();
+      } catch (e) {
+        console.warn("Audio init notice:", e);
+      }
+    }
+
+    // Play cyber synth sound bite at specific timestamps
+    function triggerBeat(freq = 120, type = "sine", duration = 0.15, vol = 0.3) {
+      if (!audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        if (audioDest) gain.connect(audioDest);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    // Particle background system
+    const particles = Array.from({ length: 45 }, () => ({
+      x: Math.random() * 1080,
+      y: Math.random() * 1920,
+      radius: Math.random() * 3 + 1,
+      speedY: Math.random() * 1.5 + 0.5,
+      color: Math.random() > 0.5 ? "rgba(47, 125, 225, 0.4)" : "rgba(248, 112, 0, 0.3)"
+    }));
+
+    // Render Canvas Function
+    function render(t) {
+      ctx.fillStyle = "#07090E";
+      ctx.fillRect(0, 0, 1080, 1920);
+
+      // Radial Glows
+      const radialBlue = ctx.createRadialGradient(540, 400, 50, 540, 400, 700);
+      radialBlue.addColorStop(0, "rgba(47, 125, 225, 0.22)");
+      radialBlue.addColorStop(1, "transparent");
+      ctx.fillStyle = radialBlue;
+      ctx.fillRect(0, 0, 1080, 1920);
+
+      const radialOrange = ctx.createRadialGradient(540, 1500, 50, 540, 1500, 600);
+      radialOrange.addColorStop(0, "rgba(248, 112, 0, 0.18)");
+      radialOrange.addColorStop(1, "transparent");
+      ctx.fillStyle = radialOrange;
+      ctx.fillRect(0, 0, 1080, 1920);
+
+      // Background Grid
+      ctx.strokeStyle = "rgba(47, 125, 225, 0.08)";
+      ctx.lineWidth = 1;
+      for (let x = 0; x < 1080; x += 80) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, 1920);
+        ctx.stroke();
+      }
+      for (let y = 0; y < 1920; y += 80) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(1080, y);
+        ctx.stroke();
+      }
+
+      // Floating Particles
+      particles.forEach(p => {
+        p.y -= p.speedY;
+        if (p.y < 0) p.y = 1920;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Top Status Pill
+      ctx.save();
+      ctx.fillStyle = "rgba(16, 26, 46, 0.85)";
+      ctx.strokeStyle = "rgba(47, 125, 225, 0.4)";
+      ctx.lineWidth = 2;
+      roundRect(ctx, 290, 80, 500, 60, 30);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = "#34D399";
+      ctx.beginPath();
+      ctx.arc(330, 110, 8, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#FFFFFF";
+      ctx.font = "bold 24px 'Plus Jakarta Sans'";
+      ctx.textAlign = "center";
+      ctx.fillText("DIGITAL CROWD TECHNOLOGIES", 550, 118);
+      ctx.restore();
+
+      // ==========================================
+      // SCENE 1 (0s - 4s): THE HOOK & BRAND INTRO
+      // ==========================================
+      if (t < 4) {
+        const opacity = Math.min(1, t * 2.5);
+        ctx.save();
+        ctx.globalAlpha = opacity;
+
+        // Brand Sub-heading
+        ctx.fillStyle = "#8494AD";
+        ctx.font = "600 32px 'Plus Jakarta Sans'";
+        ctx.textAlign = "center";
+        ctx.fillText("HYDERABAD, INDIA", 540, 480);
+
+        // Giant Main Hook
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = "900 84px 'Plus Jakarta Sans'";
+        ctx.fillText("WE DESIGN.", 540, 600);
+        ctx.fillText("WE DEVELOP.", 540, 700);
+
+        // Electric Orange Deploy
+        const grad = ctx.createLinearGradient(300, 0, 780, 0);
+        grad.addColorStop(0, "#2F7DE1");
+        grad.addColorStop(1, "#F87000");
+        ctx.fillStyle = grad;
+        ctx.fillText("WE DEPLOY.", 540, 800);
+
+        // Subtitle
+        ctx.fillStyle = "#C5CEDD";
+        ctx.font = "500 36px 'Plus Jakarta Sans'";
+        ctx.fillText("From Business Websites to Custom Software", 540, 930);
+
+        // Animated Terminal Box
+        ctx.fillStyle = "#0B1220";
+        ctx.strokeStyle = "rgba(47, 125, 225, 0.5)";
+        ctx.lineWidth = 3;
+        roundRect(ctx, 120, 1060, 840, 420, 24);
+        ctx.fill();
+        ctx.stroke();
+
+        // Terminal Header
+        ctx.fillStyle = "#101A2E";
+        roundRect(ctx, 120, 1060, 840, 60, 24);
+        ctx.fill();
+
+        ctx.fillStyle = "#EF4444"; ctx.beginPath(); ctx.arc(160, 1090, 8, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#F59E0B"; ctx.beginPath(); ctx.arc(190, 1090, 8, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#10B981"; ctx.beginPath(); ctx.arc(220, 1090, 8, 0, Math.PI * 2); ctx.fill();
+
+        ctx.fillStyle = "#8494AD";
+        ctx.font = "500 22px 'JetBrains Mono'";
+        ctx.textAlign = "left";
+        ctx.fillText("terminal :: tech-stack.sh", 260, 1098);
+
+        // Code Output
+        ctx.fillStyle = "#60A5FA";
+        ctx.fillText("$ npx create-digital-solution", 160, 1180);
+        ctx.fillStyle = "#F87000";
+        ctx.fillText("> Frontend: React & Next.js", 160, 1240);
+        ctx.fillStyle = "#34D399";
+        ctx.fillText("> Backend: Node.js & Express APIs", 160, 1300);
+        ctx.fillStyle = "#FBBF24";
+        ctx.fillText("> Database: MySQL & PostgreSQL", 160, 1360);
+        ctx.fillStyle = "#A78BFA";
+        ctx.fillText("> Deployment: VPS + SSL + Domain", 160, 1420);
+
+        ctx.restore();
+      }
+
+      // ==========================================
+      // SCENE 2 (4s - 8s): FULL STACK ARCHITECTURE
+      // ==========================================
+      else if (t < 8) {
+        ctx.save();
+        ctx.textAlign = "center";
+
+        ctx.fillStyle = "#2F7DE1";
+        ctx.font = "bold 32px 'JetBrains Mono'";
+        ctx.fillText("END-TO-END CAPABILITIES", 540, 360);
+
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = "900 76px 'Plus Jakarta Sans'";
+        ctx.fillText("ONE UNIFIED TEAM", 540, 460);
+
+        // 4 Core Pillars
+        const pillars = [
+          { title: "FRONTEND", sub: "React, Next.js, Tailwind v4", color: "#60A5FA", y: 580 },
+          { title: "BACKEND & APIs", sub: "Node.js, Express, JWT, Bcrypt", color: "#34D399", y: 760 },
+          { title: "DATABASE", sub: "MySQL, Relational Schemas, ORM", color: "#FBBF24", y: 940 },
+          { title: "DEPLOYMENT", sub: "Ubuntu VPS, Nginx, SSL, Domain", color: "#F87000", y: 1120 }
+        ];
+
+        pillars.forEach((p, idx) => {
+          ctx.fillStyle = "#0E1626";
+          ctx.strokeStyle = p.color;
+          ctx.lineWidth = 2.5;
+          roundRect(ctx, 140, p.y, 800, 140, 20);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = p.color;
+          ctx.font = "900 40px 'Plus Jakarta Sans'";
+          ctx.textAlign = "left";
+          ctx.fillText(p.title, 190, p.y + 60);
+
+          ctx.fillStyle = "#C5CEDD";
+          ctx.font = "500 28px 'Plus Jakarta Sans'";
+          ctx.fillText(p.sub, 190, p.y + 105);
+        });
+
+        // Bottom Trust Statement
+        ctx.fillStyle = "#FFFFFF";
+        ctx.textAlign = "center";
+        ctx.font = "700 34px 'Plus Jakarta Sans'";
+        ctx.fillText("Zero Freelance Headaches.", 540, 1380);
+        ctx.fillStyle = "#34D399";
+        ctx.fillText("Complete In-House Engineering.", 540, 1430);
+
+        ctx.restore();
+      }
+
+      // ==========================================
+      // SCENE 3 (8s - 13s): REAL PORTFOLIO PRODUCTS
+      // ==========================================
+      else if (t < 13) {
+        ctx.save();
+        ctx.textAlign = "center";
+
+        ctx.fillStyle = "#F87000";
+        ctx.font = "bold 32px 'JetBrains Mono'";
+        ctx.fillText("VERIFIED PORTFOLIO", 540, 360);
+
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = "900 76px 'Plus Jakarta Sans'";
+        ctx.fillText("REAL PROJECTS BUILT", 540, 460);
+
+        // Project Card 1: Ruchi Bazzar
+        ctx.fillStyle = "#0E1626";
+        ctx.strokeStyle = "rgba(47, 125, 225, 0.6)";
+        ctx.lineWidth = 3;
+        roundRect(ctx, 120, 560, 840, 360, 24);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = "#60A5FA";
+        ctx.font = "bold 26px 'JetBrains Mono'";
+        ctx.textAlign = "left";
+        ctx.fillText("E-COMMERCE & LOGISTICS", 170, 630);
+
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = "900 48px 'Plus Jakarta Sans'";
+        ctx.fillText("Ruchi Bazzar Monorepo", 170, 700);
+
+        ctx.fillStyle = "#C5CEDD";
+        ctx.font = "500 26px 'Plus Jakarta Sans'";
+        ctx.fillText("Customer Storefront + Kitchen App + Fleet App + Admin", 170, 760);
+        ctx.fillStyle = "#34D399";
+        ctx.font = "600 24px 'JetBrains Mono'";
+        ctx.fillText("✓ Live Order Tracking  ✓ Razorpay  ✓ OTP Sign-in", 170, 830);
+
+        // Project Card 2: School Management System
+        ctx.fillStyle = "#0E1626";
+        ctx.strokeStyle = "rgba(248, 112, 0, 0.6)";
+        ctx.lineWidth = 3;
+        roundRect(ctx, 120, 980, 840, 360, 24);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = "#F87000";
+        ctx.font = "bold 26px 'JetBrains Mono'";
+        ctx.fillText("CUSTOM ERP PLATFORM", 170, 1050);
+
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = "900 48px 'Plus Jakarta Sans'";
+        ctx.fillText("School Management ERP", 170, 1120);
+
+        ctx.fillStyle = "#C5CEDD";
+        ctx.font = "500 26px 'Plus Jakarta Sans'";
+        ctx.fillText("4 Portals: Admin + Teacher + Student + Parent", 170, 1180);
+        ctx.fillStyle = "#34D399";
+        ctx.font = "600 24px 'JetBrains Mono'";
+        ctx.fillText("✓ Fee Invoicing  ✓ Attendance  ✓ Multi-Role RBAC", 170, 1250);
+
+        // Transparency statement
+        ctx.textAlign = "center";
+        ctx.fillStyle = "#8494AD";
+        ctx.font = "600 26px 'Plus Jakarta Sans'";
+        ctx.fillText("No fake clients. No fabricated numbers.", 540, 1440);
+
+        ctx.restore();
+      }
+
+      // ==========================================
+      // SCENE 4 (13s - 18s): TRANSPARENT PRICING & CTA
+      // ==========================================
+      else {
+        ctx.save();
+        ctx.textAlign = "center";
+
+        ctx.fillStyle = "#34D399";
+        ctx.font = "bold 32px 'JetBrains Mono'";
+        ctx.fillText("TRANSPARENT PRICING", 540, 350);
+
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = "900 76px 'Plus Jakarta Sans'";
+        ctx.fillText("START YOUR PROJECT", 540, 450);
+
+        // Pricing Card 1
+        ctx.fillStyle = "#0E1626";
+        ctx.strokeStyle = "rgba(47, 125, 225, 0.7)";
+        ctx.lineWidth = 3;
+        roundRect(ctx, 130, 540, 820, 240, 24);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = "#C5CEDD";
+        ctx.font = "700 32px 'Plus Jakarta Sans'";
+        ctx.fillText("Business Website Development", 540, 610);
+        ctx.fillStyle = "#60A5FA";
+        ctx.font = "900 64px 'Plus Jakarta Sans'";
+        ctx.fillText("Starting from ₹4,999", 540, 690);
+        ctx.fillStyle = "#8494AD";
+        ctx.font = "500 22px 'Plus Jakarta Sans'";
+        ctx.fillText("Final pricing depends on project requirements", 540, 735);
+
+        // Pricing Card 2
+        ctx.fillStyle = "#0E1626";
+        ctx.strokeStyle = "rgba(248, 112, 0, 0.7)";
+        ctx.lineWidth = 3;
+        roundRect(ctx, 130, 830, 820, 240, 24);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = "#C5CEDD";
+        ctx.font = "700 32px 'Plus Jakarta Sans'";
+        ctx.fillText("Custom Web Application & ERP", 540, 900);
+        ctx.fillStyle = "#F87000";
+        ctx.font = "900 64px 'Plus Jakarta Sans'";
+        ctx.fillText("Starting from ₹9,999", 540, 980);
+        ctx.fillStyle = "#8494AD";
+        ctx.font = "500 22px 'Plus Jakarta Sans'";
+        ctx.fillText("Final pricing depends on project requirements", 540, 1025);
+
+        // CTA Banner
+        ctx.fillStyle = "#101A2E";
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
+        roundRect(ctx, 130, 1130, 820, 320, 24);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = "900 48px 'Plus Jakarta Sans'";
+        ctx.fillText("digitalcrowdtech.in", 540, 1220);
+
+        ctx.fillStyle = "#34D399";
+        ctx.font = "700 32px 'JetBrains Mono'";
+        ctx.fillText("WhatsApp / Call: +91 86881 61780", 540, 1290);
+
+        ctx.fillStyle = "#C5CEDD";
+        ctx.font = "600 26px 'Plus Jakarta Sans'";
+        ctx.fillText("DM us on Instagram to discuss your project!", 540, 1360);
+
+        ctx.restore();
+      }
+
+      // Bottom Progress Line
+      ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+      ctx.fillRect(0, 1910, 1080, 10);
+      ctx.fillStyle = "#F87000";
+      ctx.fillRect(0, 1910, (t / TOTAL_DURATION) * 1080, 10);
+    }
+
+    function roundRect(ctx, x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    }
+
+    // Animation Loop
+    function step(timestamp) {
+      if (!lastTimestamp) lastTimestamp = timestamp;
+      const delta = (timestamp - lastTimestamp) / 1000;
+      lastTimestamp = timestamp;
+
+      if (isPlaying) {
+        currentTime += delta;
+
+        // Trigger Audio Beats at Key Moments
+        if (Math.floor(currentTime * 4) !== Math.floor((currentTime - delta) * 4)) {
+          triggerBeat(80, "triangle", 0.08, 0.2);
+        }
+
+        if (currentTime >= TOTAL_DURATION) {
+          currentTime = 0;
+          if (isRecording) {
+            stopRecording();
+          }
+        }
+
+        updateUI();
+      }
+
+      render(currentTime);
+      requestAnimationFrame(step);
+    }
+
+    function updateUI() {
+      const pct = (currentTime / TOTAL_DURATION) * 100;
+      timelineProgress.style.width = `${pct}%`;
+      const secs = Math.floor(currentTime);
+      timeCurrent.textContent = `00:${secs < 10 ? "0" + secs : secs}`;
+    }
+
+    playBtn.addEventListener("click", () => {
+      initAudio();
+      isPlaying = !isPlaying;
+      playLabel.textContent = isPlaying ? "Pause Preview" : "Preview Reel";
+      playIcon.textContent = isPlaying ? "⏸" : "▶";
+      statusMessage.textContent = isPlaying ? "Playing live preview..." : "Preview paused";
+    });
+
+    exportBtn.addEventListener("click", () => {
+      initAudio();
+      startRecording();
+    });
+
+    function startRecording() {
+      isRecording = true;
+      isPlaying = true;
+      currentTime = 0;
+      lastTimestamp = 0;
+      recordedChunks = [];
+
+      exportBtn.disabled = true;
+      playBtn.disabled = true;
+      exportLabel.textContent = "Recording Reel (18s)...";
+      statusMessage.textContent = "Recording in 1080x1920 60FPS...";
+
+      const stream = canvas.captureStream(60);
+      let combinedStream = stream;
+
+      if (audioDest && audioDest.stream.getAudioTracks().length > 0) {
+        combinedStream = new MediaStream([
+          ...stream.getVideoTracks(),
+          ...audioDest.stream.getAudioTracks()
+        ]);
+      }
+
+      try {
+        mediaRecorder = new MediaRecorder(combinedStream, {
+          mimeType: MediaRecorder.isTypeSupported("video/webm;codecs=vp9") ? "video/webm;codecs=vp9" : "video/webm",
+          videoBitsPerSecond: 8000000
+        });
+      } catch (e) {
+        mediaRecorder = new MediaRecorder(combinedStream);
+      }
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) {
+          recordedChunks.push(e.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(recordedChunks, { type: "video/webm" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "DigitalCrowdTech-Instagram-Reel.webm";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        exportBtn.disabled = false;
+        playBtn.disabled = false;
+        exportLabel.textContent = "Record & Download Reel";
+        playLabel.textContent = "Preview Reel";
+        playIcon.textContent = "▶";
+        isPlaying = false;
+        isRecording = false;
+        statusMessage.textContent = "✓ Video downloaded successfully! Ready to upload to Instagram.";
+      };
+
+      mediaRecorder.start();
+    }
+
+    // Initial render
+    render(0);
+    requestAnimationFrame(step);
+  </script>
+</body>
+</html>

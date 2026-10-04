@@ -39,6 +39,7 @@ export default function AdminQueriesPage() {
   const [queries, setQueries] = useState([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
+  const [sourceFilter, setSourceFilter] = useState("All");
   const [viewingQuery, setViewingQuery] = useState(null);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -101,15 +102,16 @@ export default function AdminQueriesPage() {
       const term = search.trim().toLowerCase();
       const matchesSearch =
         !term ||
-        [query.name, query.email, query.phone, query.businessName, query.service, query.subject, query.message]
+        [query.name, query.email, query.phone, query.businessName, query.service, query.subject, query.message, query.source]
           .filter(Boolean)
           .some((val) => String(val).toLowerCase().includes(term));
 
       const matchesStatus = statusFilter === "All" || query.status === statusFilter;
+      const matchesSource = sourceFilter === "All" || (query.source || "Website") === sourceFilter;
 
-      return matchesSearch && matchesStatus;
+      return matchesSearch && matchesStatus && matchesSource;
     });
-  }, [queries, search, statusFilter]);
+  }, [queries, search, statusFilter, sourceFilter]);
 
   return (
     <AdminLayout>
@@ -119,7 +121,7 @@ export default function AdminQueriesPage() {
           <div>
             <h1 className="text-2xl font-bold text-white">Client Inquiries & CRM</h1>
             <p className="mt-1 text-xs text-slate-400">
-              Manage, search, filter, and track status of incoming project inquiries.
+              Unified inquiry manager: all queries from both Website and Portfolio are captured and tracked here in real-time.
             </p>
           </div>
 
@@ -130,9 +132,19 @@ export default function AdminQueriesPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search inquiries..."
-                className="pl-9 pr-4 py-2 text-xs rounded-xl bg-[#0F1422] border border-white/10 text-white placeholder-slate-500 outline-none focus:border-blue-500 w-56"
+                className="pl-9 pr-4 py-2 text-xs rounded-xl bg-[#0F1422] border border-white/10 text-white placeholder-slate-500 outline-none focus:border-blue-500 w-52"
               />
             </div>
+
+            <select
+              value={sourceFilter}
+              onChange={(e) => setSourceFilter(e.target.value)}
+              className="px-3 py-2 text-xs rounded-xl bg-[#0F1422] border border-white/10 text-white outline-none focus:border-blue-500"
+            >
+              <option value="All">All Sources</option>
+              <option value="Website">Main Website</option>
+              <option value="Portfolio">Portfolio Page</option>
+            </select>
 
             <select
               value={statusFilter}
@@ -185,10 +197,21 @@ export default function AdminQueriesPage() {
                     </td>
                   </tr>
                 ) : (
-                  filteredQueries.map((q) => (
+                    filteredQueries.map((q) => (
                     <tr key={q.id} className="hover:bg-white/[0.02] transition">
                       <td className="px-5 py-4">
-                        <div className="font-semibold text-white">{q.name}</div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-white">{q.name}</span>
+                          <span
+                            className={`text-[10px] px-2 py-0.5 rounded-full font-medium border ${
+                              (q.source || "Website").toLowerCase() === "portfolio"
+                                ? "bg-purple-500/20 text-purple-300 border-purple-500/30"
+                                : "bg-blue-500/20 text-blue-300 border-blue-500/30"
+                            }`}
+                          >
+                            {q.source || "Website"}
+                          </span>
+                        </div>
                         {q.businessName && (
                           <div className="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
                             <Building size={11} className="text-slate-500" />
@@ -259,7 +282,18 @@ export default function AdminQueriesPage() {
             <div className="w-full max-w-xl rounded-2xl bg-[#0D121F] border border-white/10 p-6 shadow-2xl space-y-5 text-sm">
               <div className="flex items-center justify-between pb-3 border-b border-white/10">
                 <div>
-                  <h3 className="text-lg font-bold text-white">{viewingQuery.name}</h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg font-bold text-white">{viewingQuery.name}</h3>
+                    <span
+                      className={`text-xs px-2.5 py-0.5 rounded-full font-medium border ${
+                        (viewingQuery.source || "Website").toLowerCase() === "portfolio"
+                          ? "bg-purple-500/20 text-purple-300 border-purple-500/30"
+                          : "bg-blue-500/20 text-blue-300 border-blue-500/30"
+                      }`}
+                    >
+                      {viewingQuery.source || "Website"}
+                    </span>
+                  </div>
                   <span className="text-xs text-slate-400">{viewingQuery.businessName || "Individual Client"}</span>
                 </div>
                 <button
@@ -290,6 +324,14 @@ export default function AdminQueriesPage() {
                   <a href={`tel:${viewingQuery.phone}`} className="text-slate-200 font-mono">
                     {viewingQuery.phone}
                   </a>
+                </div>
+                <div>
+                  <span className="text-slate-500 block">Lead Source</span>
+                  <span className="font-medium text-slate-300">{viewingQuery.source || "Website"}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500 block">Submitted At</span>
+                  <span className="font-mono text-slate-400">{formatDate(viewingQuery.createdAt)}</span>
                 </div>
               </div>
 

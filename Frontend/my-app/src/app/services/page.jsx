@@ -28,10 +28,10 @@ export default function ServicesPage() {
   return (
     <div className="flex flex-col">
       {/* 1. HERO */}
-      <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 overflow-hidden border-b border-[#26344F]/60 [html.light_&]:border-slate-200">
-        <HaikeiMeshGlow />
+      <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 overflow-hidden border-b border-white/10 [html.light_&]:border-slate-200">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-[#2F7DE1]/20 to-[#F87000]/15 blur-[120px] pointer-events-none -z-10 rounded-full" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-[#2F7DE1]/10 border border-[#2F7DE1]/30 text-[#2F7DE1] mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-[#2F7DE1]/10 border border-[#2F7DE1]/30 text-[#2F7DE1] mb-6 backdrop-blur-md">
             <Sparkles size={13} />
             <span>Our Service Portfolio</span>
           </div>
@@ -62,13 +62,13 @@ export default function ServicesPage() {
       </section>
 
       {/* 2. SERVICES GRID */}
-      <section className="py-20 bg-[#0B1220] [html.light_&]:bg-white border-b border-[#26344F]/60 [html.light_&]:border-slate-200">
+      <section className="py-20 bg-transparent border-b border-white/10 [html.light_&]:border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {SERVICES.map((service) => (
               <div
                 key={service.id}
-                className="bg-[#16223A] [html.light_&]:bg-[#F4F7FB] border border-[#26344F] [html.light_&]:border-slate-300 rounded-2xl p-8 flex flex-col justify-between shadow-xl hover:border-[#2F7DE1]/40 transition-all duration-300 group"
+                className="glass-card-premium rounded-3xl p-8 flex flex-col justify-between shadow-xl hover:border-[#2F7DE1]/40 transition-all duration-300 group"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
@@ -118,7 +118,7 @@ export default function ServicesPage() {
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-[#26344F]/60 [html.light_&]:border-slate-200 flex items-center justify-between">
+                <div className="pt-4 border-t border-white/10 [html.light_&]:border-slate-200 flex items-center justify-between">
                   <span className="text-xs text-[#8494AD] [html.light_&]:text-[#64748B]">
                     {service.startingPrice && service.startingPrice.includes("₹")
                       ? "Starting price"
@@ -139,7 +139,7 @@ export default function ServicesPage() {
       </section>
 
       {/* 3. CAPABILITIES CALLOUT */}
-      <section className="py-20 bg-[#101A2E] [html.light_&]:bg-[#F4F7FB] border-b border-[#26344F]/60 [html.light_&]:border-slate-200">
+      <section className="py-20 bg-transparent border-b border-white/10 [html.light_&]:border-slate-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
           <SectionHeading
             badge="Full-Stack Engineering"
@@ -147,7 +147,7 @@ export default function ServicesPage() {
             subtitle="You don't need five different vendors to launch software. We handle the complete engineering stack under one unified development process."
           />
 
-          <div className="p-8 rounded-2xl bg-[#16223A] [html.light_&]:bg-white border border-[#26344F] [html.light_&]:border-slate-200 text-left grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm text-[#C5CEDD] [html.light_&]:text-[#40484C] shadow-lg">
+          <div className="p-8 sm:p-10 rounded-3xl glass-card-premium text-left grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm text-[#C5CEDD] [html.light_&]:text-[#40484C] shadow-2xl">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#2F7DE1]" />
               <span>React & Next.js App Router</span>
@@ -177,7 +177,7 @@ export default function ServicesPage() {
           <div className="pt-4">
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-bold text-[#0B1220] [html.light_&]:text-white bg-[#F87000] hover:bg-[#FF8A24] rounded-full shadow-lg shadow-orange-500/25 transition-all duration-200 transform hover:scale-105 active:scale-95"
+              className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-bold text-[#0B1220] [html.light_&]:text-white bg-[#F87000] hover:bg-[#FF8A24] rounded-full shadow-lg shadow-orange-500/25 transition-all duration-200 transform hover:scale-105 active:scale-95"
             >
               <span>Discuss Your Custom Solution</span>
               <ArrowRight size={15} />

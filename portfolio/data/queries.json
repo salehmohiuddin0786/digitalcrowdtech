@@ -1,0 +1,38 @@
+[
+  {
+    "id": "query-1790950604430-fa750d",
+    "name": "Vikram Sharma",
+    "company": "Sharma Retail Hyderabad",
+    "email": "vikram@sharmaretail.in",
+    "phone": "+91 9988776655",
+    "projectType": "E-Commerce",
+    "budget": "₹75,000 – ₹1,50,000",
+    "message": "We want to launch an online grocery store with instant payment gateway and order delivery tracking.",
+    "status": "New",
+    "createdAt": "2026-10-02T14:16:44.430Z"
+  },
+  {
+    "id": "query-sample-1",
+    "name": "Rajesh Kumar",
+    "company": "Kumar Logistics Hyderabad",
+    "email": "rajesh@kumarlogistics.in",
+    "phone": "+91 98490 12345",
+    "projectType": "ERP",
+    "budget": "₹75,000 – ₹1,50,000",
+    "message": "Looking for a custom logistics ERP to track fleet dispatch, driver trip sheets, and customer invoicing with automated reports.",
+    "status": "New",
+    "createdAt": "2026-10-02T10:16:44.428Z"
+  },
+  {
+    "id": "query-sample-2",
+    "name": "Sunita Reddy",
+    "company": "Vedic Academy Hyderabad",
+    "email": "admin@vedicacademy.edu.in",
+    "phone": "+91 94401 98765",
+    "projectType": "School Management System",
+    "budget": "Under ₹25,000",
+    "message": "Interested in the School Management System license. We need student enrollment, parent SMS notices, and fee receipts for 600 students.",
+    "status": "Contacted",
+    "createdAt": "2026-10-01T10:16:44.428Z"
+  }
+]

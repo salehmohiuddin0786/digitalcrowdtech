@@ -279,6 +279,7 @@ const Query = sequelize.define(
     budget: { type: DataTypes.STRING },
     subject: { type: DataTypes.STRING, allowNull: false },
     message: { type: DataTypes.TEXT, allowNull: false },
+    source: { type: DataTypes.STRING, defaultValue: "Website" },
     status: {
       type: DataTypes.ENUM("New", "Contacted", "In Progress", "Converted"),
       defaultValue: "New",
@@ -502,17 +503,23 @@ app.get("/api/admin/me", requireAdmin, async (req, res) => {
 // INQUIRY MANAGEMENT (QUERIES)
 // ==========================================
 
-// Public Contact Form Submission with Rate Limiting
+// Public Contact Form Submission with Rate Limiting (Unified for Website & Portfolio)
 app.post("/api/contact", contactLimiter, async (req, res) => {
+  const rawName = req.body.name || req.body.fullName;
+  const rawBusiness = req.body.businessName || req.body.company;
+  const rawService = req.body.service || req.body.projectType || "Business Website";
+  const rawSource = req.body.source || (req.body.projectType || req.body.fullName ? "Portfolio" : "Website");
+
   const payload = {
-    name: sanitize(req.body.name),
-    businessName: sanitize(req.body.businessName),
+    name: sanitize(rawName),
+    businessName: sanitize(rawBusiness),
     email: sanitize(req.body.email),
     phone: sanitize(req.body.phone),
-    service: sanitize(req.body.service) || "Business Website",
+    service: sanitize(rawService),
     budget: sanitize(req.body.budget) || "Under ₹10,000",
-    subject: sanitize(req.body.subject) || `Inquiry from ${sanitize(req.body.name)}`,
+    subject: sanitize(req.body.subject) || `Inquiry from ${sanitize(rawName)}`,
     message: sanitize(req.body.message),
+    source: sanitize(rawSource) || "Website",
   };
 
   if (!payload.name) {
@@ -554,18 +561,19 @@ app.post("/api/contact", contactLimiter, async (req, res) => {
       });
 
       await transporter.sendMail({
-        from: `"DigitalCrowdTech Website" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+        from: `"DigitalCrowdTech" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
         to: SUPPORT_EMAIL,
         replyTo: payload.email,
-        subject: `New Project Inquiry: ${payload.service} - ${payload.name}`,
+        subject: `[${payload.source}] New Project Inquiry: ${payload.service} - ${payload.name}`,
         text: [
-          "New Project Inquiry from Digital Crowd Technologies website:",
+          `New Project Inquiry received from ${payload.source}:`,
           "",
+          `Source: ${payload.source}`,
           `Name: ${payload.name}`,
-          `Business Name: ${payload.businessName || "Not provided"}`,
+          `Business/Company: ${payload.businessName || "Not provided"}`,
           `Email: ${payload.email}`,
           `Phone: ${payload.phone}`,
-          `Service Required: ${payload.service}`,
+          `Service/Project: ${payload.service}`,
           `Estimated Budget: ${payload.budget}`,
           `Submitted At: ${submittedAt}`,
           "",
@@ -573,12 +581,13 @@ app.post("/api/contact", contactLimiter, async (req, res) => {
           payload.message,
         ].join("\n"),
         html: `
-          <h2>New Project Inquiry from Website</h2>
+          <h2>New Project Inquiry (${escapeHtml(payload.source)})</h2>
+          <p><strong>Source:</strong> <span style="background:#0050B0;color:#fff;padding:2px 8px;border-radius:4px;">${escapeHtml(payload.source)}</span></p>
           <p><strong>Name:</strong> ${escapeHtml(payload.name)}</p>
-          <p><strong>Business:</strong> ${escapeHtml(payload.businessName || "Not provided")}</p>
+          <p><strong>Business / Company:</strong> ${escapeHtml(payload.businessName || "Not provided")}</p>
           <p><strong>Email:</strong> <a href="mailto:${escapeHtml(payload.email)}">${escapeHtml(payload.email)}</a></p>
           <p><strong>Phone:</strong> <a href="tel:${escapeHtml(payload.phone)}">${escapeHtml(payload.phone)}</a></p>
-          <p><strong>Service:</strong> ${escapeHtml(payload.service)}</p>
+          <p><strong>Service / Project:</strong> ${escapeHtml(payload.service)}</p>
           <p><strong>Estimated Budget:</strong> ${escapeHtml(payload.budget)}</p>
           <p><strong>Submitted:</strong> ${submittedAt}</p>
           <hr />
@@ -606,11 +615,15 @@ app.post("/api/contact", contactLimiter, async (req, res) => {
 // Admin: View & Filter Queries
 app.get("/api/admin/queries", requireAdmin, async (req, res) => {
   try {
-    const { status, search } = req.query;
+    const { status, search, source } = req.query;
     const where = {};
 
     if (status && ["New", "Contacted", "In Progress", "Converted"].includes(status)) {
       where.status = status;
+    }
+
+    if (source && source !== "All") {
+      where.source = source;
     }
 
     if (search) {
@@ -619,6 +632,8 @@ app.get("/api/admin/queries", requireAdmin, async (req, res) => {
         { email: { [Op.like]: `%${search}%` } },
         { phone: { [Op.like]: `%${search}%` } },
         { businessName: { [Op.like]: `%${search}%` } },
+        { service: { [Op.like]: `%${search}%` } },
+        { source: { [Op.like]: `%${search}%` } },
       ];
     }
 
@@ -969,6 +984,8 @@ const startServer = async () => {
   try {
     await sequelize.authenticate();
     await sequelize.sync();
+    // Ensure newly introduced schema columns exist safely
+    await sequelize.query("ALTER TABLE `queries` ADD COLUMN `source` VARCHAR(255) DEFAULT 'Website';").catch(() => {});
     await seedDatabase();
     console.log(`Sequelize connected to MySQL (${DB_NAME})`);
   } catch (err) {

@@ -24,10 +24,10 @@ export default function PricingPage() {
   return (
     <div className="flex flex-col">
       {/* HERO */}
-      <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 overflow-hidden border-b border-[#26344F]/60 [html.light_&]:border-slate-200">
-        <HaikeiMeshGlow />
+      <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 overflow-hidden border-b border-white/10 [html.light_&]:border-slate-200">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-[#2F7DE1]/20 to-[#F87000]/15 blur-[120px] pointer-events-none -z-10 rounded-full" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-[#2F7DE1]/10 border border-[#2F7DE1]/30 text-[#2F7DE1] mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-[#2F7DE1]/10 border border-[#2F7DE1]/30 text-[#2F7DE1] mb-6 backdrop-blur-md">
             <Sparkles size={13} />
             <span>Transparent Pricing Policy</span>
           </div>
@@ -47,12 +47,12 @@ export default function PricingPage() {
       </section>
 
       {/* THE ONLY TWO PUBLIC PRICES */}
-      <section className="py-20 bg-[#0B1220] [html.light_&]:bg-white border-b border-[#26344F]/60 [html.light_&]:border-slate-200">
+      <section className="py-20 bg-transparent border-b border-white/10 [html.light_&]:border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             
             {/* 1. Business Website */}
-            <div className="p-8 sm:p-10 rounded-2xl bg-[#16223A] [html.light_&]:bg-[#F4F7FB] border border-[#26344F] [html.light_&]:border-slate-300 hover:border-[#2F7DE1]/40 transition flex flex-col justify-between shadow-xl">
+            <div className="p-8 sm:p-10 rounded-3xl glass-card-premium shadow-2xl relative group hover:border-[#2F7DE1]/40 transition flex flex-col justify-between">
               <div>
                 <span className="text-xs font-bold text-[#2F7DE1] uppercase tracking-wider block mb-2">
                   Professional Presence
@@ -74,7 +74,7 @@ export default function PricingPage() {
                   For professional business websites. Fast, responsive, and optimized to capture customer inquiries and WhatsApp messages.
                 </p>
 
-                <div className="p-3 rounded-lg bg-white/[0.03] [html.light_&]:bg-white border border-[#26344F] [html.light_&]:border-slate-200 text-xs text-[#8494AD] [html.light_&]:text-[#64748B] mb-6 font-medium">
+                <div className="p-3 rounded-xl bg-white/[0.03] [html.light_&]:bg-slate-50 border border-white/10 [html.light_&]:border-slate-200 text-xs text-[#8494AD] [html.light_&]:text-[#64748B] mb-6 font-medium">
                   Final pricing depends on project requirements.
                 </div>
 
@@ -113,7 +113,7 @@ export default function PricingPage() {
             </div>
 
             {/* 2. Custom Website & Web Application */}
-            <div className="p-8 sm:p-10 rounded-2xl bg-[#16223A] [html.light_&]:bg-white border-2 border-[#2F7DE1]/50 flex flex-col justify-between shadow-2xl relative">
+            <div className="p-8 sm:p-10 rounded-3xl glass-card-premium border-2 border-[#2F7DE1]/60 shadow-2xl relative flex flex-col justify-between overflow-hidden">
               <div className="absolute -top-3 right-8 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#2F7DE1] text-white">
                 Full-Stack Architecture
               </div>
@@ -139,7 +139,7 @@ export default function PricingPage() {
                   For custom websites and web applications requiring frontend, backend, database and custom functionality.
                 </p>
 
-                <div className="p-3 rounded-lg bg-white/[0.03] [html.light_&]:bg-slate-50 border border-[#26344F] [html.light_&]:border-slate-200 text-xs text-[#8494AD] [html.light_&]:text-[#64748B] mb-6 font-medium">
+                <div className="p-3 rounded-xl bg-white/[0.03] [html.light_&]:bg-slate-50 border border-white/10 [html.light_&]:border-slate-200 text-xs text-[#8494AD] [html.light_&]:text-[#64748B] mb-6 font-medium">
                   Final pricing depends on project requirements.
                 </div>
 
@@ -182,7 +182,7 @@ export default function PricingPage() {
       </section>
 
       {/* ALL OTHER SERVICES: REQUEST A CUSTOM QUOTE */}
-      <section className="py-20 bg-[#101A2E] [html.light_&]:bg-[#F4F7FB] border-b border-[#26344F]/60 [html.light_&]:border-slate-200">
+      <section className="py-20 bg-transparent border-b border-white/10 [html.light_&]:border-slate-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
             badge="Complex Software & Specialized Systems"
@@ -215,13 +215,13 @@ export default function PricingPage() {
             ].map((sol) => (
               <div
                 key={sol.title}
-                className="p-7 rounded-2xl bg-[#16223A] [html.light_&]:bg-white border border-[#26344F] [html.light_&]:border-slate-200 flex flex-col justify-between shadow-lg hover:border-[#2F7DE1]/40 transition"
+                className="p-7 rounded-3xl glass-card-premium flex flex-col justify-between shadow-xl hover:border-[#2F7DE1]/40 transition"
               >
                 <div>
                   <h3 className="text-lg font-bold text-white [html.light_&]:text-[#0A2540] mb-2">{sol.title}</h3>
                   <p className="text-xs sm:text-sm text-[#8494AD] [html.light_&]:text-[#64748B] leading-relaxed mb-6">{sol.desc}</p>
                 </div>
-                <div className="pt-4 border-t border-[#26344F]/60 [html.light_&]:border-slate-100 flex items-center justify-between">
+                <div className="pt-4 border-t border-white/10 [html.light_&]:border-slate-200 flex items-center justify-between">
                   <span className="text-xs font-semibold text-[#8494AD] [html.light_&]:text-[#64748B]">Custom Scope</span>
                   <Link
                     href="/contact"
@@ -238,9 +238,9 @@ export default function PricingPage() {
       </section>
 
       {/* INFRASTRUCTURE & THIRD PARTY TRANSPARENCY */}
-      <section className="py-16 bg-[#0B1220] [html.light_&]:bg-white border-b border-[#26344F]/60 [html.light_&]:border-slate-200">
+      <section className="py-16 bg-transparent border-b border-white/10 [html.light_&]:border-slate-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="p-8 rounded-2xl bg-[#16223A] [html.light_&]:bg-[#F4F7FB] border border-[#26344F] [html.light_&]:border-slate-200 space-y-4 shadow-lg">
+          <div className="p-8 rounded-3xl glass-card-premium space-y-4 shadow-xl">
             <div className="flex items-center gap-2 text-amber-400">
               <AlertCircle size={20} />
               <h3 className="text-base font-bold text-white [html.light_&]:text-[#0A2540]">
@@ -258,22 +258,24 @@ export default function PricingPage() {
       </section>
 
       {/* FINAL PRICING CTA */}
-      <section className="py-16 bg-[#101A2E] [html.light_&]:bg-[#F4F7FB] text-center">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white [html.light_&]:text-[#0A2540]">
-            Need Something Custom? Get a Quote
-          </h2>
-          <p className="text-sm text-[#8494AD] [html.light_&]:text-[#64748B]">
-            Tell us about your project specifications. We will review your requirements and provide an accurate, transparent milestone quote.
-          </p>
-          <div className="pt-4">
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-bold text-[#0B1220] [html.light_&]:text-white bg-[#F87000] hover:bg-[#FF8A24] rounded-full shadow-lg shadow-orange-500/25 transition-all duration-200 transform hover:scale-105 active:scale-95"
-            >
-              <span>Request a Custom Quote</span>
-              <ArrowRight size={15} />
-            </Link>
+      <section className="py-20 bg-transparent text-center">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="p-8 sm:p-12 rounded-3xl glass-card-premium shadow-2xl space-y-4">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white [html.light_&]:text-[#0A2540]">
+              Need Something Custom? Get a Quote
+            </h2>
+            <p className="text-sm text-[#8494AD] [html.light_&]:text-[#64748B] max-w-xl mx-auto">
+              Tell us about your project specifications. We will review your requirements and provide an accurate, transparent milestone quote.
+            </p>
+            <div className="pt-4">
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-bold text-[#0B1220] [html.light_&]:text-white bg-[#F87000] hover:bg-[#FF8A24] rounded-full shadow-lg shadow-orange-500/25 transition-all duration-200 transform hover:scale-105 active:scale-95"
+              >
+                <span>Request a Custom Quote</span>
+                <ArrowRight size={15} />
+              </Link>
+            </div>
           </div>
         </div>
       </section>

@@ -14,7 +14,6 @@ import {
   Sparkles,
 } from "lucide-react";
 import SectionHeading from "../Component/SectionHeading";
-import { HaikeiMeshGlow, HaikeiWave } from "../Component/HaikeiDecorations";
 
 export const metadata = {
   title: "Our Development Process | From Idea to Launch | Digital Crowd Technologies",
@@ -112,12 +111,12 @@ export default function ProcessPage() {
   ];
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col bg-transparent">
       {/* HERO */}
-      <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 overflow-hidden border-b border-[#26344F]/60 [html.light_&]:border-slate-200">
-        <HaikeiMeshGlow />
+      <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 overflow-hidden border-b border-white/10 [html.light_&]:border-slate-200">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-[#2F7DE1]/20 to-[#F87000]/15 blur-[120px] pointer-events-none -z-10 rounded-full" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-[#2F7DE1]/10 border border-[#2F7DE1]/30 text-[#2F7DE1] mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-[#2F7DE1]/10 border border-[#2F7DE1]/30 text-[#2F7DE1] mb-6 backdrop-blur-md">
             <Sparkles size={13} />
             <span>Engineering Lifecycle</span>
           </div>
@@ -129,23 +128,23 @@ export default function ProcessPage() {
             </span>
           </h1>
 
-          <p className="mt-6 text-base sm:text-lg text-[#C5CEDD] [html.light_&]:text-[#40484C] leading-relaxed">
+          <p className="mt-6 text-base sm:text-lg text-slate-300 [html.light_&]:text-slate-600 leading-relaxed">
             We follow a disciplined 7-step engineering process to eliminate ambiguity, ensure punctual delivery, and build digital software you can trust.
           </p>
         </div>
       </section>
 
       {/* 7 STEPS DETAILED */}
-      <section className="py-20 bg-[#0B1220] [html.light_&]:bg-white border-b border-[#26344F]/60 [html.light_&]:border-slate-200">
+      <section className="py-20 bg-transparent border-b border-white/10 [html.light_&]:border-slate-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           {steps.map((st) => (
             <div
               key={st.num}
-              className="p-8 rounded-2xl bg-[#16223A] [html.light_&]:bg-[#F4F7FB] border border-[#26344F] [html.light_&]:border-slate-200 hover:border-[#2F7DE1]/40 transition-all duration-300 shadow-xl"
+              className="p-8 rounded-3xl glass-card-premium shadow-xl transition-all duration-300"
             >
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#26344F]/60 [html.light_&]:border-slate-200">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-white/10 [html.light_&]:border-slate-200">
                 <div className="flex items-center gap-4">
-                  <span className="w-12 h-12 rounded-xl bg-[#2F7DE1]/15 border border-[#2F7DE1]/30 text-[#2F7DE1] font-mono text-lg font-bold flex items-center justify-center shrink-0">
+                  <span className="w-12 h-12 rounded-2xl bg-[#2F7DE1]/15 border border-[#2F7DE1]/30 text-[#2F7DE1] font-mono text-lg font-bold flex items-center justify-center shrink-0">
                     {st.num}
                   </span>
                   <div>
@@ -155,19 +154,19 @@ export default function ProcessPage() {
                 </div>
               </div>
 
-              <p className="mt-4 text-sm sm:text-base text-[#C5CEDD] [html.light_&]:text-[#40484C] leading-relaxed">
+              <p className="mt-4 text-sm sm:text-base text-slate-300 [html.light_&]:text-slate-600 leading-relaxed">
                 {st.desc}
               </p>
 
-              <div className="mt-6 pt-4 border-t border-[#26344F]/60 [html.light_&]:border-slate-200">
-                <span className="text-xs font-bold uppercase tracking-wider text-[#8494AD] [html.light_&]:text-[#64748B] block mb-2">
+              <div className="mt-6 pt-4 border-t border-white/10 [html.light_&]:border-slate-200">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-400 [html.light_&]:text-slate-500 block mb-2">
                   Key Deliverables:
                 </span>
                 <div className="flex flex-wrap gap-2">
                   {st.deliverables.map((d, i) => (
                     <span
                       key={i}
-                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-white/[0.03] [html.light_&]:bg-white text-[#C5CEDD] [html.light_&]:text-[#40484C] border border-[#26344F] [html.light_&]:border-slate-200"
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-white/[0.04] [html.light_&]:bg-slate-100 text-slate-300 [html.light_&]:text-slate-700 border border-white/10 [html.light_&]:border-slate-200"
                     >
                       <CheckCircle2 size={13} className="text-[#2F7DE1] shrink-0" />
                       <span>{d}</span>
@@ -181,11 +180,11 @@ export default function ProcessPage() {
       </section>
 
       {/* STANDARDS & COMMITMENTS */}
-      <section className="py-20 bg-[#101A2E] [html.light_&]:bg-[#F4F7FB] border-b border-[#26344F]/60 [html.light_&]:border-slate-200">
+      <section className="py-20 bg-transparent border-b border-white/10 [html.light_&]:border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
             badge="Working Principles"
-            title="Communication, Milestones & Ownership"
+            title="Communication, Milestones &amp; Ownership"
             subtitle="How we maintain transparency, deliverable quality, and professional accountability throughout."
           />
 
@@ -195,13 +194,13 @@ export default function ProcessPage() {
               return (
                 <div
                   key={std.title}
-                  className="p-6 rounded-2xl bg-[#16223A] [html.light_&]:bg-white border border-[#26344F] [html.light_&]:border-slate-200 space-y-3 shadow-lg"
+                  className="p-6 rounded-3xl glass-card-premium space-y-3 shadow-lg"
                 >
                   <div className="w-10 h-10 rounded-xl bg-[#2F7DE1]/10 text-[#2F7DE1] flex items-center justify-center">
                     <Icon size={20} />
                   </div>
                   <h3 className="text-base font-bold text-white [html.light_&]:text-[#0A2540]">{std.title}</h3>
-                  <p className="text-xs sm:text-sm text-[#8494AD] [html.light_&]:text-[#64748B] leading-relaxed">{std.desc}</p>
+                  <p className="text-xs sm:text-sm text-slate-400 [html.light_&]:text-slate-600 leading-relaxed">{std.desc}</p>
                 </div>
               );
             })}
@@ -210,22 +209,24 @@ export default function ProcessPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-[#0B1220] [html.light_&]:bg-white text-center">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white [html.light_&]:text-[#0A2540]">
-            Ready to Begin with Step 01?
-          </h2>
-          <p className="text-sm text-[#8494AD] [html.light_&]:text-[#64748B]">
-            Tell us about your project requirements and let&apos;s start the discovery consultation.
-          </p>
-          <div className="pt-4">
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-bold text-[#0B1220] [html.light_&]:text-white bg-[#F87000] hover:bg-[#FF8A24] rounded-full shadow-lg shadow-orange-500/25 transition-all duration-200 transform hover:scale-105 active:scale-95"
-            >
-              <span>Start Your Project</span>
-              <ArrowRight size={15} />
-            </Link>
+      <section className="py-20 bg-transparent text-center">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="p-8 sm:p-12 rounded-3xl glass-card-premium shadow-2xl space-y-4">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white [html.light_&]:text-[#0A2540]">
+              Ready to Begin with Step 01?
+            </h2>
+            <p className="text-sm text-slate-300 [html.light_&]:text-slate-600 max-w-xl mx-auto">
+              Business websites starting from ₹4,999. Custom web applications starting from ₹9,999. Final pricing depends on project requirements. Tell us about your goals to start the discovery consultation.
+            </p>
+            <div className="pt-4">
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-full shadow-lg transition"
+              >
+                <span>Start Your Project</span>
+                <ArrowRight size={15} />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
