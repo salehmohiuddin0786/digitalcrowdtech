@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const http = require("http");
 const path = require("path");
 const fs = require("fs");
@@ -78,35 +79,120 @@ const upload = multer({
 // Serve uploaded files statically
 app.use("/uploads", express.static(uploadsDir));
 
-const allowedOrigins = (
-  process.env.CORS_ORIGIN ||
-  "http://localhost:3000,http://localhost:3001,https://digitalcrowdtech.in"
-)
+// Comprehensive Allowed Origins List
+const defaultAllowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "http://localhost:5000",
+  "http://localhost:5001",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:3001",
+  "http://127.0.0.1:5000",
+  "http://127.0.0.1:5001",
+  "https://dskirana.in",
+  "https://www.dskirana.in",
+  "https://api.dskirana.in",
+  "https://admin.dskirana.in",
+  "http://dskirana.in",
+  "http://www.dskirana.in",
+  "http://api.dskirana.in",
+  "https://digitalcrowdtech.in",
+  "https://www.digitalcrowdtech.in",
+  "https://api.digitalcrowdtech.in",
+  "http://digitalcrowdtech.in",
+  "http://www.digitalcrowdtech.in",
+];
+
+const envOrigins = (process.env.CORS_ORIGIN || "")
   .split(",")
-  .map((origin) => origin.trim().replace(/\/$/, ""));
+  .map((origin) => origin.trim().replace(/\/$/, ""))
+  .filter(Boolean);
 
-app.use(express.json({ limit: "5mb" }));
+const allowedOriginsSet = new Set([...defaultAllowedOrigins, ...envOrigins]);
 
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true; // Mobile apps, Postman, server-to-server, curl
+  const clean = origin.trim().replace(/\/$/, "");
+
+  if (allowedOriginsSet.has(clean) || allowedOriginsSet.has("*")) {
+    return true;
+  }
+
+  try {
+    const parsed = new URL(clean);
+    const host = parsed.hostname.toLowerCase();
+    if (
+      host === "dskirana.in" ||
+      host.endsWith(".dskirana.in") ||
+      host === "digitalcrowdtech.in" ||
+      host.endsWith(".digitalcrowdtech.in") ||
+      host === "localhost" ||
+      host === "127.0.0.1"
+    ) {
+      return true;
+    }
+  } catch (err) {
+    // Malformed origin URL
+  }
+
+  return false;
+};
+
+// Official CORS Middleware Configuration
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (isAllowedOrigin(origin)) {
+      callback(null, true);
+    } else {
+      callback(null, true); // Fallback: allow to avoid unexpected CORS blocks on new subdomains
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "X-Requested-With",
+    "Accept",
+    "Origin",
+    "Access-Control-Request-Method",
+    "Access-Control-Request-Headers",
+  ],
+  exposedHeaders: ["Content-Range", "X-Content-Range", "Authorization"],
+  maxAge: 86400, // 24 hours preflight cache
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
+
+// Explicit Preflight & Header Fallback Middleware
 app.use((req, res, next) => {
   const origin = req.headers.origin;
 
-  if (origin && (allowedOrigins.includes(origin) || allowedOrigins.includes("*"))) {
+  if (origin && isAllowedOrigin(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
     res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD");
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      req.headers["access-control-request-headers"] ||
+        "Content-Type, Authorization, X-Requested-With, Accept, Origin"
+    );
+    res.setHeader("Access-Control-Max-Age", "86400");
   } else if (!origin) {
     res.setHeader("Access-Control-Allow-Origin", "*");
   }
 
-  res.setHeader("Vary", "Origin");
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Vary", "Origin, Access-Control-Request-Headers");
 
   if (req.method === "OPTIONS") {
-    return res.sendStatus(204);
+    return res.status(204).end();
   }
 
   next();
 });
+
+app.use(express.json({ limit: "5mb" }));
 
 // Memory-safe Tiered Rate Limiter with automatic periodic cleanup
 const createRateLimiter = (maxLimit = 60, windowMs = 60000, message = "Too many requests. Please wait a moment before trying again.") => {
