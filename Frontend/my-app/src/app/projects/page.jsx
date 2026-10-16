@@ -26,7 +26,29 @@ export const metadata = {
   },
 };
 
-export default function ProjectsPage() {
+async function getProjectsData() {
+  try {
+    const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+    const res = await fetch(`${apiBase}/api/projects`, { next: { revalidate: 30 } });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.ok && Array.isArray(data.items) && data.items.length > 0) {
+        return data.items.map((p) => ({
+          ...p,
+          technologies: typeof p.technologies === "string" ? JSON.parse(p.technologies || "[]") : (p.technologies || []),
+          features: typeof p.features === "string" ? JSON.parse(p.features || "[]") : (p.features || []),
+        }));
+      }
+    }
+  } catch (err) {
+    // Graceful fallback to static PROJECTS
+  }
+  return PROJECTS;
+}
+
+export default async function ProjectsPage() {
+  const projectList = await getProjectsData();
+
   return (
     <div className="flex flex-col bg-transparent">
       {/* HERO */}
@@ -55,7 +77,7 @@ export default function ProjectsPage() {
       {/* PROJECTS LISTING */}
       <section className="py-20 bg-transparent border-b border-white/10 [html.light_&]:border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-          {PROJECTS.map((project) => {
+          {projectList.map((project) => {
             const hasDiagram = project.id === "ruchi-bazzar" || project.id === "school-management-system";
 
             return (
@@ -151,13 +173,15 @@ export default function ProjectsPage() {
                         </Link>
                       )}
                       {project.liveUrl && (
-                        <Link
+                        <a
                           href={project.liveUrl}
-                          className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-slate-200 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition"
+                          target={project.liveUrl.startsWith("http") ? "_blank" : undefined}
+                          rel={project.liveUrl.startsWith("http") ? "noopener noreferrer" : undefined}
+                          className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-emerald-300 hover:text-white bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 rounded-xl transition shadow-md group"
                         >
-                          <span>Visit Website</span>
-                          <ExternalLink size={15} />
-                        </Link>
+                          <span className="font-semibold">Go to Project</span>
+                          <ExternalLink size={15} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                        </a>
                       )}
                     </div>
                   </div>

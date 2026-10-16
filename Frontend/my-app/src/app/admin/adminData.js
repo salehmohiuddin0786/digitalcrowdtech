@@ -2,6 +2,7 @@
 
 import { BLOG_POSTS } from "../data/blogs";
 import { PROJECTS } from "../data/projects";
+import { PRODUCTS } from "../data/products";
 
 export const ADMIN_EMAIL = "admin@digitalcrowdtech.in";
 
@@ -448,3 +449,113 @@ export const uploadProjectImage = async (file) => {
 
   return data.url;
 };
+
+// ==========================================
+// PRODUCTS MANAGEMENT
+// ==========================================
+export const getAdminProducts = async () => {
+  try {
+    const result = await request("/api/admin/products", { auth: true });
+    if (Array.isArray(result.items) && result.items.length > 0) {
+      return result.items.map((p) => ({
+        ...p,
+        technologies: typeof p.technologies === "string" ? JSON.parse(p.technologies || "[]") : (p.technologies || []),
+        features: typeof p.features === "string" ? JSON.parse(p.features || "[]") : (p.features || []),
+      }));
+    }
+  } catch (err) {
+    console.warn("Backend products fetch warning:", err.message);
+  }
+
+  const stored = canUseStorage()
+    ? JSON.parse(window.localStorage.getItem("dct_admin_custom_products") || "[]")
+    : [];
+
+  const defaultList = PRODUCTS.map((p) => ({
+    id: p.id,
+    title: p.title,
+    slug: p.slug,
+    category: p.category,
+    label: p.label || "Ready to Deploy",
+    summary: p.summary,
+    description: p.description,
+    price: p.price || "Starting from ₹9,999",
+    technologies: p.technologies || [],
+    features: p.features || [],
+    liveUrl: p.liveUrl || null,
+    imageUrl: p.imageUrl || "/projects/ruchi-logo.png",
+    status: p.status || "Published",
+  }));
+
+  return [...stored, ...defaultList];
+};
+
+export const createProduct = async (payload) => {
+  try {
+    const result = await request("/api/admin/products", {
+      method: "POST",
+      auth: true,
+      body: JSON.stringify(payload),
+    });
+    const item = result.item;
+    return {
+      ...item,
+      technologies: typeof item.technologies === "string" ? JSON.parse(item.technologies || "[]") : (item.technologies || []),
+      features: typeof item.features === "string" ? JSON.parse(item.features || "[]") : (item.features || []),
+    };
+  } catch (err) {
+    const newProduct = {
+      id: `prod-local-${Date.now()}`,
+      ...payload,
+      technologies: Array.isArray(payload.technologies) ? payload.technologies : JSON.parse(payload.technologies || "[]"),
+      features: Array.isArray(payload.features) ? payload.features : JSON.parse(payload.features || "[]"),
+      createdAt: new Date().toISOString(),
+    };
+    if (canUseStorage()) {
+      const stored = JSON.parse(window.localStorage.getItem("dct_admin_custom_products") || "[]");
+      window.localStorage.setItem("dct_admin_custom_products", JSON.stringify([newProduct, ...stored]));
+    }
+    return newProduct;
+  }
+};
+
+export const updateProduct = async (id, payload) => {
+  try {
+    const result = await request(`/api/admin/products/${id}`, {
+      method: "PUT",
+      auth: true,
+      body: JSON.stringify(payload),
+    });
+    const item = result.item;
+    return {
+      ...item,
+      technologies: typeof item.technologies === "string" ? JSON.parse(item.technologies || "[]") : (item.technologies || []),
+      features: typeof item.features === "string" ? JSON.parse(item.features || "[]") : (item.features || []),
+    };
+  } catch (err) {
+    if (canUseStorage()) {
+      const stored = JSON.parse(window.localStorage.getItem("dct_admin_custom_products") || "[]");
+      const updated = stored.map((p) => (p.id === id ? { ...p, ...payload } : p));
+      window.localStorage.setItem("dct_admin_custom_products", JSON.stringify(updated));
+    }
+    return { id, ...payload };
+  }
+};
+
+export const deleteProduct = async (id) => {
+  try {
+    await request(`/api/admin/products/${id}`, {
+      method: "DELETE",
+      auth: true,
+    });
+  } catch (err) {
+    if (canUseStorage()) {
+      const stored = JSON.parse(window.localStorage.getItem("dct_admin_custom_products") || "[]");
+      const filtered = stored.filter((p) => p.id !== id);
+      window.localStorage.setItem("dct_admin_custom_products", JSON.stringify(filtered));
+    }
+  }
+};
+
+export const uploadProductImage = uploadProjectImage;
+

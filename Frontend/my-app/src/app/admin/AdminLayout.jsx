@@ -9,6 +9,7 @@ import {
   LogOut,
   MessagesSquare,
   Layers,
+  Package,
   ArrowLeft,
 } from "lucide-react";
 import { logoutAdmin } from "./adminData";
@@ -16,6 +17,7 @@ import { logoutAdmin } from "./adminData";
 const navItems = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { label: "Inquiries", href: "/admin/queries", icon: MessagesSquare },
+  { label: "Products", href: "/admin/products", icon: Package },
   { label: "Projects", href: "/admin/projects", icon: Layers },
   { label: "Blogs", href: "/admin/blogs", icon: FileText },
   { label: "Careers", href: "/admin/careers", icon: Briefcase },

@@ -64,6 +64,7 @@ export default function Header() {
   const navLinks = [
     { name: "Services", href: "/services", dropdownType: "services" },
     { name: "Projects", href: "/projects" },
+    { name: "Products", href: "/products" },
     { name: "About & Portfolio", href: "/about", dropdownType: "about" },
     { name: "Pricing", href: "/pricing" },
     { name: "Process", href: "/process" },
@@ -443,6 +444,18 @@ export default function Header() {
                 }`}
               >
                 Projects
+              </Link>
+
+              <Link
+                href="/products"
+                onClick={() => setMobileOpen(false)}
+                className={`px-3 py-2 text-sm font-semibold rounded-xl ${
+                  pathname.startsWith("/products") || pathname.startsWith("/product")
+                    ? "bg-[#2F7DE1]/15 text-[#2F7DE1]"
+                    : "text-slate-200 [html.light_&]:text-[#0A2540] hover:bg-white/5"
+                }`}
+              >
+                Products
               </Link>
 
               {/* Mobile About & Portfolio Accordion */}

@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkedIn Brand Kit Studio | Digital Crowd Technologies</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brand-blue: #0050B0;
+      --brand-blue-light: #2F7DE1;
+      --brand-orange: #F87000;
+      --brand-orange-light: #FFA048;
+      --dark-bg: #07090E;
+      --dark-card: #0D121F;
+      --text-main: #F1F5F9;
+      --text-muted: #94A3B8;
+      --border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--dark-bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(0, 80, 176, 0.22) 0%, transparent 45%),
+        radial-gradient(circle at 85% 35%, rgba(248, 112, 0, 0.18) 0%, transparent 40%),
+        radial-gradient(circle at 50% 85%, rgba(47, 125, 225, 0.12) 0%, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    /* Ambient Tech Grid */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+      width: 100%;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 9999px;
+      background: rgba(47, 125, 225, 0.12);
+      border: 1px solid rgba(47, 125, 225, 0.3);
+      color: var(--brand-blue-light);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+
+    .badge::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 10px #10B981;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #2F7DE1 0%, #F87000 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 16px;
+      max-width: 650px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Live LinkedIn Profile Card Preview */
+    .preview-section {
+      background: rgba(13, 18, 31, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: 28px;
+      padding: 32px;
+      margin-bottom: 48px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .section-title span.tag {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      padding: 4px 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+    }
+
+    /* Realistic LinkedIn Card Simulation */
+    .linkedin-mockup {
+      background: #1B1F23;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    /* Cover Banner Area */
+    .linkedin-banner-wrapper {
+      width: 100%;
+      height: 240px;
+      position: relative;
+      background: #0B0E14;
+      overflow: hidden;
+    }
+
+    .linkedin-banner-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: all 0.3s ease;
+    }
+
+    /* Bottom Info Card */
+    .linkedin-body {
+      padding: 0 24px 28px;
+      position: relative;
+    }
+
+    .avatar-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: -65px;
+      margin-bottom: 16px;
+    }
+
+    .avatar-circle-wrapper {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: #1B1F23;
+      border: 5px solid #1B1F23;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+      position: relative;
+      z-index: 2;
+    }
+
+    .avatar-circle-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .linkedin-actions {
+      display: flex;
+      gap: 12px;
+      padding-bottom: 8px;
+    }
+
+    .btn-linkedin-primary {
+      background: #0A66C2;
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 8px 20px;
+      border-radius: 9999px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-linkedin-secondary {
+      background: transparent;
+      color: #0A66C2;
+      border: 1.5px solid #0A66C2;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 8px 18px;
+      border-radius: 9999px;
+      cursor: pointer;
+    }
+
+    .linkedin-profile-name {
+      font-size: 24px;
+      font-weight: 800;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .verified-icon {
+      color: #0A66C2;
+      display: inline-flex;
+    }
+
+    .linkedin-headline {
+      font-size: 15px;
+      color: #E2E8F0;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .linkedin-meta {
+      font-size: 13px;
+      color: #94A3B8;
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .linkedin-meta a {
+      color: #70B5F9;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* Grid of Downloadable Assets */
+    .assets-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 28px;
+      margin-bottom: 40px;
+    }
+
+    .asset-card {
+      background: rgba(13, 18, 31, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .asset-card:hover {
+      border-color: rgba(47, 125, 225, 0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -10px rgba(0, 80, 176, 0.3);
+    }
+
+    .asset-preview-box {
+      width: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #05070B;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .asset-preview-box.square {
+      aspect-ratio: 1 / 1;
+      padding: 24px;
+    }
+
+    .asset-preview-box.wide {
+      aspect-ratio: 16 / 9;
+    }
+
+    .asset-preview-box img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .asset-preview-box.wide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .circle-guide-overlay {
+      position: absolute;
+      inset: 20px;
+      border-radius: 50%;
+      border: 2px dashed rgba(248, 112, 0, 0.6);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.15);
+    }
+
+    .circle-guide-overlay span {
+      background: rgba(0, 0, 0, 0.75);
+      color: #FFA048;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin-top: 130px;
+    }
+
+    .asset-info h3 {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .asset-specs {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--brand-blue-light);
+      margin-bottom: 12px;
+    }
+
+    .asset-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px 20px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #FFFFFF;
+      background: linear-gradient(135deg, #0050B0 0%, #2F7DE1 100%);
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      box-shadow: 0 8px 20px -4px rgba(0, 80, 176, 0.5);
+    }
+
+    .btn-download:hover {
+      background: linear-gradient(135deg, #0060D0 0%, #3D8EF5 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px -4px rgba(0, 80, 176, 0.7);
+    }
+
+    .btn-download.orange {
+      background: linear-gradient(135deg, #D45D00 0%, #F87000 100%);
+      box-shadow: 0 8px 20px -4px rgba(248, 112, 0, 0.4);
+    }
+
+    .btn-download.orange:hover {
+      background: linear-gradient(135deg, #E66600 0%, #FF8A24 100%);
+      box-shadow: 0 12px 25px -4px rgba(248, 112, 0, 0.6);
+    }
+
+    /* Specifications guide box */
+    .guidelines-box {
+      background: rgba(13, 18, 31, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 24px 28px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-top: 10px;
+    }
+
+    .guide-item h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .guide-item p {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Controls bar */
+    .controls-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 8px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      align-items: center;
+    }
+
+    .controls-bar label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .control-btn {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #FFFFFF;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .control-btn.active {
+      background: var(--brand-blue);
+      border-color: var(--brand-blue-light);
+    }
+
+    @media (max-width: 768px) {
+      .linkedin-banner-wrapper {
+        height: 160px;
+      }
+      .avatar-circle-wrapper {
+        width: 90px;
+        height: 90px;
+        margin-top: -45px;
+      }
+      .linkedin-profile-name {
+        font-size: 18px;
+      }
+      .linkedin-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="badge">Official LinkedIn Brand Kit</div>
+      <h1>LinkedIn Profile <span class="gradient-text">Logo &amp; Cover Studio</span></h1>
+      <p class="subtitle">
+        High-resolution corporate assets engineered for Digital Crowd Technologies' LinkedIn presence. Circle profile avatars and safe-zone cover banners ready for 1-click download.
+      </p>
+    </header>
+
+    <!-- LIVE LINKEDIN PROFILE MOCKUP PREVIEW -->
+    <div class="preview-section">
+      <div class="section-title">
+        <span>Live LinkedIn Profile Simulation</span>
+        <span class="tag">REAL-TIME PREVIEW</span>
+      </div>
+
+      <!-- Controls to switch preview -->
+      <div class="controls-bar">
+        <label>Avatar Style:</label>
+        <button class="control-btn active" onclick="switchAvatar('logo', this)">Full-Text Circle Badge</button>
+        <button class="control-btn" onclick="switchAvatar('monogram', this)">Geometric DCT Monogram</button>
+      </div>
+
+      <div class="linkedin-mockup">
+        <!-- Banner Image -->
+        <div class="linkedin-banner-wrapper">
+          <img 
+            id="mockup-banner" 
+            src="/linkedin-cover-banner.jpg" 
+            alt="LinkedIn Cover Banner" 
+            class="linkedin-banner-img"
+          >
+        </div>
+
+        <!-- Body Details -->
+        <div class="linkedin-body">
+          <div class="avatar-row">
+            <div class="avatar-circle-wrapper">
+              <img 
+                id="mockup-avatar" 
+                src="/linkedin-profile-logo.jpg" 
+                alt="LinkedIn Profile Avatar" 
+                class="avatar-circle-img"
+              >
+            </div>
+            <div class="linkedin-actions">
+              <button class="btn-linkedin-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Follow
+              </button>
+              <button class="btn-linkedin-secondary">Visit Website</button>
+            </div>
+          </div>
+
+          <div class="linkedin-profile-name">
+            Digital Crowd Technologies
+            <span class="verified-icon" title="Verified Organization">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#0A66C2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            </span>
+          </div>
+
+          <div class="linkedin-headline">
+            Custom Web Applications • SaaS ERPs • Full-Stack Software Engineering
+          </div>
+
+          <div class="linkedin-meta">
+            <span>Information Technology &amp; Services</span>
+            <span>Madhapur, Hyderabad, Telangana</span>
+            <a href="https://digitalcrowdtech.in" target="_blank" rel="noopener">digitalcrowdtech.in</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ASSET DOWNLOAD CARDS -->
+    <div class="section-title">
+      <span>Ready-To-Use Production Assets</span>
+      <span class="tag">CLICK TO DOWNLOAD</span>
+    </div>
+
+    <div class="assets-grid">
+      <!-- 1. Full-Text Circle Logo -->
+      <div class="asset-card">
+        <div>
+          <div class="asset-preview-box square">
+            <img src="/linkedin-profile-logo.jpg" alt="LinkedIn Profile Logo">
+            <div class="circle-guide-overlay">
+              <span>CIRCLE CROP SAFE</span>
+            </div>
+          </div>
+          <div class="asset-info">
+            <h3>Circle Profile Logo (Option 1)</h3>
+            <div class="asset-specs">800 × 800 PX • 1:1 RATIO • CIRCLE SAFE</div>
+            <p class="asset-desc">
+              Features the official "Digital Crowd Technologies" typography with luminous blue and orange neon ring border and tech network node graphics.
+            </p>
+          </div>
+        </div>
+        <a href="/linkedin-profile-logo.jpg" download="digital-crowd-linkedin-profile-logo.jpg" class="btn-download">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Download Circle Logo
+        </a>
+      </div>
+
+      <!-- 2. Geometric DCT Monogram -->
+      <div class="asset-card">
+        <div>
+          <div class="asset-preview-box square">
+            <img src="/linkedin-profile-monogram.jpg" alt="DCT Monogram Logo">
+            <div class="circle-guide-overlay">
+              <span>CIRCLE CROP SAFE</span>
+            </div>
+          </div>
+          <div class="asset-info">
+            <h3>Geometric DCT Monogram (Option 2)</h3>
+            <div class="asset-specs">800 × 800 PX • 1:1 RATIO • MONOGRAM</div>
+            <p class="asset-desc">
+              Bold isometric 3D "DCT" emblem with neon gradient rings and interconnected circuit nodes. Perfect for a futuristic tech agency avatar.
+            </p>
+          </div>
+        </div>
+        <a href="/linkedin-profile-monogram.jpg" download="digital-crowd-linkedin-monogram.jpg" class="btn-download orange">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Download Monogram Logo
+        </a>
+      </div>
+
+      <!-- 3. LinkedIn Cover Banner -->
+      <div class="asset-card">
+        <div>
+          <div class="asset-preview-box wide">
+            <img src="/linkedin-cover-banner.jpg" alt="LinkedIn Cover Banner">
+          </div>
+          <div class="asset-info">
+            <h3>LinkedIn Cover Banner</h3>
+            <div class="asset-specs">1584 × 396 / 1920 × 1080 • SAFE-ZONE OPTIMIZED</div>
+            <p class="asset-desc">
+              Clean left space engineered so LinkedIn's circular profile photo doesn't block the logo, stack tags, or company location details.
+            </p>
+          </div>
+        </div>
+        <a href="/linkedin-cover-banner.jpg" download="digital-crowd-linkedin-cover-banner.jpg" class="btn-download">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Download Cover Banner
+        </a>
+      </div>
+    </div>
+
+    <!-- SPECIFICATIONS CHEAT SHEET -->
+    <div class="section-title">
+      <span>LinkedIn Recommended Dimensions &amp; Upload Guide</span>
+      <span class="tag">SPECS &amp; BEST PRACTICES</span>
+    </div>
+
+    <div class="guidelines-box">
+      <div class="guide-item">
+        <h4>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2F7DE1" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          Profile Picture Guidelines
+        </h4>
+        <p>
+          Recommended upload: 400×400 px or 800×800 px (1:1 ratio). LinkedIn crops the image into a circle, so the emblem is positioned inside the central 80% safe circle zone.
+        </p>
+      </div>
+
+      <div class="guide-item">
+        <h4>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F87000" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line></svg>
+          Cover Banner Safe Zone
+        </h4>
+        <p>
+          Standard personal cover: 1584×396 px (4:1). Company page cover: 1128×191 px. The circular avatar sits over the bottom-left on desktop; all branding is placed on the center-right.
+        </p>
+      </div>
+
+      <div class="guide-item">
+        <h4>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          Brand Cohesion
+        </h4>
+        <p>
+          Both assets use Digital Crowd Technologies' signature electric royal blue (#0050B0), vibrant orange (#F87000), and dark obsidian tech background.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function switchAvatar(type, btn) {
+      document.querySelectorAll('.controls-bar .control-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const avatar = document.getElementById('mockup-avatar');
+      if (type === 'logo') {
+        avatar.src = '/linkedin-profile-logo.jpg';
+      } else {
+        avatar.src = '/linkedin-profile-monogram.jpg';
+      }
+    }
+  </script>
+</body>
+</html>

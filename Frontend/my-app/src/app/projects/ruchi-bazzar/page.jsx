@@ -17,6 +17,7 @@ import {
   ShieldCheck,
   ChevronRight,
   Sparkles,
+  ExternalLink,
 } from "lucide-react";
 import SectionHeading from "../../Component/SectionHeading";
 import { getProjectBySlug } from "../../data/projects";
@@ -73,6 +74,25 @@ export default function RuchiBazzarCaseStudyPage() {
                 {tech}
               </span>
             ))}
+          </div>
+
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+            <a
+              href="https://ruchibazzar.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-bold text-white bg-gradient-to-r from-[#F87000] to-[#FF8C2A] hover:opacity-95 rounded-xl shadow-lg shadow-orange-500/20 transition-all transform hover:-translate-y-0.5"
+            >
+              <span>Go to Project (ruchibazzar.com)</span>
+              <ExternalLink size={15} />
+            </a>
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition"
+            >
+              <span>Request Similar Platform</span>
+              <ArrowRight size={15} />
+            </Link>
           </div>
         </div>
       </section>

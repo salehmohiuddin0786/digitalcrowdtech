@@ -12,7 +12,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config({ override: true });
 
-const { defaultBlogs, defaultCareers, defaultProjects } = require("./defaultData");
+const { defaultBlogs, defaultCareers, defaultProjects, defaultProducts } = require("./defaultData");
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -341,6 +341,26 @@ const Project = sequelize.define(
   { tableName: "projects" }
 );
 
+const Product = sequelize.define(
+  "Product",
+  {
+    id: { type: DataTypes.STRING, primaryKey: true },
+    title: { type: DataTypes.STRING, allowNull: false },
+    slug: { type: DataTypes.STRING, allowNull: false, unique: true },
+    category: { type: DataTypes.STRING, allowNull: false, defaultValue: "Web Application" },
+    label: { type: DataTypes.STRING, defaultValue: "Ready to Deploy" },
+    summary: { type: DataTypes.TEXT, allowNull: false },
+    description: { type: DataTypes.TEXT("long"), allowNull: false },
+    price: { type: DataTypes.STRING, defaultValue: "Starting from ₹9,999" },
+    technologies: { type: DataTypes.TEXT, defaultValue: "[]" },
+    features: { type: DataTypes.TEXT, defaultValue: "[]" },
+    liveUrl: { type: DataTypes.STRING },
+    imageUrl: { type: DataTypes.STRING },
+    status: { type: DataTypes.ENUM("Published", "Draft"), defaultValue: "Published" },
+  },
+  { tableName: "products" }
+);
+
 const User = sequelize.define(
   "User",
   {
@@ -497,6 +517,13 @@ const seedDatabase = async () => {
     if (careerCount === 0) {
       await Career.bulkCreate(defaultCareers);
       console.log("Seeded default careers.");
+    }
+
+    // Seed Products if empty
+    const productCount = await Product.count();
+    if (productCount === 0) {
+      await Product.bulkCreate(defaultProducts);
+      console.log(`Seeded ${defaultProducts.length} default products into database.`);
     }
   } catch (err) {
     console.warn("Seeding warning:", err.message);
@@ -1057,6 +1084,105 @@ app.delete("/api/admin/projects/:id", requireAdmin, async (req, res) => {
       return res.status(404).json({ ok: false, message: "Project not found." });
     }
     return res.json({ ok: true, message: "Project deleted successfully." });
+  } catch (err) {
+    return res.status(500).json({ ok: false, message: err.message });
+  }
+});
+
+// ==========================================
+// PRODUCTS CRUD
+// ==========================================
+
+// Public Products
+app.get("/api/products", async (req, res) => {
+  try {
+    const products = await Product.findAll({
+      where: { status: "Published" },
+      order: [["createdAt", "ASC"]],
+    });
+    return res.json({ ok: true, items: toPlainItems(products) });
+  } catch {
+    return res.json({ ok: true, items: defaultProducts });
+  }
+});
+
+// Admin: Products List
+app.get("/api/admin/products", requireAdmin, async (req, res) => {
+  try {
+    const products = await Product.findAll({ order: [["createdAt", "DESC"]] });
+    return res.json({ ok: true, items: toPlainItems(products) });
+  } catch {
+    return res.json({ ok: true, items: defaultProducts });
+  }
+});
+
+// Admin: Create Product
+app.post("/api/admin/products", requireAdmin, async (req, res) => {
+  try {
+    const payload = {
+      title: sanitize(req.body.title),
+      slug: sanitize(req.body.slug) || sanitize(req.body.title).toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+      category: sanitize(req.body.category) || "Web Application",
+      label: sanitize(req.body.label) || "Ready to Deploy",
+      summary: sanitize(req.body.summary),
+      description: sanitize(req.body.description),
+      price: sanitize(req.body.price) || "Starting from ₹9,999",
+      technologies: typeof req.body.technologies === "string" ? req.body.technologies : JSON.stringify(req.body.technologies || []),
+      features: typeof req.body.features === "string" ? req.body.features : JSON.stringify(req.body.features || []),
+      liveUrl: sanitize(req.body.liveUrl),
+      imageUrl: sanitize(req.body.imageUrl),
+      status: sanitize(req.body.status) || "Published",
+    };
+
+    if (!payload.title || !payload.summary) {
+      return res.status(400).json({ ok: false, message: "Title and summary are required." });
+    }
+
+    const product = await Product.create({ id: createId("prod"), ...payload });
+    return res.status(201).json({ ok: true, item: product.get({ plain: true }) });
+  } catch (err) {
+    return res.status(500).json({ ok: false, message: err.message });
+  }
+});
+
+// Admin: Update Product
+app.put("/api/admin/products/:id", requireAdmin, async (req, res) => {
+  try {
+    const product = await Product.findByPk(req.params.id);
+    if (!product) {
+      return res.status(404).json({ ok: false, message: "Product not found." });
+    }
+
+    const payload = {
+      title: sanitize(req.body.title) || product.title,
+      slug: sanitize(req.body.slug) || product.slug,
+      category: sanitize(req.body.category) || product.category,
+      label: sanitize(req.body.label) !== undefined ? sanitize(req.body.label) : product.label,
+      summary: sanitize(req.body.summary) || product.summary,
+      description: sanitize(req.body.description) || product.description,
+      price: sanitize(req.body.price) || product.price,
+      technologies: typeof req.body.technologies === "string" ? req.body.technologies : JSON.stringify(req.body.technologies || []),
+      features: typeof req.body.features === "string" ? req.body.features : JSON.stringify(req.body.features || []),
+      liveUrl: sanitize(req.body.liveUrl) !== undefined ? sanitize(req.body.liveUrl) : product.liveUrl,
+      imageUrl: sanitize(req.body.imageUrl) !== undefined ? sanitize(req.body.imageUrl) : product.imageUrl,
+      status: sanitize(req.body.status) || product.status,
+    };
+
+    await product.update(payload);
+    return res.json({ ok: true, item: product.get({ plain: true }) });
+  } catch (err) {
+    return res.status(500).json({ ok: false, message: err.message });
+  }
+});
+
+// Admin: Delete Product
+app.delete("/api/admin/products/:id", requireAdmin, async (req, res) => {
+  try {
+    const deletedCount = await Product.destroy({ where: { id: req.params.id } });
+    if (!deletedCount) {
+      return res.status(404).json({ ok: false, message: "Product not found." });
+    }
+    return res.json({ ok: true, message: "Product deleted successfully." });
   } catch (err) {
     return res.status(500).json({ ok: false, message: err.message });
   }

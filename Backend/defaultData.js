@@ -302,8 +302,109 @@ const defaultProjects = [
   },
 ];
 
+const defaultProducts = [
+  {
+    id: "prod-ruchi-bazzar",
+    title: "Ruchi Bazzar - Food & Grocery Delivery Ecosystem",
+    slug: "ruchi-bazzar-food-delivery",
+    category: "Food Delivery & Hyperlocal SaaS",
+    label: "Flagship Turnkey Platform",
+    summary:
+      "A complete multi-portal food ordering and hyperlocal grocery delivery ecosystem connecting customer storefront, restaurant kitchen portal, delivery rider fleet app, and superadmin management.",
+    description:
+      "Engineered as a high-efficiency monorepo. Features mobile OTP customer login, real-time WebSocket order tracking (Order Placed → Cooking → Dispatched → Delivered), restaurant menu & kitchen order tablet management, delivery partner dispatch, coupon matrix, and a centralized superadmin console.",
+    price: "Starting from ₹19,999",
+    technologies: JSON.stringify(["Next.js", "React", "Node.js", "Express.js", "MySQL", "Socket.io", "Tailwind CSS"]),
+    features: JSON.stringify([
+      "Customer storefront web app with dish customizations & coupon codes",
+      "Dedicated restaurant merchant portal for live kitchen order acceptance",
+      "Delivery rider fleet interface with route details & payout tracking",
+      "SuperAdmin central control for restaurant KYC, commissions & tax compliance",
+      "Real-time bidirectional WebSocket event streaming with Socket.io",
+      "Zero aggregator commissions: 100% direct restaurant revenue",
+    ]),
+    liveUrl: "https://ruchibazzar.com",
+    imageUrl: "/projects/ruchi-logo.png",
+    status: "Published",
+  },
+  {
+    id: "prod-school-erp",
+    title: "EduMaster - School & College Management ERP",
+    slug: "edumaster-school-management-erp",
+    category: "Education ERP & Institutional SaaS",
+    label: "Multi-Role Institutional ERP",
+    summary:
+      "A complete 4-portal campus management platform designed to automate student admissions, daily attendance, fee ledger with PDF invoicing, and real-time parent notifications.",
+    description:
+      "Consolidates educational operations into dedicated role-based portals (SuperAdmin, Teacher, Student, Parent) backed by a normalized MySQL schema and secure REST API. Solves paper-based administrative friction and fragmented parent communication.",
+    price: "Starting from ₹14,999",
+    technologies: JSON.stringify(["Next.js", "React", "Node.js", "Express.js", "MySQL", "Sequelize"]),
+    features: JSON.stringify([
+      "Role-Based Access Control (RBAC) across 4 dedicated stakeholder portals",
+      "Automated student admission records, class promotion & document storage",
+      "Fee structure management with installment tracking, penalties & PDF receipts",
+      "1-Click teacher attendance logging with monthly percentage statistics",
+      "Parent portal for fee dues alerts, report cards & academic notices",
+      "Multi-branch management support for educational trusts and groups",
+    ]),
+    liveUrl: "/projects/school-management-system",
+    imageUrl: "/projects/ruchi-logo.png",
+    status: "Published",
+  },
+  {
+    id: "prod-retail-ecommerce",
+    title: "QuickKirana - Retail & Grocery E-Commerce Platform",
+    slug: "quickkirana-retail-ecommerce",
+    category: "Retail E-Commerce & Storefront",
+    label: "Ready-to-Deploy E-Commerce",
+    summary:
+      "High-speed modern digital storefront engineered for local supermarkets, FMCG retailers, and wholesale distributors with instant product search, cart persistence, and 1-tap WhatsApp ordering.",
+    description:
+      "Built for Indian retail businesses to bridge the gap between offline store counters and online ordering. Delivers sub-second mobile loading speeds, direct UPI & payment gateway checkouts, and instant order notifications sent straight to the merchant's WhatsApp.",
+    price: "Starting from ₹9,999",
+    technologies: JSON.stringify(["Next.js 16", "React 19", "Node.js", "MySQL", "Tailwind CSS", "WhatsApp API"]),
+    features: JSON.stringify([
+      "Ultra-fast product catalog with live category filtering & barcode search",
+      "1-Tap WhatsApp order forwarding with automated itemized billing",
+      "Integrated UPI, cards, and Cash on Delivery (COD) checkout options",
+      "Store owner inventory management dashboard with low-stock alerts",
+      "Mobile-first responsive design optimized for Core Web Vitals",
+      "Google Local SEO ready with structured schema markup",
+    ]),
+    liveUrl: "https://dskirana.in",
+    imageUrl: "/logo.png",
+    status: "Published",
+  },
+  {
+    id: "prod-enterprise-agency-suite",
+    title: "Enterprise Agency Website & Inquiry CMS",
+    slug: "enterprise-agency-website-cms",
+    category: "Corporate Web Platform & CMS",
+    label: "Turnkey Agency Solution",
+    summary:
+      "Production-grade corporate website engine featuring verified lead capture pipelines, dynamic blog publishing, modern dark/light glassmorphic UI, and full admin management.",
+    description:
+      "A complete solution designed for IT service providers, consulting agencies, and professional firms. Eliminates slow bloated WordPress setups with a modern Next.js 16 App Router frontend, Express backend, MySQL database, and automated Nodemailer notification pipelines.",
+    price: "Starting from ₹4,999",
+    technologies: JSON.stringify(["Next.js 16", "React 19", "Node.js", "Express.js", "MySQL", "Nodemailer"]),
+    features: JSON.stringify([
+      "Complete client lead qualification pipeline with instant email alerts",
+      "Integrated administrative dashboard for inquiries, blogs & assets",
+      "Dynamic SEO blog engine with reading time and category filters",
+      "Accessible dark/light theme design system with micro-interactions",
+      "Zero template lock-in: 100% full source code and database ownership",
+      "Built-in security: JWT auth, bcrypt password hashing & rate limiting",
+    ]),
+    liveUrl: "/",
+    imageUrl: "/logo.png",
+    status: "Published",
+  },
+];
+
 module.exports = {
   defaultBlogs,
   defaultCareers,
   defaultProjects,
+  defaultProducts,
 };
+
