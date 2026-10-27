@@ -8,7 +8,6 @@ import {
   Sparkles,
 } from "lucide-react";
 import SectionHeading from "../Component/SectionHeading";
-import { HaikeiMeshGlow, HaikeiWave } from "../Component/HaikeiDecorations";
 import { COMPANY } from "../data/company";
 
 export const metadata = {
@@ -22,81 +21,80 @@ export const metadata = {
 
 export default function PricingPage() {
   return (
-    <div className="flex flex-col">
-      {/* HERO */}
-      <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 overflow-hidden border-b border-white/10 [html.light_&]:border-slate-200">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-[#2F7DE1]/20 to-[#F87000]/15 blur-[120px] pointer-events-none -z-10 rounded-full" />
+    <div className="flex flex-col bg-slate-50/50 [html.dark_&]:bg-transparent">
+      {/* 1. HERO */}
+      <section className="relative pt-12 pb-16 md:pt-20 md:pb-24 overflow-hidden border-b border-slate-200 [html.dark_&]:border-[#22344D]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-[#2F7DE1]/10 border border-[#2F7DE1]/30 text-[#2F7DE1] mb-6 backdrop-blur-md">
-            <Sparkles size={13} />
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold bg-[#567785]/10 text-[#567785] [html.dark_&]:text-[#8EAEBD] border border-[#567785]/30 mb-4">
+            <Sparkles size={14} className="text-[#E89228]" />
             <span>Transparent Pricing Policy</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white [html.light_&]:text-[#0A2540] tracking-tight leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#1E293B] [html.dark_&]:text-white tracking-tight leading-tight">
             Simple Starting Prices
           </h1>
 
-          <p className="mt-6 text-base sm:text-lg text-[#C5CEDD] [html.light_&]:text-[#40484C] leading-relaxed">
-            Honest baseline pricing without hidden markups or misleading enterprise tiers. We provide clear milestone estimates based on your functional scope.
+          <p className="mt-4 text-sm sm:text-base text-slate-600 [html.dark_&]:text-slate-300 leading-relaxed">
+            Honest baseline pricing without hidden markups or inflated subscription tiers. We provide clear milestone estimates based on your exact functional scope.
           </p>
 
-          <div className="mt-6 p-3 rounded-xl bg-[#2F7DE1]/10 border border-[#2F7DE1]/25 max-w-lg mx-auto text-xs text-[#2F7DE1] font-semibold">
+          <div className="mt-5 p-2.5 rounded-lg bg-[#FFF3E0] border border-[#FFD099] max-w-md mx-auto text-xs text-[#E89228] font-bold">
             * Final pricing depends on project requirements.
           </div>
         </div>
       </section>
 
-      {/* THE ONLY TWO PUBLIC PRICES */}
-      <section className="py-20 bg-transparent border-b border-white/10 [html.light_&]:border-slate-200">
+      {/* 2. THE TWO PUBLIC BASELINE PRICING CARDS */}
+      <section className="py-14 md:py-20 bg-transparent border-b border-slate-200 [html.dark_&]:border-[#22344D]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             
             {/* 1. Business Website */}
-            <div className="p-8 sm:p-10 rounded-3xl glass-card-premium shadow-2xl relative group hover:border-[#2F7DE1]/40 transition flex flex-col justify-between">
+            <div className="p-7 sm:p-9 rounded-2xl bg-white [html.dark_&]:bg-[#152234] border border-slate-200 [html.dark_&]:border-[#26364A] shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
               <div>
-                <span className="text-xs font-bold text-[#2F7DE1] uppercase tracking-wider block mb-2">
+                <span className="text-[11px] font-black text-[#567785] uppercase tracking-wider block mb-1">
                   Professional Presence
                 </span>
-                <h2 className="text-2xl font-bold text-white [html.light_&]:text-[#0A2540] mb-2">
+                <h2 className="text-xl sm:text-2xl font-black text-[#1E293B] [html.dark_&]:text-white mb-2">
                   Business Website Development
                 </h2>
                 
-                <div className="my-6 flex items-baseline gap-2">
-                  <span className="text-4xl sm:text-5xl font-black text-white [html.light_&]:text-[#0A2540]">
+                <div className="my-5 flex items-baseline gap-2">
+                  <span className="text-4xl sm:text-5xl font-black text-[#1E293B] [html.dark_&]:text-white">
                     ₹4,999
                   </span>
-                  <span className="text-xs text-[#8494AD] [html.light_&]:text-[#64748B] uppercase font-mono">
+                  <span className="text-xs text-slate-400 uppercase font-mono font-bold">
                     Starting from
                   </span>
                 </div>
 
-                <p className="text-sm text-[#C5CEDD] [html.light_&]:text-[#40484C] mb-6 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-600 [html.dark_&]:text-slate-300 mb-5 leading-relaxed">
                   For professional business websites. Fast, responsive, and optimized to capture customer inquiries and WhatsApp messages.
                 </p>
 
-                <div className="p-3 rounded-xl bg-white/[0.03] [html.light_&]:bg-slate-50 border border-white/10 [html.light_&]:border-slate-200 text-xs text-[#8494AD] [html.light_&]:text-[#64748B] mb-6 font-medium">
+                <div className="p-2.5 rounded-lg bg-slate-50 [html.dark_&]:bg-slate-800 border border-slate-200 [html.dark_&]:border-slate-700 text-xs text-slate-500 mb-6 font-medium">
                   Final pricing depends on project requirements.
                 </div>
 
-                <ul className="space-y-3 text-xs sm:text-sm text-[#C5CEDD] [html.light_&]:text-[#40484C] mb-8">
+                <ul className="space-y-3 text-xs sm:text-sm text-slate-700 [html.dark_&]:text-slate-300 mb-8">
                   <li className="flex items-center gap-2.5">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>Responsive mobile, tablet & desktop layout</span>
+                    <Check size={16} className="text-[#27AE60] shrink-0" />
+                    <span>Responsive mobile, tablet &amp; desktop layout</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
+                    <Check size={16} className="text-[#27AE60] shrink-0" />
                     <span>Essential business pages (Home, About, Services, Contact)</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>WhatsApp quick-chat & interactive contact form</span>
+                    <Check size={16} className="text-[#27AE60] shrink-0" />
+                    <span>WhatsApp quick-chat &amp; interactive contact form</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>SEO-friendly HTML structure & Google Maps embed</span>
+                    <Check size={16} className="text-[#27AE60] shrink-0" />
+                    <span>SEO-friendly HTML structure &amp; Google Maps embed</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
+                    <Check size={16} className="text-[#27AE60] shrink-0" />
                     <span>Complete deployment assistance on your hosting</span>
                   </li>
                 </ul>
@@ -105,7 +103,7 @@ export default function PricingPage() {
               <div>
                 <Link
                   href="/contact"
-                  className="w-full inline-flex items-center justify-center py-3.5 text-sm font-bold text-[#0B1220] [html.light_&]:text-white bg-[#F87000] hover:bg-[#FF8A24] rounded-full shadow-lg shadow-orange-500/25 transition-all duration-200 transform hover:-translate-y-0.5"
+                  className="w-full btn-brand-orange py-3 text-xs font-bold text-center"
                 >
                   Start Your Project
                 </Link>
@@ -113,56 +111,56 @@ export default function PricingPage() {
             </div>
 
             {/* 2. Custom Website & Web Application */}
-            <div className="p-8 sm:p-10 rounded-3xl glass-card-premium border-2 border-[#2F7DE1]/60 shadow-2xl relative flex flex-col justify-between overflow-hidden">
-              <div className="absolute -top-3 right-8 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#2F7DE1] text-white">
+            <div className="p-7 sm:p-9 rounded-2xl bg-white [html.dark_&]:bg-[#152234] border-2 border-[#567785] shadow-md transition-all flex flex-col justify-between relative">
+              <div className="absolute -top-3 right-6 px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#567785] text-white">
                 Full-Stack Architecture
               </div>
 
               <div>
-                <span className="text-xs font-bold text-[#2F7DE1] uppercase tracking-wider block mb-2">
-                  Database & Application Logic
+                <span className="text-[11px] font-black text-[#567785] uppercase tracking-wider block mb-1">
+                  Database &amp; Application Logic
                 </span>
-                <h2 className="text-2xl font-bold text-white [html.light_&]:text-[#0A2540] mb-2">
-                  Custom Website & Web Application
+                <h2 className="text-xl sm:text-2xl font-black text-[#1E293B] [html.dark_&]:text-white mb-2">
+                  Custom Web Application
                 </h2>
                 
-                <div className="my-6 flex items-baseline gap-2">
-                  <span className="text-4xl sm:text-5xl font-black text-white [html.light_&]:text-[#0A2540]">
+                <div className="my-5 flex items-baseline gap-2">
+                  <span className="text-4xl sm:text-5xl font-black text-[#1E293B] [html.dark_&]:text-white">
                     ₹9,999
                   </span>
-                  <span className="text-xs text-[#8494AD] [html.light_&]:text-[#64748B] uppercase font-mono">
+                  <span className="text-xs text-slate-400 uppercase font-mono font-bold">
                     Starting from
                   </span>
                 </div>
 
-                <p className="text-sm text-[#C5CEDD] [html.light_&]:text-[#40484C] mb-6 leading-relaxed">
-                  For custom websites and web applications requiring frontend, backend, database and custom functionality.
+                <p className="text-xs sm:text-sm text-slate-600 [html.dark_&]:text-slate-300 mb-5 leading-relaxed">
+                  For custom web applications requiring frontend, backend REST APIs, relational database and tailored functionality.
                 </p>
 
-                <div className="p-3 rounded-xl bg-white/[0.03] [html.light_&]:bg-slate-50 border border-white/10 [html.light_&]:border-slate-200 text-xs text-[#8494AD] [html.light_&]:text-[#64748B] mb-6 font-medium">
+                <div className="p-2.5 rounded-lg bg-slate-50 [html.dark_&]:bg-slate-800 border border-slate-200 [html.dark_&]:border-slate-700 text-xs text-slate-500 mb-6 font-medium">
                   Final pricing depends on project requirements.
                 </div>
 
-                <ul className="space-y-3 text-xs sm:text-sm text-[#C5CEDD] [html.light_&]:text-[#40484C] mb-8">
+                <ul className="space-y-3 text-xs sm:text-sm text-slate-700 [html.dark_&]:text-slate-300 mb-8">
                   <li className="flex items-center gap-2.5">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
+                    <Check size={16} className="text-[#27AE60] shrink-0" />
                     <span>Custom Next.js/React frontend with dynamic components</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
+                    <Check size={16} className="text-[#27AE60] shrink-0" />
                     <span>Node.js / Express backend with modular REST APIs</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
+                    <Check size={16} className="text-[#27AE60] shrink-0" />
                     <span>MySQL / MongoDB relational database modeling</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>Authentication, role-based access & admin dashboards</span>
+                    <Check size={16} className="text-[#27AE60] shrink-0" />
+                    <span>Authentication, admin controls, and business logic</span>
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>API integrations, payment handling & VPS configuration</span>
+                    <Check size={16} className="text-[#27AE60] shrink-0" />
+                    <span>Production deployment on your Ubuntu VPS with SSL</span>
                   </li>
                 </ul>
               </div>
@@ -170,113 +168,34 @@ export default function PricingPage() {
               <div>
                 <Link
                   href="/contact"
-                  className="w-full inline-flex items-center justify-center py-3.5 text-sm font-bold text-[#0B1220] [html.light_&]:text-white bg-[#F87000] hover:bg-[#FF8A24] rounded-full shadow-lg shadow-orange-500/25 transition-all duration-200 transform hover:-translate-y-0.5"
+                  className="w-full btn-brand-orange py-3 text-xs font-bold text-center"
                 >
-                  Discuss Your Project
+                  Discuss Application Scope
                 </Link>
               </div>
             </div>
 
           </div>
-        </div>
-      </section>
 
-      {/* ALL OTHER SERVICES: REQUEST A CUSTOM QUOTE */}
-      <section className="py-20 bg-transparent border-b border-white/10 [html.light_&]:border-slate-200">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            badge="Complex Software & Specialized Systems"
-            title="Custom Software & Enterprise Solutions"
-            subtitle="To guarantee realistic quotes, specialized systems are scoped individually based on your business logic, integrations, and user roles."
-          />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {[
-              {
-                title: "E-Commerce Platforms & Marketplaces",
-                desc: "Online stores, multi-vendor catalogs, delivery fleet routing, kitchen dashboards, and real-time Socket.io orders (like Ruchi Bazzar).",
-                action: "Request a Custom Quote",
-              },
-              {
-                title: "ERP & Operations Software",
-                desc: "Inventory management across warehouses, CRM ledgers, staff attendance, automated GST invoicing, and financial reporting.",
-                action: "Request a Custom Quote",
-              },
-              {
-                title: "School Management Software",
-                desc: "Four dedicated portals for Super Admins, Teachers, Students, and Parents with fee installment tracking and attendance percentage calculations.",
-                action: "Request a Custom Quote",
-              },
-              {
-                title: "Backend & API Engineering",
-                desc: "High-performance Node.js APIs, database optimization, authentication engines, and third-party webhook integrations.",
-                action: "Request a Custom Quote",
-              },
-            ].map((sol) => (
-              <div
-                key={sol.title}
-                className="p-7 rounded-3xl glass-card-premium flex flex-col justify-between shadow-xl hover:border-[#2F7DE1]/40 transition"
-              >
-                <div>
-                  <h3 className="text-lg font-bold text-white [html.light_&]:text-[#0A2540] mb-2">{sol.title}</h3>
-                  <p className="text-xs sm:text-sm text-[#8494AD] [html.light_&]:text-[#64748B] leading-relaxed mb-6">{sol.desc}</p>
-                </div>
-                <div className="pt-4 border-t border-white/10 [html.light_&]:border-slate-200 flex items-center justify-between">
-                  <span className="text-xs font-semibold text-[#8494AD] [html.light_&]:text-[#64748B]">Custom Scope</span>
-                  <Link
-                    href="/contact"
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-[#F87000] hover:text-[#FF8A24] transition-colors"
-                  >
-                    <span>{sol.action}</span>
-                    <ArrowRight size={13} />
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* INFRASTRUCTURE & THIRD PARTY TRANSPARENCY */}
-      <section className="py-16 bg-transparent border-b border-white/10 [html.light_&]:border-slate-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="p-8 rounded-3xl glass-card-premium space-y-4 shadow-xl">
-            <div className="flex items-center gap-2 text-amber-400">
-              <AlertCircle size={20} />
-              <h3 className="text-base font-bold text-white [html.light_&]:text-[#0A2540]">
-                Domain, Hosting & Third-Party Infrastructure Services
-              </h3>
-            </div>
-            <p className="text-xs sm:text-sm text-[#C5CEDD] [html.light_&]:text-[#40484C] leading-relaxed">
-              We operate on 100% transparency. Domain registration (e.g. from Namecheap, Cloudflare, or GoDaddy), hosting servers/VPS (e.g. Hostinger, DigitalOcean, or AWS), and third-party messaging/payment APIs (e.g. SMS OTP packs, payment gateway transaction charges) are infrastructure services billed separately by the respective service providers.
-            </p>
-            <p className="text-xs sm:text-sm text-[#8494AD] [html.light_&]:text-[#64748B] leading-relaxed">
-              We help you configure all accounts directly in your own name so you retain full, permanent ownership without proprietary agency lock-in.
+          {/* Pricing Disclaimer */}
+          <div className="mt-8 text-center max-w-xl mx-auto space-y-2">
+            <p className="text-xs text-slate-500">
+              * Final pricing depends on project requirements. Domain, hosting, third-party APIs or infrastructure services may be billed separately where applicable.
             </p>
           </div>
         </div>
       </section>
 
-      {/* FINAL PRICING CTA */}
-      <section className="py-20 bg-transparent text-center">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="p-8 sm:p-12 rounded-3xl glass-card-premium shadow-2xl space-y-4">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white [html.light_&]:text-[#0A2540]">
-              Need Something Custom? Get a Quote
-            </h2>
-            <p className="text-sm text-[#8494AD] [html.light_&]:text-[#64748B] max-w-xl mx-auto">
-              Tell us about your project specifications. We will review your requirements and provide an accurate, transparent milestone quote.
-            </p>
-            <div className="pt-4">
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-bold text-[#0B1220] [html.light_&]:text-white bg-[#F87000] hover:bg-[#FF8A24] rounded-full shadow-lg shadow-orange-500/25 transition-all duration-200 transform hover:scale-105 active:scale-95"
-              >
-                <span>Request a Custom Quote</span>
-                <ArrowRight size={15} />
-              </Link>
-            </div>
-          </div>
+      {/* 3. CTA */}
+      <section className="py-14 text-center">
+        <div className="max-w-xl mx-auto px-4">
+          <Link
+            href="/contact"
+            className="btn-peach text-xs font-bold"
+          >
+            <span>Need Something Custom? Request a Written Quote</span>
+            <ArrowRight size={13} className="ml-1.5" />
+          </Link>
         </div>
       </section>
     </div>

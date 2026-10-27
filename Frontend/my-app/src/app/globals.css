@@ -2,18 +2,33 @@
 
 :root {
   /* Default: Dark Theme */
-  --bg-page: #0B1220;
-  --bg-section: #101A2E;
-  --bg-card: #16223A;
-  --border-card: #26344F;
+  --bg-page: #0C131D;
+  --bg-section: #101B2A;
+  --bg-card: #152234;
+  --border-card: #22344D;
   --text-heading: #FFFFFF;
-  --text-body: #C5CEDD;
-  --text-muted: #8494AD;
+  --text-body: #C5D1E0;
+  --text-muted: #8A9CAE;
   
-  --primary-orange: #F87000;
-  --primary-orange-hover: #FF8A24;
-  --primary-orange-dark: #F84800;
-  --primary-btn-text: #0B1220;
+  /* Screenshot Signature Color Tokens */
+  --petrol-blue: #567785;
+  --petrol-blue-dark: #415C68;
+  --petrol-blue-light: #6D8E9D;
+  --petrol-blue-surface: #1E2D38;
+  
+  --primary-orange: #E89228;
+  --primary-orange-hover: #D78119;
+  --primary-orange-dark: #C47214;
+  --primary-btn-text: #FFFFFF;
+
+  --peach-fill: #FFF3E0;
+  --peach-border: #FFD099;
+  --peach-hover: #FFE0B2;
+  --peach-text: #E89228;
+
+  --savings-green: #27AE60;
+  --savings-green-light: #E8F8EE;
+  --savings-green-border: #A9DFBF;
 
   --accent-blue: #2F7DE1;
   --logo-blue: #0050B0;
@@ -21,7 +36,7 @@
   --charcoal: #40484C;
   --wordmark-tech: #FFFFFF;
   
-  --status-success: #22C55E;
+  --status-success: #27AE60;
   --status-error: #EF4444;
 
   --background: var(--bg-page);
@@ -30,18 +45,32 @@
 
 /* Explicit Light Mode */
 html.light {
-  --bg-page: #FFFFFF;
-  --bg-section: #F4F7FB;
+  --bg-page: #F5F6F8;
+  --bg-section: #FFFFFF;
   --bg-card: #FFFFFF;
   --border-card: #E2E8F0;
-  --text-heading: #0A2540;
-  --text-body: #40484C;
+  --text-heading: #1E293B;
+  --text-body: #475569;
   --text-muted: #64748B;
   
-  --primary-orange: #F87000;
-  --primary-orange-hover: #E86500;
-  --primary-orange-dark: #F84800;
+  --petrol-blue: #567785;
+  --petrol-blue-dark: #415C68;
+  --petrol-blue-light: #EBF0F3;
+  --petrol-blue-surface: #567785;
+
+  --primary-orange: #E89228;
+  --primary-orange-hover: #D78119;
+  --primary-orange-dark: #C47214;
   --primary-btn-text: #FFFFFF;
+
+  --peach-fill: #FFF3E0;
+  --peach-border: #FFD099;
+  --peach-hover: #FFE0B2;
+  --peach-text: #E89228;
+
+  --savings-green: #27AE60;
+  --savings-green-light: #E8F8EE;
+  --savings-green-border: #A9DFBF;
 
   --accent-blue: #0050B0;
   --logo-blue: #0050B0;
@@ -56,18 +85,32 @@ html.light {
 /* System Default: prefers-color-scheme light (when not explicitly forced dark) */
 @media (prefers-color-scheme: light) {
   html:not(.dark) {
-    --bg-page: #FFFFFF;
-    --bg-section: #F4F7FB;
+    --bg-page: #F5F6F8;
+    --bg-section: #FFFFFF;
     --bg-card: #FFFFFF;
     --border-card: #E2E8F0;
-    --text-heading: #0A2540;
-    --text-body: #40484C;
+    --text-heading: #1E293B;
+    --text-body: #475569;
     --text-muted: #64748B;
     
-    --primary-orange: #F87000;
-    --primary-orange-hover: #E86500;
-    --primary-orange-dark: #F84800;
+    --petrol-blue: #567785;
+    --petrol-blue-dark: #415C68;
+    --petrol-blue-light: #EBF0F3;
+    --petrol-blue-surface: #567785;
+
+    --primary-orange: #E89228;
+    --primary-orange-hover: #D78119;
+    --primary-orange-dark: #C47214;
     --primary-btn-text: #FFFFFF;
+
+    --peach-fill: #FFF3E0;
+    --peach-border: #FFD099;
+    --peach-hover: #FFE0B2;
+    --peach-text: #E89228;
+
+    --savings-green: #27AE60;
+    --savings-green-light: #E8F8EE;
+    --savings-green-border: #A9DFBF;
 
     --accent-blue: #0050B0;
     --logo-blue: #0050B0;
@@ -198,12 +241,136 @@ html:not(.dark) .text-slate-500 {
 /* Ensure brand CTA buttons retain crisp white text in light mode */
 html.light a[class*="bg-[#F87000]"],
 html.light button[class*="bg-[#F87000]"],
+html.light a[class*="bg-[#E89228]"],
+html.light button[class*="bg-[#E89228]"],
 html.light .btn-primary-brand,
 html:not(.dark) a[class*="bg-[#F87000]"],
 html:not(.dark) button[class*="bg-[#F87000]"],
+html:not(.dark) a[class*="bg-[#E89228]"],
+html:not(.dark) button[class*="bg-[#E89228]"],
 html:not(.dark) .btn-primary-brand {
-  background-color: #F87000 !important;
+  background-color: #E89228 !important;
   color: #FFFFFF !important;
+}
+
+/* UI/UX Pro Max & Screenshot Design Classes */
+.bg-petrol {
+  background-color: var(--petrol-blue) !important;
+  color: #FFFFFF !important;
+}
+.bg-petrol-dark {
+  background-color: var(--petrol-blue-dark) !important;
+  color: #FFFFFF !important;
+}
+.text-petrol {
+  color: var(--petrol-blue) !important;
+}
+.border-petrol {
+  border-color: var(--petrol-blue) !important;
+}
+
+.btn-brand-orange {
+  background-color: #E89228;
+  color: #FFFFFF;
+  font-weight: 700;
+  border-radius: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px -2px rgba(232, 146, 40, 0.35);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-brand-orange:hover {
+  background-color: #D78119;
+  box-shadow: 0 6px 18px -2px rgba(232, 146, 40, 0.45);
+  transform: translateY(-1px);
+}
+
+.btn-peach {
+  background-color: #FFF3E0;
+  color: #E89228;
+  border: 1px solid #FFD099;
+  font-weight: 700;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-peach:hover {
+  background-color: #FFE0B2;
+  border-color: #E89228;
+  transform: translateY(-1px);
+}
+
+.badge-savings {
+  background-color: #E8F8EE;
+  color: #27AE60;
+  border: 1px solid #A9DFBF;
+  font-weight: 700;
+  border-radius: 9999px;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.badge-discount {
+  background-color: #E89228;
+  color: #FFFFFF;
+  font-weight: 800;
+  border-radius: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+}
+
+.category-tile {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 1rem;
+  padding: 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  box-shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.05);
+}
+.category-tile:hover {
+  border-color: #567785;
+  box-shadow: 0 10px 24px -6px rgba(86, 119, 133, 0.2);
+  transform: translateY(-3px);
+}
+.category-tile .tile-icon-container {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 0.875rem;
+  background-color: rgba(86, 119, 133, 0.1);
+  border: 1px solid rgba(86, 119, 133, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+  color: #567785;
+  transition: all 0.2s ease;
+}
+.category-tile:hover .tile-icon-container {
+  background-color: #567785;
+  color: #FFFFFF;
+  transform: scale(1.08);
+}
+.category-tile .tile-title {
+  font-weight: 800;
+  font-size: 0.8125rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-heading);
 }
 
 /* Custom Scrollbar */
