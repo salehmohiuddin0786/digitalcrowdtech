@@ -20,23 +20,20 @@ import {
   Cpu,
   Clock,
   Check,
-  ShoppingBag,
-  CreditCard,
-  Building,
-  GraduationCap,
-  Percent,
-  Phone,
 } from "lucide-react";
 import HeroArchitectureVisual from "./Component/HeroArchitectureVisual";
 import SectionHeading from "./Component/SectionHeading";
-import { HaikeiMeshGlow, StatusBadge } from "./Component/HaikeiDecorations";
+import { HaikeiMeshGlow, StatusBadge, HaikeiWave, HaikeiLayeredWave } from "./Component/HaikeiDecorations";
 import FlipWords from "./Component/FlipWords";
 import BorderBeam from "./Component/BorderBeam";
+import SpotlightCard from "./Component/SpotlightCard";
 import TechMarquee from "./Component/TechMarquee";
+import ShimmerButton from "./Component/ShimmerButton";
+import TiltCard from "./Component/TiltCard";
+import ProjectArchitectureDiagram from "./Component/ProjectArchitectureDiagram";
 import { COMPANY } from "./data/company";
 import { SERVICES } from "./data/services";
 import { PROJECTS } from "./data/projects";
-import { PRODUCTS } from "./data/products";
 import { FAQS } from "./data/faqs";
 
 export const metadata = {
@@ -49,88 +46,29 @@ export const metadata = {
 };
 
 export default function HomePage() {
-  const categories = [
-    {
-      title: "BUSINESS WEBSITES",
-      desc: "Fast, responsive & inquiry-ready",
-      price: "From ₹4,999",
-      icon: Globe,
-      href: "/services/business-website-development",
-    },
-    {
-      title: "CUSTOM WEB APPS",
-      desc: "Full-stack tailored applications",
-      price: "From ₹9,999",
-      icon: Code2,
-      href: "/services/custom-web-application-development",
-    },
-    {
-      title: "ECOMMERCE STORES",
-      desc: "Catalog, cart & UPI payment",
-      price: "Turnkey Platform",
-      icon: ShoppingBag,
-      href: "/services/ecommerce-development",
-    },
-    {
-      title: "ERP SYSTEMS",
-      desc: "Multi-role operations & accounts",
-      price: "Modular Software",
-      icon: Database,
-      href: "/services/erp-development",
-    },
-    {
-      title: "SCHOOL MANAGEMENT",
-      desc: "Admissions, fees & parent app",
-      price: "4-Portal Suite",
-      icon: GraduationCap,
-      href: "/services/school-management-software",
-    },
-    {
-      title: "BACKEND & REST APIS",
-      desc: "High-throughput Node.js & MySQL",
-      price: "Secure APIs",
-      icon: Server,
-      href: "/services/backend-api-development",
-    },
-    {
-      title: "PAYMENT INTEGRATION",
-      desc: "Razorpay, Cashfree & UPI",
-      price: "Instant Settlement",
-      icon: CreditCard,
-      href: "/contact",
-    },
-    {
-      title: "VPS & DEPLOYMENT",
-      desc: "Ubuntu, Nginx, SSL & Cloud",
-      price: "Full Handover",
-      icon: ShieldCheck,
-      href: "/process",
-    },
-  ];
-
   const whyPoints = [
     {
       title: "Business-Focused Development",
       description:
-        "We understand your commercial model, customer workflows, and operational requirements before writing a single line of code.",
+        "We understand your business model, customer workflows, and operational requirements before writing a single line of code.",
       icon: Zap,
     },
     {
-      title: "Modern Technology Stack",
+      title: "Modern Technology",
       description:
         "We use proven, production-grade frontend, backend, and database technologies (React, Next.js, Node.js, Express, MySQL) built for longevity.",
       icon: Code2,
     },
     {
-      title: "Unified Engineering Team",
+      title: "Complete Development",
       description:
-        "Frontend, backend APIs, relational database schemas, payment integrations, and cloud deployment handled under one unified Hyderabad team.",
+        "Frontend, backend APIs, relational database schemas, payment integrations, and cloud deployment handled under one unified engineering team.",
       icon: Layers,
     },
     {
       title: "Responsive by Default",
       description:
-        "Every website and web application is engineered to perform seamlessly across smartphones, tablets, laptops, and desktop screens.",
+        "Every website and web application is engineered to perform seamlessly across mobile phones, tablets, laptops, and desktop displays.",
       icon: Smartphone,
     },
     {
@@ -140,9 +78,9 @@ export default function HomePage() {
       icon: ShieldCheck,
     },
     {
-      title: "100% Code Ownership",
+      title: "Post-Launch Support",
       description:
-        "Zero vendor lock-in. Full source code, database scripts, configurations, and administrative access are completely handed over to you.",
+        "Comprehensive support for deployment, domain setup, server monitoring, bug fixes, updates, and ongoing improvements.",
       icon: Clock,
     },
   ];
@@ -176,138 +114,138 @@ export default function HomePage() {
     },
   ];
 
-  const homeFaqs = FAQS.slice(0, 8);
+  const homeFaqs = FAQS.slice(0, 9);
 
   return (
     <div className="flex flex-col">
-      {/* 1. HERO SECTION (Screenshot 1 Carousel/Hero Reference) */}
-      <section className="relative pt-8 pb-14 md:pt-16 md:pb-20 overflow-hidden border-b border-slate-200 [html.dark_&]:border-[#22344D]">
+      {/* 1. HERO SECTION */}
+      <section className="relative pt-12 pb-16 md:pt-20 md:pb-24 overflow-hidden border-b border-[#26344F]/60 [html.light_&]:border-slate-200">
+        {/* Haikei Generative Tech Mesh & Radial Gradient Glow Background */}
         <HaikeiMeshGlow />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             
-            {/* Left Column: Headline, Value Prop & CTAs */}
-            <div className="lg:col-span-6 space-y-5 text-center lg:text-left">
+            {/* Left Content Column */}
+            <div className="lg:col-span-6 space-y-6 text-center lg:text-left">
+              {/* Motion Primitives Animated Status Badge */}
               <div className="flex items-center justify-center lg:justify-start">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#E8F8EE] text-[#27AE60] border border-[#A9DFBF]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#27AE60] animate-pulse" />
-                  <span>Available for New Projects • Hyderabad &amp; Pan-India</span>
-                </div>
+                <StatusBadge text="Available for New Projects" tone="emerald" />
               </div>
 
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#1E293B] [html.dark_&]:text-white tracking-tight leading-[1.15]">
+              {/* Primary Headline */}
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5.5xl font-black text-white [html.light_&]:text-[#0A2540] tracking-tight leading-[1.15]">
                 We Design. <br className="hidden sm:inline" />
                 We Develop. <br className="hidden sm:inline" />
-                <span className="text-[#E89228]">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2F7DE1] via-[#2F7DE1] to-[#F87000]">
                   We Deploy.
                 </span>
               </h1>
 
-              {/* Dynamic Capability Subtitle */}
-              <div className="flex items-center justify-center lg:justify-start gap-2 text-sm sm:text-base font-semibold text-slate-600 [html.dark_&]:text-slate-300">
-                <span>Engineering modern</span>
+              {/* 21st.dev Dynamic FlipWords Capability Display */}
+              <div className="flex items-center justify-center lg:justify-start gap-2 text-sm sm:text-base font-medium text-[#8494AD] [html.light_&]:text-slate-600">
+                <span>Building high-performance</span>
                 <FlipWords
                   words={[
+                    "Web Applications",
                     "Business Websites",
-                    "Custom Web Applications",
                     "E-Commerce Systems",
-                    "ERP & School Software",
-                    "High-Throughput APIs",
+                    "Relational Databases",
+                    "Custom REST APIs",
                   ]}
                   duration={2400}
-                  className="font-bold text-[#567785] [html.dark_&]:text-[#6D8E9D]"
+                  className="font-bold"
                 />
               </div>
 
-              <p className="text-sm sm:text-base text-slate-600 [html.dark_&]:text-slate-300 leading-relaxed max-w-xl mx-auto lg:mx-0">
-                Digital Crowd Technologies builds dependable business websites, full-stack software, and turnkey digital commerce platforms backed by Node.js, Express, MySQL, and Next.js.
+              {/* Primary Description */}
+              <p className="text-base sm:text-lg text-[#C5CEDD] [html.light_&]:text-[#40484C] leading-relaxed max-w-xl mx-auto lg:mx-0">
+                Digital Crowd Technologies builds professional websites, custom web applications, e-commerce platforms and backend systems for businesses in Hyderabad and across India.
               </p>
 
-              {/* Dual Action CTAs matching Screenshot Colors */}
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-2">
-                <Link
-                  href="/contact"
-                  className="w-full sm:w-auto btn-brand-orange text-sm font-bold shadow-md"
-                >
+              {/* Supporting Line: Full Stack Capability */}
+              <div className="flex items-center justify-center lg:justify-start gap-2 text-xs font-mono text-[#2F7DE1] py-1">
+                <span className="px-3 py-1.5 rounded-full bg-[#2F7DE1]/10 border border-[#2F7DE1]/25 font-semibold">
+                  Frontend + Backend + Database + APIs + Deployment
+                </span>
+              </div>
+
+              {/* 21st.dev CTA Buttons with ShimmerButton */}
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
+                <ShimmerButton href="/contact">
                   <span>Start Your Project</span>
-                  <ArrowRight size={15} className="ml-1.5" />
-                </Link>
+                </ShimmerButton>
                 <Link
-                  href="/products"
-                  className="w-full sm:w-auto btn-peach text-sm font-bold"
+                  href="/projects"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-semibold text-white [html.light_&]:text-[#0A2540] bg-[#16223A] [html.light_&]:bg-slate-100 hover:bg-white/10 [html.light_&]:hover:bg-slate-200 border border-[#26344F] [html.light_&]:border-slate-300 rounded-full transition-all duration-200"
                 >
-                  <span>Explore Turnkey Systems</span>
-                  <ChevronRight size={15} className="ml-1" />
+                  <span>View Our Work</span>
+                  <ChevronRight size={16} />
                 </Link>
               </div>
 
               {/* Verified Trust Badges */}
-              <div className="pt-4 grid grid-cols-3 gap-3 border-t border-slate-200 [html.dark_&]:border-slate-800 text-left">
+              <div className="pt-4 grid grid-cols-3 gap-3 border-t border-[#26344F]/80 [html.light_&]:border-slate-200 text-left">
                 <div className="flex flex-col">
-                  <span className="text-xs font-black text-[#1E293B] [html.dark_&]:text-white">Authentic Code</span>
-                  <span className="text-[11px] text-slate-500 font-medium">Zero cracked templates</span>
+                  <span className="text-xs font-bold text-white [html.light_&]:text-[#0A2540]">Authentic Code</span>
+                  <span className="text-[11px] text-[#8494AD] [html.light_&]:text-[#64748B]">Zero fake templates</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs font-black text-[#E89228]">From ₹4,999</span>
-                  <span className="text-[11px] text-slate-500 font-medium">Transparent pricing</span>
+                  <span className="text-xs font-bold text-[#F87000]">From ₹4,999</span>
+                  <span className="text-[11px] text-[#8494AD] [html.light_&]:text-[#64748B]">Transparent pricing</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs font-black text-[#27AE60]">100% Handover</span>
-                  <span className="text-[11px] text-slate-500 font-medium">Source code ownership</span>
+                  <span className="text-xs font-bold text-white [html.light_&]:text-[#0A2540]">Full Handover</span>
+                  <span className="text-[11px] text-[#8494AD] [html.light_&]:text-[#64748B]">100% source ownership</span>
                 </div>
-              </div>
-
-              {/* Carousel Pagination Indicator (Screenshot 1 Reference) */}
-              <div className="pt-2 flex items-center justify-center lg:justify-start gap-1.5">
-                <span className="w-5 h-1.5 rounded-full bg-[#E89228]" />
-                <span className="w-1.5 h-1.5 rounded-full bg-slate-300 [html.dark_&]:bg-slate-700" />
-                <span className="w-1.5 h-1.5 rounded-full bg-slate-300 [html.dark_&]:bg-slate-700" />
               </div>
             </div>
 
-            {/* Right Column: Interactive Terminal Preview */}
+            {/* Right Visual Column (Interactive Terminal Architecture) */}
             <div className="lg:col-span-6 w-full flex justify-center">
               <HeroArchitectureVisual />
             </div>
 
           </div>
         </div>
+
+        {/* Subtle luminous accent divider */}
+        <div className="mt-12 sm:mt-16 w-full h-px bg-gradient-to-r from-transparent via-[#2F7DE1]/40 to-transparent" />
       </section>
 
-      {/* 2. CORE TECH STACK MARQUEE */}
-      <section className="py-4 bg-white/70 [html.dark_&]:bg-[#101B2A]/70 backdrop-blur-md border-b border-slate-200 [html.dark_&]:border-[#22344D] overflow-hidden">
+      {/* 2. TECHNOLOGY STRIP WITH 21ST.DEV INFINITE MARQUEE */}
+      <section className="py-6 bg-white/[0.02] [html.light_&]:bg-white/60 backdrop-blur-xl border-y border-white/5 [html.light_&]:border-slate-200/80 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-center gap-3">
+          <div className="flex flex-col lg:flex-row items-center gap-4">
             <div className="shrink-0 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#567785]" />
-              <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 [html.dark_&]:text-slate-400">
-                Engineering Stack:
+              <span className="w-2 h-2 rounded-full bg-[#2F7DE1] animate-pulse" />
+              <span className="text-xs font-bold uppercase tracking-wider text-[#8494AD] [html.light_&]:text-[#64748B]">
+                Core Tech Stack:
               </span>
             </div>
             <div className="w-full flex-1 overflow-hidden">
               <TechMarquee
-                speed={26}
+                speed={28}
                 pauseOnHover={true}
                 items={[
                   "React",
-                  "Next.js",
+                  "Next.js 16",
                   "Node.js",
                   "Express.js",
                   "MySQL Relational DB",
-                  "Tailwind CSS",
-                  "REST APIs",
-                  "JWT Security",
-                  "Socket.io",
+                  "PostgreSQL",
+                  "Tailwind CSS v4",
+                  "REST & GraphQL APIs",
+                  "JWT & Bcrypt Security",
                   "Linux VPS & Ubuntu",
-                  "Razorpay & Cashfree",
-                  "Nginx Reverse Proxy",
+                  "Sequelize ORM",
+                  "Framer Motion",
                 ].map((tech) => (
                   <div
                     key={tech}
-                    className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white [html.dark_&]:bg-[#152234] border border-slate-200 [html.dark_&]:border-[#2A3E59] text-slate-700 [html.dark_&]:text-slate-200 shadow-sm"
+                    className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white/[0.04] [html.light_&]:bg-white border border-white/10 [html.light_&]:border-slate-200 text-[#C5CEDD] [html.light_&]:text-[#40484C] hover:text-[#2F7DE1] hover:border-[#2F7DE1]/40 shadow-sm transition-all duration-200 cursor-default"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#E89228]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#2F7DE1]" />
                     <span>{tech}</span>
                   </div>
                 ))}
@@ -317,306 +255,367 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3. ALL CATEGORIES GRID (Screenshot 1 Reference: 4-Column Category Grid) */}
-      <section className="py-14 md:py-20 bg-slate-50/60 [html.dark_&]:bg-transparent border-b border-slate-200 [html.dark_&]:border-[#22344D]">
+      {/* 3. SERVICES: WHAT WE BUILD */}
+      <section className="py-20 md:py-28 bg-transparent border-b border-white/5 [html.light_&]:border-slate-200/80 relative" id="services">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
-            badge="Solutions & Offerings"
-            title="ALL CATEGORIES"
-            subtitle="Explore our complete software and development specializations, structured for businesses of all scales."
+            badge="Solutions & Services"
+            title="What We Build"
+            subtitle="From professional business websites to complete custom software, we build digital solutions around your requirements."
           />
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-            {categories.map((cat) => {
-              const Icon = cat.icon;
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {SERVICES.map((service) => {
+              const isBusinessSite = service.id === "business-website-development";
+              const isCustomApp = service.id === "custom-web-application-development";
+
               return (
-                <Link
-                  key={cat.title}
-                  href={cat.href}
-                  className="category-tile group"
+                <SpotlightCard
+                  key={service.id}
+                  className="p-7 flex flex-col justify-between group"
                 >
-                  <div className="tile-icon-container">
-                    <Icon size={24} />
-                  </div>
-                  <h3 className="tile-title group-hover:text-[#567785] transition-colors">
-                    {cat.title}
-                  </h3>
-                  <p className="text-[11px] text-slate-500 [html.dark_&]:text-slate-400 mt-1 line-clamp-1">
-                    {cat.desc}
-                  </p>
-                  <span className="mt-3 inline-block px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#FFF3E0] text-[#E89228] border border-[#FFD099]">
-                    {cat.price}
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
-
-          <div className="mt-8 text-center">
-            <Link
-              href="/services"
-              className="inline-flex items-center gap-2 text-xs font-bold text-[#567785] hover:text-[#415C68] px-4 py-2 rounded-lg bg-white [html.dark_&]:bg-[#152234] border border-slate-200 [html.dark_&]:border-slate-700 shadow-sm transition"
-            >
-              <span>View Detailed Service Breakdowns &amp; Deliverables</span>
-              <ArrowRight size={13} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. TURNKEY PRODUCTS SHOWCASE (Screenshot 4 Reference: Vertical Row Cards with Badges & Peach Buttons) */}
-      <section className="py-14 md:py-20 bg-white [html.dark_&]:bg-[#0D1520] border-b border-slate-200 [html.dark_&]:border-[#22344D]" id="turnkey">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            badge="Verified Live Platforms"
-            title="FEATURED TURNKEY SYSTEMS"
-            subtitle="Ready-to-deploy digital platforms with live websites, customer storefronts, admin control suites, and zero aggregator commissions."
-          />
-
-          <div className="space-y-6 max-w-5xl mx-auto">
-            {PRODUCTS.map((prod) => (
-              <div
-                key={prod.id}
-                className="bg-white [html.dark_&]:bg-[#152234] border border-slate-200 [html.dark_&]:border-[#26364A] rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-md transition-all duration-200"
-              >
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                  
-                  {/* Left Media Container with Discount/Price Badge matching Screenshot 4 */}
-                  <div className="md:col-span-4 relative rounded-xl bg-slate-100 [html.dark_&]:bg-[#1A2A40] p-6 flex flex-col items-center justify-center text-center border border-slate-200 [html.dark_&]:border-[#2A3E59] overflow-hidden min-h-[170px]">
-                    <span className="absolute top-2.5 left-2.5 badge-discount">
-                      Turnkey Platform
-                    </span>
-                    <div className="w-14 h-14 rounded-2xl bg-white [html.dark_&]:bg-[#152234] flex items-center justify-center text-[#567785] shadow-sm mb-2 border border-slate-200 [html.dark_&]:border-slate-700">
-                      <ShoppingBag size={28} className="text-[#567785]" />
-                    </div>
-                    <span className="text-xs font-mono font-bold text-slate-700 [html.dark_&]:text-slate-300">
-                      {prod.category}
-                    </span>
-                    {prod.liveUrl && (
-                      <span className="mt-1 text-[10px] text-[#27AE60] font-bold flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#27AE60] animate-ping" />
-                        Live Demo Available
+                  <div>
+                    {/* Card Header: Number & Badge */}
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-xs font-mono font-bold text-blue-400 px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20">
+                        {service.number}
                       </span>
-                    )}
-                  </div>
-
-                  {/* Right Product Details matching Screenshot 4 */}
-                  <div className="md:col-span-8 space-y-3">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <h3 className="text-lg sm:text-xl font-extrabold uppercase text-[#1E293B] [html.dark_&]:text-white">
-                        {prod.title}
-                      </h3>
-                      {prod.label && (
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 [html.dark_&]:bg-slate-800 text-[#567785] [html.dark_&]:text-[#8EAEBD] border border-slate-200 [html.dark_&]:border-slate-700">
-                          {prod.label}
+                      {service.startingPrice && service.startingPrice.includes("₹") ? (
+                        <span className="text-xs font-bold text-emerald-400 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                          {service.startingPrice}
+                        </span>
+                      ) : (
+                        <span className="text-[11px] font-medium text-slate-400 px-2 py-0.5 rounded bg-white/5">
+                          Custom Quote
                         </span>
                       )}
                     </div>
 
-                    {/* Pricing Row: Price, Strikethrough, Green Savings Badge */}
-                    <div className="flex flex-wrap items-center gap-2.5">
-                      <span className="text-xl sm:text-2xl font-black text-[#1E293B] [html.dark_&]:text-white">
-                        {prod.price}
-                      </span>
-                      <span className="text-xs text-slate-400 line-through">
-                        ₹35,000 Estimate
-                      </span>
-                      <span className="badge-savings">
-                        <CheckCircle2 size={12} />
-                        Save ₹15,000+
-                      </span>
-                    </div>
+                    {/* Title */}
+                    <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors mb-2.5">
+                      {service.title}
+                    </h3>
 
-                    <p className="text-xs sm:text-sm text-slate-600 [html.dark_&]:text-slate-300 leading-relaxed">
-                      {prod.summary}
+                    {/* Summary */}
+                    <p className="text-sm text-slate-400 leading-relaxed mb-6">
+                      {service.summary}
                     </p>
 
-                    {/* Key Bullets */}
-                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1 text-xs text-slate-600 [html.dark_&]:text-slate-400">
-                      {prod.features.slice(0, 4).map((f, i) => (
-                        <li key={i} className="flex items-start gap-1.5">
-                          <Check size={14} className="text-[#27AE60] shrink-0 mt-0.5" />
-                          <span className="line-clamp-1">{f}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    {/* Action Buttons: Peach button on right matching Screenshot 4 */}
-                    <div className="pt-2 flex flex-wrap items-center gap-3">
-                      {prod.liveUrl && (
-                        <a
-                          href={prod.liveUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn-peach text-xs font-bold"
-                        >
-                          <span>View Live Storefront Demo</span>
-                          <ExternalLink size={13} className="ml-1.5" />
-                        </a>
+                    {/* Key Technical Bullets */}
+                    <div className="space-y-2 mb-6">
+                      {service.id === "backend-api-development" && (
+                        <div className="flex flex-wrap gap-1.5 text-[11px] text-slate-300">
+                          {[
+                            "Node.js",
+                            "Express.js",
+                            "REST APIs",
+                            "Auth & RBAC",
+                            "Database Integration",
+                            "OTP & Payments",
+                            "Real-Time WebSockets",
+                          ].map((t) => (
+                            <span key={t} className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/5">
+                              {t}
+                            </span>
+                          ))}
+                        </div>
                       )}
-                      <Link
-                        href="/contact"
-                        className="btn-brand-orange text-xs font-bold"
-                      >
-                        <span>Acquire Platform</span>
-                        <ArrowRight size={13} className="ml-1.5" />
-                      </Link>
-                    </div>
 
+                      {service.id === "erp-development" && (
+                        <div className="flex flex-wrap gap-1.5 text-[11px] text-slate-300">
+                          {[
+                            "Inventory",
+                            "Customers",
+                            "Orders",
+                            "Employees",
+                            "Accounts",
+                            "Reports",
+                            "Admin Dashboard",
+                            "Role-Based Access",
+                          ].map((t) => (
+                            <span key={t} className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/5">
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {service.id === "school-management-software" && (
+                        <div className="flex flex-wrap gap-1.5 text-[11px] text-slate-300">
+                          {[
+                            "Students",
+                            "Teachers",
+                            "Parents",
+                            "Attendance",
+                            "Fees",
+                            "Notices",
+                            "Timetable",
+                            "Reports",
+                            "Admin Dashboard",
+                          ].map((t) => (
+                            <span key={t} className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/5">
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {isBusinessSite && (
+                        <div className="flex flex-wrap gap-1.5 text-[11px] text-slate-300">
+                          {[
+                            "Responsive Layouts",
+                            "Contact & WhatsApp",
+                            "SEO Semantic HTML",
+                            "Fast Performance",
+                            "VPS / Cloud Setup",
+                          ].map((t) => (
+                            <span key={t} className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/5">
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {isCustomApp && (
+                        <div className="flex flex-wrap gap-1.5 text-[11px] text-slate-300">
+                          {[
+                            "Frontend + Backend",
+                            "MySQL Relational DB",
+                            "Authentication & RBAC",
+                            "Admin Dashboards",
+                            "Payment APIs",
+                          ].map((t) => (
+                            <span key={t} className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/5">
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {service.id === "ecommerce-development" && (
+                        <div className="flex flex-wrap gap-1.5 text-[11px] text-slate-300">
+                          {[
+                            "Product Catalog",
+                            "Shopping Cart",
+                            "UPI & Card Checkout",
+                            "Orders & Coupons",
+                            "Merchant Portal",
+                          ].map((t) => (
+                            <span key={t} className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/5">
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
 
-                </div>
-              </div>
-            ))}
+                  {/* Card Bottom CTA */}
+                  <div className="pt-4 border-t border-white/5 flex items-center justify-between">
+                    <span className="text-[11px] text-slate-500">
+                      {service.startingPrice && service.startingPrice.includes("₹")
+                        ? "Starting price"
+                        : "Custom requirements"}
+                    </span>
+                    <Link
+                      href={`/services/${service.slug}`}
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-400 group-hover:text-blue-300 transition-colors"
+                    >
+                      <span>{service.ctaText}</span>
+                      <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform" />
+                    </Link>
+                  </div>
+                </SpotlightCard>
+              );
+            })}
           </div>
 
-          <div className="mt-8 text-center">
+          <div className="mt-10 text-center">
             <Link
-              href="/products"
-              className="inline-flex items-center gap-2 text-xs font-bold text-[#567785] hover:text-[#415C68]"
+              href="/services"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-slate-300 hover:text-white px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition"
             >
-              <span>Explore All Products &amp; Turnkey Packages</span>
-              <ArrowRight size={13} />
+              <span>Explore All Detailed Service Pages</span>
+              <ArrowRight size={15} />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* 5. OFFERS & PACKAGES TABS (Screenshot 3 Reference) */}
-      <section className="py-14 md:py-20 bg-slate-50/60 [html.dark_&]:bg-transparent border-b border-slate-200 [html.dark_&]:border-[#22344D]">
+      {/* 4. FEATURED PROJECTS: OUR WORK */}
+      <section className="py-20 md:py-28 bg-transparent border-b border-white/5 [html.light_&]:border-slate-200/80 relative" id="projects">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
-            badge="Clear Packages"
-            title="PACKAGES &amp; OFFERS"
-            subtitle="Predictable deliverables and transparent scopes engineered for direct business deployment."
+            badge="Verified Portfolio"
+            title="Our Work"
+            subtitle="Explore real digital products and software solutions built by Digital Crowd Technologies."
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            
-            {/* Offer Card 1 */}
-            <div className="bg-white [html.dark_&]:bg-[#152234] border border-slate-200 [html.dark_&]:border-[#26364A] rounded-2xl p-6 shadow-sm hover:shadow-md transition-all space-y-4 flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-[#567785] bg-[#567785]/10 px-2 py-0.5 rounded">
-                    Web Presence
-                  </span>
-                  <span className="badge-savings">Save ₹5,000</span>
-                </div>
-                <h3 className="text-base font-black uppercase text-[#E89228] mt-2">
-                  BUSINESS WEBSITE PACKAGE
-                </h3>
-                <div className="my-2">
-                  <span className="text-2xl font-black text-slate-900 [html.dark_&]:text-white">₹4,999</span>
-                  <span className="text-xs text-slate-400 line-through ml-2">₹9,999</span>
-                </div>
-                <p className="text-xs text-slate-600 [html.dark_&]:text-slate-400 leading-relaxed">
-                  Fast, mobile-ready 5-page business website with WhatsApp chat, contact forms, Google Map, and SEO semantic structure.
-                </p>
-                <div className="pt-3 border-t border-slate-100 [html.dark_&]:border-slate-800 text-[11px] text-slate-500">
-                  Deliverable in 5–7 business days with full source code.
-                </div>
-              </div>
-              <Link
-                href="/contact"
-                className="w-full btn-peach text-xs font-bold text-center"
-              >
-                Choose Website Package
-              </Link>
-            </div>
+          <div className="space-y-12">
+            {PROJECTS.map((project, idx) => {
+              const isEven = idx % 2 === 1;
 
-            {/* Offer Card 2 */}
-            <div className="bg-white [html.dark_&]:bg-[#152234] border-2 border-[#567785] rounded-2xl p-6 shadow-md transition-all space-y-4 flex flex-col justify-between relative">
-              <span className="absolute -top-3 right-5 px-2.5 py-0.5 text-[9px] font-black uppercase tracking-wider bg-[#567785] text-white rounded-full">
-                Most Popular
+              return (
+                <div
+                  key={project.id}
+                  className="rounded-3xl glass-card-premium p-6 sm:p-8 lg:p-10 shadow-2xl relative overflow-hidden group"
+                >
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    
+                    {/* Project Info */}
+                    <div className={`lg:col-span-6 space-y-4 ${isEven ? "lg:order-2" : "lg:order-1"}`}>
+                      {project.isInternal ? (
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 border border-amber-500/30 text-amber-300">
+                          <span>{project.label}</span>
+                        </div>
+                      ) : (
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 border border-blue-500/20 text-blue-400">
+                          <span>{project.category}</span>
+                        </div>
+                      )}
+
+                      <h3 className="text-2xl sm:text-3xl font-extrabold text-white [html.light_&]:text-[#0A2540]">
+                        {project.title}
+                      </h3>
+
+                      <p className="text-sm sm:text-base text-slate-300 [html.light_&]:text-slate-600 leading-relaxed">
+                        {project.summary}
+                      </p>
+
+                      {/* Tech Pills */}
+                      <div className="flex flex-wrap gap-1.5 pt-1">
+                        {project.technologies.slice(0, 6).map((tech) => (
+                          <span
+                            key={tech}
+                            className="px-2.5 py-1 text-xs font-mono font-medium rounded-md bg-white/5 [html.light_&]:bg-slate-100 text-slate-300 [html.light_&]:text-slate-700 border border-white/5 [html.light_&]:border-slate-200"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Features Snippet */}
+                      <ul className="space-y-1.5 pt-2 text-xs sm:text-sm text-slate-400 [html.light_&]:text-slate-600">
+                        {project.features.slice(0, 4).map((feat, fIdx) => (
+                          <li key={fIdx} className="flex items-start gap-2">
+                            <CheckCircle2 size={15} className="text-blue-400 shrink-0 mt-0.5" />
+                            <span>{feat}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      {/* CTA */}
+                      <div className="pt-4 flex items-center gap-4">
+                        {project.caseStudyUrl ? (
+                          <Link
+                            href={project.caseStudyUrl}
+                            className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-xl shadow-md transition"
+                          >
+                            <span>View Case Study</span>
+                            <ArrowRight size={15} />
+                          </Link>
+                        ) : (
+                          <Link
+                            href={project.liveUrl || "/"}
+                            className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white [html.light_&]:text-[#0A2540] bg-white/10 [html.light_&]:bg-slate-100 hover:bg-white/15 [html.light_&]:hover:bg-slate-200 border border-white/10 [html.light_&]:border-slate-300 rounded-xl transition"
+                          >
+                            <span>Live Internal Site</span>
+                            <ArrowRight size={15} />
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Project Architecture & Mock Visual */}
+                    <div className={`lg:col-span-6 ${isEven ? "lg:order-1" : "lg:order-2"}`}>
+                      {project.id === "ruchi-bazzar" || project.id === "school-management-system" ? (
+                        <ProjectArchitectureDiagram projectId={project.id} />
+                      ) : (
+                        <TiltCard tiltAmount={6}>
+                          <div className="rounded-2xl glass-card-premium p-5 space-y-4 shadow-inner">
+                            <div className="flex items-center justify-between pb-3 border-b border-white/5 text-xs">
+                              <span className="font-mono text-slate-400 flex items-center gap-1.5">
+                                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                                {project.title.toLowerCase().replace(/\s+/g, "-")} :: overview
+                              </span>
+                              <span className="text-[11px] font-semibold text-slate-400">
+                                {project.category}
+                              </span>
+                            </div>
+
+                            <div className="space-y-2.5 text-xs text-slate-300 [html.light_&]:text-slate-700">
+                              <div className="p-3 rounded-lg bg-white/[0.02] [html.light_&]:bg-slate-50 border border-white/5 [html.light_&]:border-slate-200">
+                                <span className="font-semibold text-white [html.light_&]:text-slate-900 block mb-0.5">Agency Infrastructure & Admin Portal</span>
+                                <p className="text-slate-400 [html.light_&]:text-slate-600 text-[11px]">
+                                  Next.js App Router frontend with authenticated inquiry CRM, MySQL persistence, and Nodemailer integration.
+                                </p>
+                              </div>
+                              <div className="grid grid-cols-2 gap-2 text-[11px]">
+                                <div className="p-2 rounded bg-white/[0.02] [html.light_&]:bg-slate-50 border border-white/5 [html.light_&]:border-slate-200">
+                                  <span className="text-blue-400 font-semibold block">Inquiry Tracking</span>
+                                  <span className="text-slate-400 [html.light_&]:text-slate-600">New → Contacted → Done</span>
+                                </div>
+                                <div className="p-2 rounded bg-white/[0.02] [html.light_&]:bg-slate-50 border border-white/5 [html.light_&]:border-slate-200">
+                                  <span className="text-cyan-400 font-semibold block">High Performance</span>
+                                  <span className="text-slate-400 [html.light_&]:text-slate-600">90+ Core Web Vitals</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="pt-2 flex items-center justify-between text-[11px] text-slate-400">
+                              <span>Verified Production Deliverable</span>
+                              <span className="text-blue-400 font-semibold">100% Client-Ready</span>
+                            </div>
+                          </div>
+                        </TiltCard>
+                      )}
+                    </div>
+
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* Honest 'More Projects Coming Soon' banner */}
+            <div className="p-6 rounded-2xl bg-white/[0.02] border border-dashed border-white/10 text-center">
+              <span className="text-xs font-mono uppercase tracking-wider text-slate-400 block mb-1">
+                Portfolio Transparency
               </span>
-              <div>
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-[#567785] bg-[#567785]/10 px-2 py-0.5 rounded">
-                    Full-Stack
-                  </span>
-                  <span className="badge-savings">Turnkey</span>
-                </div>
-                <h3 className="text-base font-black uppercase text-[#E89228] mt-2">
-                  CUSTOM WEB APPLICATION
-                </h3>
-                <div className="my-2">
-                  <span className="text-2xl font-black text-slate-900 [html.dark_&]:text-white">₹9,999</span>
-                  <span className="text-xs text-slate-400 uppercase font-mono ml-1.5">Starting</span>
-                </div>
-                <p className="text-xs text-slate-600 [html.dark_&]:text-slate-400 leading-relaxed">
-                  Custom Next.js frontend, Express REST APIs, MySQL relational database, role-based admin controls, and payment gateway.
-                </p>
-                <div className="pt-3 border-t border-slate-100 [html.dark_&]:border-slate-800 text-[11px] text-slate-500">
-                  Custom database schema &amp; production deployment included.
-                </div>
-              </div>
-              <Link
-                href="/contact"
-                className="w-full btn-brand-orange text-xs font-bold text-center"
-              >
-                Discuss Application Scope
-              </Link>
+              <p className="text-sm font-semibold text-slate-300">
+                More Genuine Projects Coming Soon
+              </p>
+              <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
+                We believe in genuine engineering. We do not invent fake client logos, fabricated case studies, or mock testimonials.
+              </p>
             </div>
-
-            {/* Offer Card 3 */}
-            <div className="bg-white [html.dark_&]:bg-[#152234] border border-slate-200 [html.dark_&]:border-[#26364A] rounded-2xl p-6 shadow-sm hover:shadow-md transition-all space-y-4 flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-[#567785] bg-[#567785]/10 px-2 py-0.5 rounded">
-                    Turnkey SaaS
-                  </span>
-                  <span className="badge-savings">Zero Comm.</span>
-                </div>
-                <h3 className="text-base font-black uppercase text-[#E89228] mt-2">
-                  RUCHI BAZZAR TURNKEY
-                </h3>
-                <div className="my-2">
-                  <span className="text-2xl font-black text-slate-900 [html.dark_&]:text-white">₹19,999</span>
-                  <span className="text-xs text-slate-400 line-through ml-2">₹35,000</span>
-                </div>
-                <p className="text-xs text-slate-600 [html.dark_&]:text-slate-400 leading-relaxed">
-                  Complete hyperlocal food &amp; grocery ecosystem with customer storefront, merchant kitchen portal, delivery rider fleet, and superadmin.
-                </p>
-                <div className="pt-3 border-t border-slate-100 [html.dark_&]:border-slate-800 text-[11px] text-slate-500">
-                  Live demo active at ruchibazzar.com. 100% white label.
-                </div>
-              </div>
-              <Link
-                href="/products"
-                className="w-full btn-peach text-xs font-bold text-center"
-              >
-                Inspect Turnkey System
-              </Link>
-            </div>
-
           </div>
         </div>
       </section>
 
-      {/* 6. WHY WORK WITH US */}
-      <section className="py-14 md:py-20 bg-white [html.dark_&]:bg-[#0D1520] border-b border-slate-200 [html.dark_&]:border-[#22344D]">
+      {/* 5. WHY CHOOSE US */}
+      <section className="py-20 md:py-28 bg-transparent border-b border-white/5 [html.light_&]:border-slate-200/80 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
             badge="Engineering Integrity"
-            title="WHY DIGITAL CROWD TECH?"
-            subtitle="Straightforward engineering without middle brokers, subcontracting, or fabricated claims."
+            title="Why Work With Digital Crowd Technologies?"
+            subtitle="Capable, honest software development built around real client outcomes and clean technical execution."
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {whyPoints.map((point) => {
               const Icon = point.icon;
               return (
                 <div
                   key={point.title}
-                  className="p-6 rounded-2xl bg-slate-50/70 [html.dark_&]:bg-[#152234] border border-slate-200 [html.dark_&]:border-[#26364A] hover:border-[#567785] transition-all group"
+                  className="p-7 rounded-2xl glass-card-premium group hover:border-[#2F7DE1]/50 shadow-xl transition-all duration-300"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-[#567785]/10 text-[#567785] flex items-center justify-center mb-3.5 group-hover:bg-[#567785] group-hover:text-white transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-[#2F7DE1]/10 border border-[#2F7DE1]/25 text-[#2F7DE1] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
                     <Icon size={20} />
                   </div>
-                  <h3 className="text-base font-extrabold text-[#1E293B] [html.dark_&]:text-white mb-2">
+                  <h3 className="text-lg font-bold text-white [html.light_&]:text-[#0A2540] mb-2">
                     {point.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 [html.dark_&]:text-slate-400 leading-relaxed">
+                  <p className="text-sm text-[#8494AD] [html.light_&]:text-[#64748B] leading-relaxed">
                     {point.description}
                   </p>
                 </div>
@@ -626,29 +625,29 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 7. DEVELOPMENT PROCESS (7 STEPS) */}
-      <section className="py-14 md:py-20 bg-slate-50/60 [html.dark_&]:bg-transparent border-b border-slate-200 [html.dark_&]:border-[#22344D]">
+      {/* 6. HOW WE WORK: FROM IDEA TO LAUNCH */}
+      <section className="py-20 md:py-28 bg-transparent border-b border-white/5 [html.light_&]:border-slate-200/80 relative" id="process">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
-            badge="Workflow"
-            title="FROM IDEA TO PRODUCTION LAUNCH"
-            subtitle="A transparent 7-step process from requirements gathering to server configuration and deployment."
+            badge="Development Workflow"
+            title="From Idea to Launch"
+            subtitle="A clear, structured 7-step process from requirements gathering to production deployment and beyond."
           />
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-4">
             {steps.map((st) => (
               <div
                 key={st.num}
-                className="p-4 rounded-xl bg-white [html.dark_&]:bg-[#152234] border border-slate-200 [html.dark_&]:border-[#26364A] flex flex-col justify-between shadow-xs"
+                className="p-5 rounded-2xl glass-card-premium flex flex-col justify-between group hover:border-[#2F7DE1]/50 shadow-md transition-all duration-300"
               >
                 <div>
-                  <span className="text-xs font-mono font-black text-[#E89228] block mb-1">
+                  <span className="text-xs font-mono font-bold text-[#2F7DE1] block mb-2 group-hover:text-[#F87000] transition-colors">
                     {st.num}
                   </span>
-                  <h3 className="text-xs font-bold text-[#1E293B] [html.dark_&]:text-white mb-1">
+                  <h3 className="text-sm font-bold text-white [html.light_&]:text-[#0A2540] mb-2">
                     {st.name}
                   </h3>
-                  <p className="text-[11px] text-slate-500 [html.dark_&]:text-slate-400 leading-snug">
+                  <p className="text-xs text-[#8494AD] [html.light_&]:text-[#64748B] leading-relaxed">
                     {st.desc}
                   </p>
                 </div>
@@ -659,123 +658,202 @@ export default function HomePage() {
           <div className="mt-8 text-center">
             <Link
               href="/process"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#567785] hover:text-[#415C68]"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#2F7DE1] hover:text-[#2F7DE1]/80"
             >
-              <span>Learn More About Milestones &amp; Staging Previews</span>
+              <span>Learn More About Communication & Milestones</span>
               <ArrowRight size={13} />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* 8. CONSULTATION / QUICK INQUIRY (Screenshot 5 Reference: Clean Welcome / Contact Card) */}
-      <section className="py-14 md:py-20 bg-white [html.dark_&]:bg-[#0D1520] relative">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white [html.dark_&]:bg-[#152234] border border-slate-200 [html.dark_&]:border-[#26364A] rounded-2xl shadow-lg overflow-hidden">
-            
-            {/* Top Petrol Blue Banner */}
-            <div className="bg-[#567785] text-white py-3 px-6 flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider">
-                Direct Project Consultation
-              </span>
-              <span className="text-xs font-semibold text-[#FFD099]">
-                Zero Obligation
-              </span>
-            </div>
+      {/* 7. PRICING PREVIEW: SIMPLE STARTING PRICES */}
+      <section className="py-20 md:py-28 bg-transparent border-b border-white/5 [html.light_&]:border-slate-200/80 relative" id="pricing">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            badge="Transparent Pricing"
+            title="Simple Starting Prices"
+            subtitle="Straightforward starting prices for standard websites and web applications. No hidden markups."
+          />
 
-            <div className="p-6 sm:p-8 space-y-5 text-center">
-              <div className="w-12 h-12 rounded-2xl bg-slate-100 [html.dark_&]:bg-slate-800 flex items-center justify-center mx-auto border border-slate-200 [html.dark_&]:border-slate-700 p-1.5 shadow-sm">
-                <Image
-                  src="/logo.png"
-                  alt="Digital Crowd Tech Logo"
-                  width={40}
-                  height={40}
-                  className="object-contain"
-                />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            
+            {/* Price 1: Business Website */}
+            <div className="p-8 rounded-3xl glass-card-premium flex flex-col justify-between shadow-2xl relative group hover:border-[#2F7DE1]/40 transition">
+              <div>
+                <span className="text-xs font-bold text-[#2F7DE1] uppercase tracking-wider block mb-2">
+                  Standard Tier
+                </span>
+                <h3 className="text-xl font-bold text-white [html.light_&]:text-[#0A2540] mb-1">
+                  Business Website
+                </h3>
+                <div className="my-5 flex items-baseline gap-2">
+                  <span className="text-3xl sm:text-4xl font-extrabold text-white [html.light_&]:text-[#0A2540]">
+                    ₹4,999
+                  </span>
+                  <span className="text-xs text-[#8494AD] [html.light_&]:text-[#64748B] uppercase font-mono">
+                    Starting from
+                  </span>
+                </div>
+                <p className="text-sm text-[#C5CEDD] [html.light_&]:text-[#40484C] mb-6">
+                  Professional responsive website for businesses, startups, clinics, and professionals.
+                </p>
+                <ul className="space-y-2.5 text-xs sm:text-sm text-[#C5CEDD] [html.light_&]:text-[#40484C] mb-8">
+                  <li className="flex items-center gap-2">
+                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
+                    <span>Responsive mobile & desktop design</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
+                    <span>Essential business pages (Home, About, Services, Contact)</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
+                    <span>WhatsApp button & contact form integration</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
+                    <span>Fast performance & SEO-friendly structure</span>
+                  </li>
+                </ul>
               </div>
 
               <div>
-                <h2 className="text-2xl font-black text-[#1E293B] [html.dark_&]:text-white">
-                  Welcome!
-                </h2>
-                <p className="text-xs sm:text-sm text-slate-600 [html.dark_&]:text-slate-400 mt-1">
-                  Start your digital project consultation with Digital Crowd Technologies.
-                </p>
+                <Link
+                  href="/contact"
+                  className="w-full inline-flex items-center justify-center py-3 text-sm font-bold text-[#0B1220] [html.light_&]:text-white bg-[#F87000] hover:bg-[#FF8A24] rounded-full shadow-lg shadow-orange-500/25 transition"
+                >
+                  Start Your Project
+                </Link>
+              </div>
+            </div>
+
+            {/* Price 2: Custom Website & Web Application */}
+            <div className="p-8 rounded-3xl glass-card-premium border-2 border-[#2F7DE1]/60 flex flex-col justify-between relative shadow-2xl overflow-hidden">
+              <BorderBeam duration={8} rx={24} strokeWidth={2} />
+              <div className="absolute -top-3 right-6 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#2F7DE1] text-white">
+                Full-Stack
               </div>
 
-              {/* Quick Contact Form with Indian +91 Flag Selector matching Screenshot 5 */}
-              <form action="/contact" method="GET" className="space-y-3.5 text-left max-w-md mx-auto">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 [html.dark_&]:text-slate-300 mb-1">
-                    Your Contact Number
-                  </label>
-                  <div className="flex rounded-lg border border-slate-300 [html.dark_&]:border-[#2A3E59] bg-white [html.dark_&]:bg-[#182638] overflow-hidden focus-within:border-[#567785]">
-                    <div className="flex items-center gap-1 px-3 bg-slate-50 [html.dark_&]:bg-slate-800/80 border-r border-slate-200 [html.dark_&]:border-slate-700 text-xs font-bold text-slate-700 [html.dark_&]:text-slate-300">
-                      <span>🇮🇳</span>
-                      <span>+91</span>
-                    </div>
-                    <input
-                      type="tel"
-                      name="phone"
-                      placeholder="Enter 10-digit mobile number"
-                      className="w-full px-3 py-2 text-xs text-slate-900 [html.dark_&]:text-white bg-transparent focus:outline-none"
-                    />
-                  </div>
+              <div>
+                <span className="text-xs font-bold text-[#2F7DE1] uppercase tracking-wider block mb-2">
+                  Application Tier
+                </span>
+                <h3 className="text-xl font-bold text-white [html.light_&]:text-[#0A2540] mb-1">
+                  Custom Website & Web Application
+                </h3>
+                <div className="my-5 flex items-baseline gap-2">
+                  <span className="text-3xl sm:text-4xl font-extrabold text-white [html.light_&]:text-[#0A2540]">
+                    ₹9,999
+                  </span>
+                  <span className="text-xs text-[#8494AD] [html.light_&]:text-[#64748B] uppercase font-mono">
+                    Starting from
+                  </span>
                 </div>
+                <p className="text-sm text-[#C5CEDD] [html.light_&]:text-[#40484C] mb-6">
+                  Custom frontend + backend + database + business functionality tailored to your process.
+                </p>
+                <ul className="space-y-2.5 text-xs sm:text-sm text-[#C5CEDD] [html.light_&]:text-[#40484C] mb-8">
+                  <li className="flex items-center gap-2">
+                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
+                    <span>Custom Next.js/React frontend interface</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
+                    <span>Node.js / Express backend with REST APIs</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
+                    <span>MySQL / MongoDB relational database integration</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
+                    <span>Authentication, admin controls, and business logic</span>
+                  </li>
+                </ul>
+              </div>
 
-                <button
-                  type="submit"
-                  className="w-full btn-brand-orange py-2.5 text-xs font-bold shadow-md"
+              <div>
+                <Link
+                  href="/contact"
+                  className="w-full inline-flex items-center justify-center py-3 text-sm font-bold text-[#0B1220] [html.light_&]:text-white bg-[#F87000] hover:bg-[#FF8A24] rounded-full shadow-lg shadow-orange-500/25 transition"
                 >
-                  GET PROJECT PROPOSAL
-                </button>
-
-                <div className="text-center pt-2">
-                  <Link
-                    href="/contact"
-                    className="text-xs font-semibold text-slate-500 hover:text-[#567785] transition-colors"
-                  >
-                    Or fill detailed requirements form →
-                  </Link>
-                </div>
-              </form>
-
-              <div className="pt-3 border-t border-slate-100 [html.dark_&]:border-slate-800 flex items-center justify-center gap-4 text-xs text-slate-500">
-                <a
-                  href={`tel:${COMPANY.phone}`}
-                  className="flex items-center gap-1 font-bold text-slate-700 [html.dark_&]:text-slate-300 hover:text-[#E89228]"
-                >
-                  <Phone size={13} className="text-[#E89228]" />
-                  <span>{COMPANY.phoneDisplay}</span>
-                </a>
-                <span>•</span>
-                <span className="text-[#27AE60] font-bold">Fast Reply via WhatsApp</span>
+                  Discuss Your Project
+                </Link>
               </div>
             </div>
 
           </div>
+
+          {/* Pricing Disclaimer & Custom Quote prompt */}
+          <div className="mt-8 text-center max-w-xl mx-auto space-y-3">
+            <p className="text-xs font-medium text-[#8494AD] [html.light_&]:text-[#64748B]">
+              * Final pricing depends on project requirements. Domain, hosting, third-party APIs or infrastructure services may be billed separately where applicable.
+            </p>
+            <div>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-1.5 text-sm font-bold text-[#2F7DE1] hover:text-[#2F7DE1]/80"
+              >
+                <span>Need Something Custom? Get a Quote</span>
+                <ArrowRight size={14} />
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* 9. FAQ SECTION */}
-      <section className="py-14 md:py-20 bg-slate-50/60 [html.dark_&]:bg-transparent border-t border-slate-200 [html.dark_&]:border-[#22344D]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* 8. TECHNOLOGY WE WORK WITH */}
+      <section className="py-20 md:py-28 bg-transparent border-b border-white/5 [html.light_&]:border-slate-200/80 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
-            badge="Answers"
-            title="FREQUENTLY ASKED QUESTIONS"
-            subtitle="Clear, honest answers regarding pricing, code ownership, timelines, and post-launch support."
+            badge="Engineering Foundation"
+            title="Technology We Work With"
+            subtitle="We exclusively deploy technologies our engineering team has mastered and uses in production every day."
           />
 
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {techCategories.map((cat) => (
+              <div
+                key={cat.category}
+                className="p-6 rounded-2xl glass-card-premium shadow-md"
+              >
+                <h3 className="text-base font-bold text-white [html.light_&]:text-[#0A2540] mb-4 pb-2 border-b border-white/10 [html.light_&]:border-slate-200">
+                  {cat.category}
+                </h3>
+                <ul className="space-y-2 text-sm text-[#C5CEDD] [html.light_&]:text-[#40484C]">
+                  {cat.skills.map((s) => (
+                    <li key={s} className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#2F7DE1]" />
+                      <span>{s}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 9. FAQ ACCORDION */}
+      <section className="py-20 md:py-28 bg-transparent border-b border-white/5 [html.light_&]:border-slate-200/80 relative" id="faq">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            badge="Clear Answers"
+            title="Frequently Asked Questions"
+            subtitle="Transparent answers regarding cost, backend capabilities, hosting ownership, and project kick-off."
+          />
+
+          <div className="space-y-4">
             {homeFaqs.map((faq) => (
               <div
                 key={faq.id}
-                className="bg-white [html.dark_&]:bg-[#152234] border border-slate-200 [html.dark_&]:border-[#26364A] rounded-xl p-4 sm:p-5 shadow-xs"
+                className="p-5 rounded-xl glass-card-premium shadow-sm"
               >
-                <h3 className="text-sm font-bold text-[#1E293B] [html.dark_&]:text-white mb-1.5">
+                <h3 className="text-base font-bold text-white [html.light_&]:text-[#0A2540] mb-2">
                   {faq.question}
                 </h3>
-                <p className="text-xs text-slate-600 [html.dark_&]:text-slate-400 leading-relaxed">
+                <p className="text-sm text-[#8494AD] [html.light_&]:text-[#64748B] leading-relaxed">
                   {faq.answer}
                 </p>
               </div>
@@ -785,11 +863,46 @@ export default function HomePage() {
           <div className="mt-8 text-center">
             <Link
               href="/faq"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#567785] hover:text-[#415C68]"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#2F7DE1] hover:text-[#2F7DE1]/80"
             >
-              <span>View All Frequently Asked Questions</span>
+              <span>View Full FAQ Page with More Technical Details</span>
               <ArrowRight size={13} />
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 10. FINAL CTA: HAVE A PROJECT IN MIND? */}
+      <section className="py-20 md:py-28 bg-transparent relative overflow-hidden">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="relative rounded-3xl glass-card-premium p-8 sm:p-14 text-center space-y-6 shadow-2xl overflow-hidden">
+            {/* 21st.dev Magic UI BorderBeam */}
+            <BorderBeam duration={9} rx={24} strokeWidth={2} />
+
+            <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold bg-[#2F7DE1]/10 border border-[#2F7DE1]/25 text-[#2F7DE1] uppercase tracking-wider">
+              Let&apos;s Build Together
+            </span>
+
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white [html.light_&]:text-[#0A2540] tracking-tight">
+              Have a Project in Mind?
+            </h2>
+
+            <p className="text-base sm:text-lg text-[#C5CEDD] [html.light_&]:text-[#40484C] max-w-xl mx-auto leading-relaxed">
+              Tell us what you&apos;re building. We&apos;ll understand your requirements and help you plan the right solution.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+              <ShimmerButton href="/contact">
+                <span>Start Your Project</span>
+              </ShimmerButton>
+              <Link
+                href="/contact"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 text-sm font-semibold text-white [html.light_&]:text-[#0A2540] bg-[#16223A]/80 [html.light_&]:bg-slate-100 hover:bg-white/10 [html.light_&]:hover:bg-slate-200 border border-[#26344F] [html.light_&]:border-slate-300 rounded-full transition"
+              >
+                <span>Contact Us</span>
+                <MessageSquare size={16} />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
