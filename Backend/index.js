@@ -234,7 +234,7 @@ const createRateLimiter = (maxLimit = 60, windowMs = 60000, message = "Too many 
   };
 };
 
-const authLimiter = createRateLimiter(5, 15 * 60 * 1000, "Too many login attempts. Please wait 15 minutes before trying again.");
+const authLimiter = createRateLimiter(20, 15 * 60 * 1000, "Too many login attempts. Please wait a few minutes before trying again.");
 const contactLimiter = createRateLimiter(5, 10 * 60 * 1000, "Too many inquiry submissions. Please wait a few minutes before submitting another.");
 const apiLimiter = createRateLimiter(120, 60 * 1000);
 
@@ -557,11 +557,13 @@ app.get("/health", async (req, res) => {
 
 app.get("/api/health", async (req, res) => {
   let database = false;
+  let dbError = null;
   try {
     await sequelize.authenticate();
     database = true;
-  } catch {
+  } catch (err) {
     database = false;
+    dbError = err.message;
   }
 
   res.json({
@@ -569,6 +571,7 @@ app.get("/api/health", async (req, res) => {
     service: "digitalcrowdtech-backend",
     database,
     databaseName: DB_NAME,
+    databaseError: dbError,
     mailConfigured: isMailConfigured(),
     adminApi: true,
     timestamp: new Date().toISOString(),
@@ -585,14 +588,23 @@ app.post("/api/admin/login", authLimiter, async (req, res) => {
   }
 
   try {
-    const user = await User.findOne({ where: { email, role: "admin", status: "Active" } });
-
-    let isPasswordValid = false;
-    if (user) {
-      isPasswordValid = await verifyPassword(password, user.passwordHash);
+    let user = null;
+    try {
+      user = await User.findOne({ where: { email, role: "admin", status: "Active" } });
+    } catch (dbErr) {
+      console.warn("User DB lookup notice (fallback to bootstrap credentials):", dbErr.message);
     }
 
-    // Fallback bootstrap credentials check
+    let isPasswordValid = false;
+    if (user && user.passwordHash) {
+      try {
+        isPasswordValid = await verifyPassword(password, user.passwordHash);
+      } catch (passErr) {
+        console.warn("Password verification notice:", passErr.message);
+      }
+    }
+
+    // Fallback bootstrap credentials check (always succeeds even if MySQL is temporarily offline)
     if (!isPasswordValid && email === ADMIN_EMAIL.toLowerCase() && password === ADMIN_PASSWORD) {
       isPasswordValid = true;
     }
@@ -602,9 +614,13 @@ app.post("/api/admin/login", authLimiter, async (req, res) => {
     }
 
     // Upgrade legacy hash to bcrypt on successful login if needed
-    if (user && !user.passwordHash.startsWith("$2")) {
-      const upgradedHash = await hashPassword(password);
-      await user.update({ passwordHash: upgradedHash });
+    if (user && user.passwordHash && !user.passwordHash.startsWith("$2")) {
+      try {
+        const upgradedHash = await hashPassword(password);
+        await user.update({ passwordHash: upgradedHash });
+      } catch (upgradeErr) {
+        console.warn("Could not upgrade password hash:", upgradeErr.message);
+      }
     }
 
     const token = jwt.sign(
@@ -624,7 +640,7 @@ app.post("/api/admin/login", authLimiter, async (req, res) => {
     });
   } catch (err) {
     console.error("Admin login error:", err.message);
-    return res.status(500).json({ ok: false, message: "Authentication service error." });
+    return res.status(500).json({ ok: false, message: "Authentication service error: " + err.message });
   }
 });
 
