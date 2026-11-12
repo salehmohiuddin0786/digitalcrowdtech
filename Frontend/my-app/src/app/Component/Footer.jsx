@@ -24,6 +24,7 @@ export default function Footer() {
     { label: "Home", href: "/" },
     { label: "About", href: "/about" },
     { label: "Services", href: "/services" },
+    { label: "Products", href: "/products" },
     { label: "Projects", href: "/projects" },
     { label: "Portfolio", href: "/portfolio" },
     { label: "Pricing", href: "/pricing" },
@@ -39,6 +40,7 @@ export default function Footer() {
     { label: "Terms & Conditions", href: "/terms-and-conditions" },
     { label: "Refund Policy", href: "/refund-policy" },
     { label: "Cookie Policy", href: "/cookie-policy" },
+    { label: "HTML Sitemap", href: "/sitemap" },
   ];
 
   const localPages = [
@@ -56,24 +58,26 @@ export default function Footer() {
           
           {/* Brand & Description (2 cols on large screen) */}
           <div className="lg:col-span-2 space-y-4">
-            <Link href="/" className="inline-flex items-center space-x-3 group">
-              <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center p-1 shadow-md shadow-blue-500/10 border border-slate-200">
+            <Link href="/" className="inline-flex flex-col space-y-1.5 group">
+              <div className="relative h-10 w-auto flex items-center transition-transform duration-200 group-hover:scale-[1.02]">
+                <Image
+                  src="/logo-dark.png"
+                  alt="Digital Crowd Technologies Logo"
+                  width={180}
+                  height={48}
+                  className="h-10 w-auto object-contain block [html.light_&]:hidden"
+                />
                 <Image
                   src="/logo.png"
                   alt="Digital Crowd Technologies Logo"
-                  width={36}
-                  height={36}
-                  className="w-full h-full object-contain"
+                  width={180}
+                  height={48}
+                  className="h-10 w-auto object-contain hidden [html.light_&]:block"
                 />
               </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold tracking-tight transition-colors">
-                  <span className="text-[#2F7DE1]">Digital</span> <span className="text-[#F87000]">Crowd</span> <span className="text-white [html.light_&]:text-[#40484C]">Technologies</span>
-                </span>
-                <span className="text-xs font-semibold text-[#F87000] tracking-wide">
-                  {COMPANY.tagline}
-                </span>
-              </div>
+              <span className="text-xs font-semibold text-[#F87000] tracking-wide">
+                {COMPANY.tagline}
+              </span>
             </Link>
 
             <p className="text-slate-400 text-sm leading-relaxed max-w-md">

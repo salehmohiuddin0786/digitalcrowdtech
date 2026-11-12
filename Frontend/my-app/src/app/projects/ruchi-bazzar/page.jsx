@@ -46,13 +46,13 @@ export default function RuchiBazzarCaseStudyPage() {
             <span>Production Case Study</span>
           </div>
 
-          <div className="w-16 h-16 rounded-2xl bg-white p-2 mx-auto mb-6 shadow-xl shadow-orange-500/10 flex items-center justify-center">
+          <div className="h-16 sm:h-20 w-auto px-6 py-2.5 rounded-2xl bg-white mx-auto mb-6 shadow-xl shadow-orange-500/10 flex items-center justify-center inline-flex">
             <Image
               src="/projects/ruchi-logo.png"
               alt="Ruchi Bazzar Logo"
-              width={56}
+              width={110}
               height={56}
-              className="w-full h-full object-contain"
+              className="h-12 sm:h-14 w-auto object-contain"
             />
           </div>
 

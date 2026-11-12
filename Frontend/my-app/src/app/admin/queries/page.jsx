@@ -15,6 +15,9 @@ import {
   Filter,
   Building,
   Calendar,
+  MessageCircle,
+  Copy,
+  Download,
 } from "lucide-react";
 import AdminLayout from "../AdminLayout";
 import { getQueries, updateQueryStatus, deleteQuery, verifyAdmin } from "../adminData";
@@ -97,6 +100,40 @@ export default function AdminQueriesPage() {
     }
   };
 
+  const exportToCSV = () => {
+    if (queries.length === 0) {
+      alert("No inquiries to export.");
+      return;
+    }
+    const headers = ["ID", "Name", "Business", "Email", "Phone", "Service", "Budget", "Source", "Status", "CreatedAt"];
+    const rows = queries.map((q) => [
+      `"${q.id || ""}"`,
+      `"${(q.name || "").replace(/"/g, '""')}"`,
+      `"${(q.businessName || "").replace(/"/g, '""')}"`,
+      `"${q.email || ""}"`,
+      `"${q.phone || ""}"`,
+      `"${(q.service || "").replace(/"/g, '""')}"`,
+      `"${q.budget || ""}"`,
+      `"${q.source || "Website"}"`,
+      `"${q.status || "New"}"`,
+      `"${q.createdAt || ""}"`,
+    ]);
+    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `digitalcrowdtech_inquiries_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const copyLead = (q) => {
+    const text = `Client: ${q.name}\nBusiness: ${q.businessName || "N/A"}\nEmail: ${q.email}\nPhone: ${q.phone}\nService: ${q.service}\nBudget: ${q.budget || "Under ₹10,000"}\nRequirement: ${q.message || ""}`;
+    navigator.clipboard.writeText(text);
+    alert("Lead contact information copied to clipboard!");
+  };
+
   const filteredQueries = useMemo(() => {
     return queries.filter((query) => {
       const term = search.trim().toLowerCase();
@@ -159,9 +196,18 @@ export default function AdminQueriesPage() {
             </select>
 
             <button
+              onClick={exportToCSV}
+              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 transition"
+              title="Export all inquiries to CSV spreadsheet"
+            >
+              <Download size={13} className="text-emerald-400" />
+              <span>Export CSV</span>
+            </button>
+
+            <button
               onClick={loadQueries}
               disabled={isLoading}
-              title="Refresh"
+              title="Refresh Inquiries"
               className="p-2 rounded-xl bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 transition"
             >
               <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
@@ -249,7 +295,28 @@ export default function AdminQueriesPage() {
                         {formatDate(q.createdAt)}
                       </td>
                       <td className="px-5 py-4 text-right">
-                        <div className="inline-flex items-center gap-2">
+                        <div className="inline-flex items-center gap-1.5">
+                          {q.phone && (
+                            <a
+                              href={`https://wa.me/${(q.phone || "").replace(/[^0-9]/g, "").startsWith("91") ? (q.phone || "").replace(/[^0-9]/g, "") : "91" + (q.phone || "").replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
+                                `Hi ${q.name}, thank you for contacting DigitalCrowd Tech regarding your inquiry for ${q.service}!`
+                              )}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition"
+                              title="Chat on WhatsApp"
+                            >
+                              <MessageCircle size={14} />
+                            </a>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => copyLead(q)}
+                            className="p-1.5 rounded-lg bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white transition"
+                            title="Copy Contact Info"
+                          >
+                            <Copy size={14} />
+                          </button>
                           <button
                             type="button"
                             onClick={() => setViewingQuery(q)}
@@ -304,7 +371,7 @@ export default function AdminQueriesPage() {
                 </button>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <div>
                   <span className="text-slate-500 block">Service Required</span>
                   <span className="font-semibold text-blue-400">{viewingQuery.service}</span>
@@ -342,7 +409,7 @@ export default function AdminQueriesPage() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-3 border-t border-white/10 text-xs">
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-white/10 text-xs">
                 <div className="flex items-center gap-2">
                   <span className="text-slate-400">Status:</span>
                   <select
@@ -358,13 +425,37 @@ export default function AdminQueriesPage() {
                     <option value="Converted" className="bg-[#090D16] text-emerald-400">Converted</option>
                   </select>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setViewingQuery(null)}
-                  className="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-white font-medium transition"
-                >
-                  Close
-                </button>
+
+                <div className="flex items-center gap-2">
+                  {viewingQuery.phone && (
+                    <a
+                      href={`https://wa.me/${(viewingQuery.phone || "").replace(/[^0-9]/g, "").startsWith("91") ? (viewingQuery.phone || "").replace(/[^0-9]/g, "") : "91" + (viewingQuery.phone || "").replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
+                        `Hi ${viewingQuery.name}, thank you for contacting DigitalCrowd Tech regarding your inquiry about ${viewingQuery.service}!`
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-semibold transition shadow-sm"
+                    >
+                      <MessageCircle size={13} />
+                      <span>WhatsApp Reply</span>
+                    </a>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => copyLead(viewingQuery)}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 font-medium transition"
+                  >
+                    <Copy size={13} />
+                    <span>Copy</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setViewingQuery(null)}
+                    className="px-4 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white font-medium transition"
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
             </div>
           </div>

@@ -90,24 +90,41 @@ export default function ContactPage() {
     setLoading(true);
 
     try {
-      const apiEndpoint = process.env.NEXT_PUBLIC_API_URL 
-        ? `${process.env.NEXT_PUBLIC_API_URL}/api/contact`
-        : "/api/contact";
+      const getApiTarget = () => {
+        if (process.env.NEXT_PUBLIC_API_URL) return `${process.env.NEXT_PUBLIC_API_URL}/api/contact`;
+        if (typeof window !== "undefined") {
+          const host = window.location.hostname || "localhost";
+          return `http://${host}:5001/api/contact`;
+        }
+        return "/api/contact";
+      };
 
-      const res = await fetch(apiEndpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formData.name.trim(),
-          businessName: formData.businessName.trim(),
-          email: formData.email.trim(),
-          phone: formData.phone.trim(),
-          service: formData.service,
-          budget: formData.budget,
-          subject: `${formData.service} Inquiry - ${formData.name}`,
-          message: formData.message.trim(),
-        }),
-      });
+      const payload = {
+        name: formData.name.trim(),
+        businessName: formData.businessName.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        service: formData.service,
+        budget: formData.budget,
+        subject: `${formData.service} Inquiry - ${formData.name}`,
+        message: formData.message.trim(),
+      };
+
+      let res;
+      try {
+        res = await fetch(getApiTarget(), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      } catch {
+        // Fallback to local Next.js API route if direct backend fetch fails
+        res = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      }
 
       const data = await res.json().catch(() => ({}));
 

@@ -18,10 +18,17 @@ export const COMPANY = {
   whatsappPrefill: "Hi Digital Crowd Technologies, I would like to enquire about web development and software solutions for my business.",
   
   // Location
-  address: "Unit No 203, 2nd Floor Suite No.806, SBR CV Towers, Madhapur, Hyderabad – TG, India",
+  address: "Unit No 203, 2nd Floor Suite No.806, SBR CV Towers, Sector-I, Sy No 64, HUDA Techno Enclave, Madhapur, Hyderabad - 500081",
+  addressLines: [
+    "Unit No 203, 2nd Floor Suite No.806",
+    "SBR CV Towers, Sector-I, Sy No 64",
+    "HUDA Techno Enclave",
+    "Madhapur, Hyderabad - 500081",
+  ],
   locality: "Madhapur",
   city: "Hyderabad",
   state: "Telangana",
+  postalCode: "500081",
   country: "India",
   primaryServiceArea: "Hyderabad, Telangana, India",
   serviceAreas: ["Hyderabad", "Telangana", "Bangalore", "Mumbai", "Delhi NCR", "All across India"],

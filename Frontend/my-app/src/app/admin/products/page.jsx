@@ -504,6 +504,42 @@ export default function AdminProductsPage() {
                     Add Tech
                   </button>
                 </div>
+                <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-slate-400 mb-2.5">
+                  <span className="text-slate-500">Quick add:</span>
+                  {[
+                    "Next.js",
+                    "React",
+                    "Node.js",
+                    "Express.js",
+                    "MySQL",
+                    "PostgreSQL",
+                    "Tailwind CSS",
+                    "TypeScript",
+                    "Socket.io",
+                    "Razorpay API",
+                    "Docker",
+                  ].map((item) => (
+                    <button
+                      key={item}
+                      type="button"
+                      onClick={() => {
+                        if (!form.technologies.includes(item)) {
+                          setForm((prev) => ({
+                            ...prev,
+                            technologies: [...prev.technologies, item],
+                          }));
+                        }
+                      }}
+                      className={`px-2 py-0.5 rounded-full border text-[10px] transition ${
+                        form.technologies.includes(item)
+                          ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+                          : "bg-white/5 text-slate-300 border-white/10 hover:border-white/30"
+                      }`}
+                    >
+                      + {item}
+                    </button>
+                  ))}
+                </div>
                 <div className="flex flex-wrap gap-1.5">
                   {form.technologies.map((t) => (
                     <span

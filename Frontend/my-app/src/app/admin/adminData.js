@@ -7,18 +7,22 @@ import { PRODUCTS } from "../data/products";
 export const ADMIN_EMAIL = "admin@digitalcrowdtech.in";
 
 const tokenKey = "digitalcrowdtech_admin_token";
-const apiBaseUrl =
-  process.env.NEXT_PUBLIC_API_URL ||
-  (typeof window !== "undefined" && window.location.hostname === "localhost"
-    ? "http://localhost:5001"
-    : "");
+const getApiBaseUrl = () => {
+  if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname || "localhost";
+    return `http://${host}:5001`;
+  }
+  return "http://localhost:5001";
+};
 
 const canUseStorage = () => typeof window !== "undefined";
 
 const getToken = () => (canUseStorage() ? window.localStorage.getItem(tokenKey) : "");
 
 const request = async (path, options = {}) => {
-  const fullUrl = apiBaseUrl ? `${apiBaseUrl}${path}` : path;
+  const apiBase = getApiBaseUrl();
+  const fullUrl = apiBase ? `${apiBase}${path}` : path;
 
   const response = await fetch(fullUrl, {
     ...options,
@@ -60,6 +64,9 @@ export const loginAdmin = async (email, password) => {
 export const logoutAdmin = () => {
   if (canUseStorage()) {
     window.localStorage.removeItem(tokenKey);
+  }
+  if (typeof window !== "undefined") {
+    window.location.href = "/admin";
   }
 };
 
@@ -432,7 +439,8 @@ export const uploadProjectImage = async (file) => {
   const formData = new FormData();
   formData.append("image", file);
 
-  const fullUrl = apiBaseUrl ? `${apiBaseUrl}/api/admin/upload` : "/api/admin/upload";
+  const apiBase = getApiBaseUrl();
+  const fullUrl = apiBase ? `${apiBase}/api/admin/upload` : "/api/admin/upload";
 
   const response = await fetch(fullUrl, {
     method: "POST",
@@ -442,7 +450,7 @@ export const uploadProjectImage = async (file) => {
     body: formData,
   });
 
-  const data = await response.json();
+  const data = await response.json().catch(() => ({}));
   if (!response.ok || !data.ok) {
     throw new Error(data.message || "Failed to upload image.");
   }

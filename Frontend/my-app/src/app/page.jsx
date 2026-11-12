@@ -29,11 +29,12 @@ import BorderBeam from "./Component/BorderBeam";
 import SpotlightCard from "./Component/SpotlightCard";
 import TechMarquee from "./Component/TechMarquee";
 import ShimmerButton from "./Component/ShimmerButton";
-import TiltCard from "./Component/TiltCard";
-import ProjectArchitectureDiagram from "./Component/ProjectArchitectureDiagram";
+import FaqSection from "./Component/FaqSection";
+import OurWorkShowcase from "./Component/OurWorkShowcase";
+import ClientProofsSection from "./Component/ClientProofsSection";
+import PricingScopeCalculator from "./Component/PricingScopeCalculator";
 import { COMPANY } from "./data/company";
 import { SERVICES } from "./data/services";
-import { PROJECTS } from "./data/projects";
 import { FAQS } from "./data/faqs";
 
 export const metadata = {
@@ -442,157 +443,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. FEATURED PROJECTS: OUR WORK */}
-      <section className="py-20 md:py-28 bg-transparent border-b border-white/5 [html.light_&]:border-slate-200/80 relative" id="projects">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            badge="Verified Portfolio"
-            title="Our Work"
-            subtitle="Explore real digital products and software solutions built by Digital Crowd Technologies."
-          />
+      <OurWorkShowcase />
 
-          <div className="space-y-12">
-            {PROJECTS.map((project, idx) => {
-              const isEven = idx % 2 === 1;
+      {/* 5. VERIFIED CLIENT PROOFS & DELIVERABLES */}
+      <ClientProofsSection />
 
-              return (
-                <div
-                  key={project.id}
-                  className="rounded-3xl glass-card-premium p-6 sm:p-8 lg:p-10 shadow-2xl relative overflow-hidden group"
-                >
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                    
-                    {/* Project Info */}
-                    <div className={`lg:col-span-6 space-y-4 ${isEven ? "lg:order-2" : "lg:order-1"}`}>
-                      {project.isInternal ? (
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 border border-amber-500/30 text-amber-300">
-                          <span>{project.label}</span>
-                        </div>
-                      ) : (
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 border border-blue-500/20 text-blue-400">
-                          <span>{project.category}</span>
-                        </div>
-                      )}
-
-                      <h3 className="text-2xl sm:text-3xl font-extrabold text-white [html.light_&]:text-[#0A2540]">
-                        {project.title}
-                      </h3>
-
-                      <p className="text-sm sm:text-base text-slate-300 [html.light_&]:text-slate-600 leading-relaxed">
-                        {project.summary}
-                      </p>
-
-                      {/* Tech Pills */}
-                      <div className="flex flex-wrap gap-1.5 pt-1">
-                        {project.technologies.slice(0, 6).map((tech) => (
-                          <span
-                            key={tech}
-                            className="px-2.5 py-1 text-xs font-mono font-medium rounded-md bg-white/5 [html.light_&]:bg-slate-100 text-slate-300 [html.light_&]:text-slate-700 border border-white/5 [html.light_&]:border-slate-200"
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-
-                      {/* Features Snippet */}
-                      <ul className="space-y-1.5 pt-2 text-xs sm:text-sm text-slate-400 [html.light_&]:text-slate-600">
-                        {project.features.slice(0, 4).map((feat, fIdx) => (
-                          <li key={fIdx} className="flex items-start gap-2">
-                            <CheckCircle2 size={15} className="text-blue-400 shrink-0 mt-0.5" />
-                            <span>{feat}</span>
-                          </li>
-                        ))}
-                      </ul>
-
-                      {/* CTA */}
-                      <div className="pt-4 flex items-center gap-4">
-                        {project.caseStudyUrl ? (
-                          <Link
-                            href={project.caseStudyUrl}
-                            className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-xl shadow-md transition"
-                          >
-                            <span>View Case Study</span>
-                            <ArrowRight size={15} />
-                          </Link>
-                        ) : (
-                          <Link
-                            href={project.liveUrl || "/"}
-                            className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white [html.light_&]:text-[#0A2540] bg-white/10 [html.light_&]:bg-slate-100 hover:bg-white/15 [html.light_&]:hover:bg-slate-200 border border-white/10 [html.light_&]:border-slate-300 rounded-xl transition"
-                          >
-                            <span>Live Internal Site</span>
-                            <ArrowRight size={15} />
-                          </Link>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Project Architecture & Mock Visual */}
-                    <div className={`lg:col-span-6 ${isEven ? "lg:order-1" : "lg:order-2"}`}>
-                      {project.id === "ruchi-bazzar" || project.id === "school-management-system" ? (
-                        <ProjectArchitectureDiagram projectId={project.id} />
-                      ) : (
-                        <TiltCard tiltAmount={6}>
-                          <div className="rounded-2xl glass-card-premium p-5 space-y-4 shadow-inner">
-                            <div className="flex items-center justify-between pb-3 border-b border-white/5 text-xs">
-                              <span className="font-mono text-slate-400 flex items-center gap-1.5">
-                                <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                                {project.title.toLowerCase().replace(/\s+/g, "-")} :: overview
-                              </span>
-                              <span className="text-[11px] font-semibold text-slate-400">
-                                {project.category}
-                              </span>
-                            </div>
-
-                            <div className="space-y-2.5 text-xs text-slate-300 [html.light_&]:text-slate-700">
-                              <div className="p-3 rounded-lg bg-white/[0.02] [html.light_&]:bg-slate-50 border border-white/5 [html.light_&]:border-slate-200">
-                                <span className="font-semibold text-white [html.light_&]:text-slate-900 block mb-0.5">Agency Infrastructure & Admin Portal</span>
-                                <p className="text-slate-400 [html.light_&]:text-slate-600 text-[11px]">
-                                  Next.js App Router frontend with authenticated inquiry CRM, MySQL persistence, and Nodemailer integration.
-                                </p>
-                              </div>
-                              <div className="grid grid-cols-2 gap-2 text-[11px]">
-                                <div className="p-2 rounded bg-white/[0.02] [html.light_&]:bg-slate-50 border border-white/5 [html.light_&]:border-slate-200">
-                                  <span className="text-blue-400 font-semibold block">Inquiry Tracking</span>
-                                  <span className="text-slate-400 [html.light_&]:text-slate-600">New → Contacted → Done</span>
-                                </div>
-                                <div className="p-2 rounded bg-white/[0.02] [html.light_&]:bg-slate-50 border border-white/5 [html.light_&]:border-slate-200">
-                                  <span className="text-cyan-400 font-semibold block">High Performance</span>
-                                  <span className="text-slate-400 [html.light_&]:text-slate-600">90+ Core Web Vitals</span>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="pt-2 flex items-center justify-between text-[11px] text-slate-400">
-                              <span>Verified Production Deliverable</span>
-                              <span className="text-blue-400 font-semibold">100% Client-Ready</span>
-                            </div>
-                          </div>
-                        </TiltCard>
-                      )}
-                    </div>
-
-                  </div>
-                </div>
-              );
-            })}
-
-            {/* Honest 'More Projects Coming Soon' banner */}
-            <div className="p-6 rounded-2xl bg-white/[0.02] border border-dashed border-white/10 text-center">
-              <span className="text-xs font-mono uppercase tracking-wider text-slate-400 block mb-1">
-                Portfolio Transparency
-              </span>
-              <p className="text-sm font-semibold text-slate-300">
-                More Genuine Projects Coming Soon
-              </p>
-              <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
-                We believe in genuine engineering. We do not invent fake client logos, fabricated case studies, or mock testimonials.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. WHY CHOOSE US */}
+      {/* 6. WHY CHOOSE US */}
       <section className="py-20 md:py-28 bg-transparent border-b border-white/5 [html.light_&]:border-slate-200/80 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
@@ -671,135 +527,12 @@ export default function HomePage() {
       <section className="py-20 md:py-28 bg-transparent border-b border-white/5 [html.light_&]:border-slate-200/80 relative" id="pricing">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
-            badge="Transparent Pricing"
-            title="Simple Starting Prices"
-            subtitle="Straightforward starting prices for standard websites and web applications. No hidden markups."
+            badge="Transparent Pricing & Scope Estimator"
+            title="Simple Starting Prices. Calculate Your Exact Scope."
+            subtitle="Straightforward starting prices with zero hidden markups. Select your tier, configure verified feature modules, and discuss directly on WhatsApp."
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            
-            {/* Price 1: Business Website */}
-            <div className="p-8 rounded-3xl glass-card-premium flex flex-col justify-between shadow-2xl relative group hover:border-[#2F7DE1]/40 transition">
-              <div>
-                <span className="text-xs font-bold text-[#2F7DE1] uppercase tracking-wider block mb-2">
-                  Standard Tier
-                </span>
-                <h3 className="text-xl font-bold text-white [html.light_&]:text-[#0A2540] mb-1">
-                  Business Website
-                </h3>
-                <div className="my-5 flex items-baseline gap-2">
-                  <span className="text-3xl sm:text-4xl font-extrabold text-white [html.light_&]:text-[#0A2540]">
-                    ₹4,999
-                  </span>
-                  <span className="text-xs text-[#8494AD] [html.light_&]:text-[#64748B] uppercase font-mono">
-                    Starting from
-                  </span>
-                </div>
-                <p className="text-sm text-[#C5CEDD] [html.light_&]:text-[#40484C] mb-6">
-                  Professional responsive website for businesses, startups, clinics, and professionals.
-                </p>
-                <ul className="space-y-2.5 text-xs sm:text-sm text-[#C5CEDD] [html.light_&]:text-[#40484C] mb-8">
-                  <li className="flex items-center gap-2">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>Responsive mobile & desktop design</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>Essential business pages (Home, About, Services, Contact)</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>WhatsApp button & contact form integration</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>Fast performance & SEO-friendly structure</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div>
-                <Link
-                  href="/contact"
-                  className="w-full inline-flex items-center justify-center py-3 text-sm font-bold text-[#0B1220] [html.light_&]:text-white bg-[#F87000] hover:bg-[#FF8A24] rounded-full shadow-lg shadow-orange-500/25 transition"
-                >
-                  Start Your Project
-                </Link>
-              </div>
-            </div>
-
-            {/* Price 2: Custom Website & Web Application */}
-            <div className="p-8 rounded-3xl glass-card-premium border-2 border-[#2F7DE1]/60 flex flex-col justify-between relative shadow-2xl overflow-hidden">
-              <BorderBeam duration={8} rx={24} strokeWidth={2} />
-              <div className="absolute -top-3 right-6 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#2F7DE1] text-white">
-                Full-Stack
-              </div>
-
-              <div>
-                <span className="text-xs font-bold text-[#2F7DE1] uppercase tracking-wider block mb-2">
-                  Application Tier
-                </span>
-                <h3 className="text-xl font-bold text-white [html.light_&]:text-[#0A2540] mb-1">
-                  Custom Website & Web Application
-                </h3>
-                <div className="my-5 flex items-baseline gap-2">
-                  <span className="text-3xl sm:text-4xl font-extrabold text-white [html.light_&]:text-[#0A2540]">
-                    ₹9,999
-                  </span>
-                  <span className="text-xs text-[#8494AD] [html.light_&]:text-[#64748B] uppercase font-mono">
-                    Starting from
-                  </span>
-                </div>
-                <p className="text-sm text-[#C5CEDD] [html.light_&]:text-[#40484C] mb-6">
-                  Custom frontend + backend + database + business functionality tailored to your process.
-                </p>
-                <ul className="space-y-2.5 text-xs sm:text-sm text-[#C5CEDD] [html.light_&]:text-[#40484C] mb-8">
-                  <li className="flex items-center gap-2">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>Custom Next.js/React frontend interface</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>Node.js / Express backend with REST APIs</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>MySQL / MongoDB relational database integration</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>Authentication, admin controls, and business logic</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div>
-                <Link
-                  href="/contact"
-                  className="w-full inline-flex items-center justify-center py-3 text-sm font-bold text-[#0B1220] [html.light_&]:text-white bg-[#F87000] hover:bg-[#FF8A24] rounded-full shadow-lg shadow-orange-500/25 transition"
-                >
-                  Discuss Your Project
-                </Link>
-              </div>
-            </div>
-
-          </div>
-
-          {/* Pricing Disclaimer & Custom Quote prompt */}
-          <div className="mt-8 text-center max-w-xl mx-auto space-y-3">
-            <p className="text-xs font-medium text-[#8494AD] [html.light_&]:text-[#64748B]">
-              * Final pricing depends on project requirements. Domain, hosting, third-party APIs or infrastructure services may be billed separately where applicable.
-            </p>
-            <div>
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-1.5 text-sm font-bold text-[#2F7DE1] hover:text-[#2F7DE1]/80"
-              >
-                <span>Need Something Custom? Get a Quote</span>
-                <ArrowRight size={14} />
-              </Link>
-            </div>
-          </div>
+          <PricingScopeCalculator />
         </div>
       </section>
 
@@ -835,42 +568,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 9. FAQ ACCORDION */}
-      <section className="py-20 md:py-28 bg-transparent border-b border-white/5 [html.light_&]:border-slate-200/80 relative" id="faq">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            badge="Clear Answers"
-            title="Frequently Asked Questions"
-            subtitle="Transparent answers regarding cost, backend capabilities, hosting ownership, and project kick-off."
-          />
-
-          <div className="space-y-4">
-            {homeFaqs.map((faq) => (
-              <div
-                key={faq.id}
-                className="p-5 rounded-xl glass-card-premium shadow-sm"
-              >
-                <h3 className="text-base font-bold text-white [html.light_&]:text-[#0A2540] mb-2">
-                  {faq.question}
-                </h3>
-                <p className="text-sm text-[#8494AD] [html.light_&]:text-[#64748B] leading-relaxed">
-                  {faq.answer}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-8 text-center">
-            <Link
-              href="/faq"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#2F7DE1] hover:text-[#2F7DE1]/80"
-            >
-              <span>View Full FAQ Page with More Technical Details</span>
-              <ArrowRight size={13} />
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* 9. FREQUENTLY ASKED QUESTIONS */}
+      <FaqSection id="faq" className="border-b border-white/5 [html.light_&]:border-slate-200/80" />
 
       {/* 10. FINAL CTA: HAVE A PROJECT IN MIND? */}
       <section className="py-20 md:py-28 bg-transparent relative overflow-hidden">

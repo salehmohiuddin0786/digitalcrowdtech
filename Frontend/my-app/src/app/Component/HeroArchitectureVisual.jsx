@@ -194,7 +194,7 @@ export default function HeroArchitectureVisual() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
               <div className="p-2.5 rounded-lg bg-white/[0.02] border border-white/5">
                 <span className="text-slate-400 text-[10px] uppercase font-mono block">Storefront</span>
                 <span className="font-medium text-slate-200">Customer Next.js App</span>
@@ -245,7 +245,7 @@ export default function HeroArchitectureVisual() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
               <div className="p-2.5 rounded-lg bg-white/[0.02] border border-white/5">
                 <span className="text-slate-400 text-[10px] uppercase font-mono block">Super Admin</span>
                 <span className="font-medium text-slate-200">Management Console</span>

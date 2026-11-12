@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import SectionHeading from "../Component/SectionHeading";
 import { HaikeiMeshGlow, HaikeiWave } from "../Component/HaikeiDecorations";
+import PricingScopeCalculator from "../Component/PricingScopeCalculator";
 import { COMPANY } from "../data/company";
 
 export const metadata = {
@@ -46,138 +47,16 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* THE ONLY TWO PUBLIC PRICES */}
+      {/* THE ONLY TWO PUBLIC PRICES & INTERACTIVE SCOPE ESTIMATOR */}
       <section className="py-20 bg-transparent border-b border-white/10 [html.light_&]:border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            
-            {/* 1. Business Website */}
-            <div className="p-8 sm:p-10 rounded-3xl glass-card-premium shadow-2xl relative group hover:border-[#2F7DE1]/40 transition flex flex-col justify-between">
-              <div>
-                <span className="text-xs font-bold text-[#2F7DE1] uppercase tracking-wider block mb-2">
-                  Professional Presence
-                </span>
-                <h2 className="text-2xl font-bold text-white [html.light_&]:text-[#0A2540] mb-2">
-                  Business Website Development
-                </h2>
-                
-                <div className="my-6 flex items-baseline gap-2">
-                  <span className="text-4xl sm:text-5xl font-black text-white [html.light_&]:text-[#0A2540]">
-                    ₹4,999
-                  </span>
-                  <span className="text-xs text-[#8494AD] [html.light_&]:text-[#64748B] uppercase font-mono">
-                    Starting from
-                  </span>
-                </div>
+          <SectionHeading
+            badge="Interactive Scope Calculator"
+            title="Configure Your Project Deliverables"
+            subtitle="Select a baseline tier, pick your custom feature modules, and get an immediate estimate with direct WhatsApp booking."
+          />
 
-                <p className="text-sm text-[#C5CEDD] [html.light_&]:text-[#40484C] mb-6 leading-relaxed">
-                  For professional business websites. Fast, responsive, and optimized to capture customer inquiries and WhatsApp messages.
-                </p>
-
-                <div className="p-3 rounded-xl bg-white/[0.03] [html.light_&]:bg-slate-50 border border-white/10 [html.light_&]:border-slate-200 text-xs text-[#8494AD] [html.light_&]:text-[#64748B] mb-6 font-medium">
-                  Final pricing depends on project requirements.
-                </div>
-
-                <ul className="space-y-3 text-xs sm:text-sm text-[#C5CEDD] [html.light_&]:text-[#40484C] mb-8">
-                  <li className="flex items-center gap-2.5">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>Responsive mobile, tablet & desktop layout</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>Essential business pages (Home, About, Services, Contact)</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>WhatsApp quick-chat & interactive contact form</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>SEO-friendly HTML structure & Google Maps embed</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>Complete deployment assistance on your hosting</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div>
-                <Link
-                  href="/contact"
-                  className="w-full inline-flex items-center justify-center py-3.5 text-sm font-bold text-[#0B1220] [html.light_&]:text-white bg-[#F87000] hover:bg-[#FF8A24] rounded-full shadow-lg shadow-orange-500/25 transition-all duration-200 transform hover:-translate-y-0.5"
-                >
-                  Start Your Project
-                </Link>
-              </div>
-            </div>
-
-            {/* 2. Custom Website & Web Application */}
-            <div className="p-8 sm:p-10 rounded-3xl glass-card-premium border-2 border-[#2F7DE1]/60 shadow-2xl relative flex flex-col justify-between overflow-hidden">
-              <div className="absolute -top-3 right-8 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#2F7DE1] text-white">
-                Full-Stack Architecture
-              </div>
-
-              <div>
-                <span className="text-xs font-bold text-[#2F7DE1] uppercase tracking-wider block mb-2">
-                  Database & Application Logic
-                </span>
-                <h2 className="text-2xl font-bold text-white [html.light_&]:text-[#0A2540] mb-2">
-                  Custom Website & Web Application
-                </h2>
-                
-                <div className="my-6 flex items-baseline gap-2">
-                  <span className="text-4xl sm:text-5xl font-black text-white [html.light_&]:text-[#0A2540]">
-                    ₹9,999
-                  </span>
-                  <span className="text-xs text-[#8494AD] [html.light_&]:text-[#64748B] uppercase font-mono">
-                    Starting from
-                  </span>
-                </div>
-
-                <p className="text-sm text-[#C5CEDD] [html.light_&]:text-[#40484C] mb-6 leading-relaxed">
-                  For custom websites and web applications requiring frontend, backend, database and custom functionality.
-                </p>
-
-                <div className="p-3 rounded-xl bg-white/[0.03] [html.light_&]:bg-slate-50 border border-white/10 [html.light_&]:border-slate-200 text-xs text-[#8494AD] [html.light_&]:text-[#64748B] mb-6 font-medium">
-                  Final pricing depends on project requirements.
-                </div>
-
-                <ul className="space-y-3 text-xs sm:text-sm text-[#C5CEDD] [html.light_&]:text-[#40484C] mb-8">
-                  <li className="flex items-center gap-2.5">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>Custom Next.js/React frontend with dynamic components</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>Node.js / Express backend with modular REST APIs</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>MySQL / MongoDB relational database modeling</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>Authentication, role-based access & admin dashboards</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check size={16} className="text-[#2F7DE1] shrink-0" />
-                    <span>API integrations, payment handling & VPS configuration</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div>
-                <Link
-                  href="/contact"
-                  className="w-full inline-flex items-center justify-center py-3.5 text-sm font-bold text-[#0B1220] [html.light_&]:text-white bg-[#F87000] hover:bg-[#FF8A24] rounded-full shadow-lg shadow-orange-500/25 transition-all duration-200 transform hover:-translate-y-0.5"
-                >
-                  Discuss Your Project
-                </Link>
-              </div>
-            </div>
-
-          </div>
+          <PricingScopeCalculator />
         </div>
       </section>
 

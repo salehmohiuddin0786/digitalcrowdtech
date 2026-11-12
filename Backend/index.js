@@ -555,6 +555,26 @@ app.get("/health", async (req, res) => {
   });
 });
 
+app.get("/api/health", async (req, res) => {
+  let database = false;
+  try {
+    await sequelize.authenticate();
+    database = true;
+  } catch {
+    database = false;
+  }
+
+  res.json({
+    ok: true,
+    service: "digitalcrowdtech-backend",
+    database,
+    databaseName: DB_NAME,
+    mailConfigured: isMailConfigured(),
+    adminApi: true,
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // Admin Authentication with Bcrypt & JWT
 app.post("/api/admin/login", authLimiter, async (req, res) => {
   const email = sanitize(req.body.email).toLowerCase();
@@ -995,11 +1015,24 @@ app.get("/api/projects", async (req, res) => {
   try {
     const projects = await Project.findAll({
       where: { status: "Published" },
-      order: [["createdAt", "ASC"]],
+      order: [
+        [
+          Sequelize.literal(
+            "CASE WHEN liveUrl IS NOT NULL AND TRIM(liveUrl) != '' AND TRIM(liveUrl) != '/' THEN 0 ELSE 1 END"
+          ),
+          "ASC",
+        ],
+        ["createdAt", "DESC"],
+      ],
     });
     return res.json({ ok: true, items: toPlainItems(projects) });
   } catch {
-    return res.json({ ok: true, items: defaultProjects });
+    const sorted = [...defaultProjects].sort((a, b) => {
+      const aLive = a.liveUrl && String(a.liveUrl).trim() !== "" && a.liveUrl !== "/" ? 0 : 1;
+      const bLive = b.liveUrl && String(b.liveUrl).trim() !== "" && b.liveUrl !== "/" ? 0 : 1;
+      return aLive - bLive;
+    });
+    return res.json({ ok: true, items: sorted });
   }
 });
 

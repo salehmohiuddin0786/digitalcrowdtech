@@ -388,13 +388,21 @@ export default function AdminProjectsPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Live Website URL</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-medium text-slate-300">Live Website URL</label>
+                  <span className="text-[10px] text-emerald-400 font-mono">Pins project to TOP of portfolio</span>
+                </div>
                 <input
-                  placeholder="https://..."
+                  placeholder="https://clientwebsite.com (leave empty for Coming Soon)"
                   value={form.liveUrl}
                   onChange={(e) => setForm({ ...form, liveUrl: e.target.value })}
                   className="w-full rounded-xl border border-white/10 bg-[#0F1422] px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500"
                 />
+                <span className="text-[11px] text-slate-400 mt-1 block">
+                  {form.liveUrl && form.liveUrl.trim().startsWith("http")
+                    ? "✓ Live URL detected: Will display 'Visit Live Website' and pin card to top."
+                    : "ℹ No live URL provided: Will display 'Coming Soon' button automatically."}
+                </span>
               </div>
 
               <div>
@@ -508,6 +516,42 @@ export default function AdminProjectsPage() {
                 >
                   Add Tech
                 </button>
+              </div>
+
+              {/* Quick Tech Suggestions */}
+              <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px] text-slate-400">
+                <span className="text-slate-500">Quick add:</span>
+                {[
+                  "Next.js",
+                  "React",
+                  "Node.js",
+                  "Express.js",
+                  "MySQL",
+                  "PostgreSQL",
+                  "Tailwind CSS",
+                  "TypeScript",
+                  "Socket.io",
+                  "Redis",
+                  "Razorpay API",
+                  "Docker",
+                ].map((item) => (
+                  <button
+                    key={item}
+                    type="button"
+                    onClick={() => {
+                      if (!form.technologies.includes(item)) {
+                        setForm({ ...form, technologies: [...form.technologies, item] });
+                      }
+                    }}
+                    className={`px-2 py-0.5 rounded-full border text-[10px] transition ${
+                      form.technologies.includes(item)
+                        ? "bg-blue-500/20 text-blue-300 border-blue-500/40"
+                        : "bg-white/5 text-slate-300 border-white/10 hover:border-white/30"
+                    }`}
+                  >
+                    + {item}
+                  </button>
+                ))}
               </div>
 
               <div className="mt-2.5 flex flex-wrap gap-1.5">
@@ -687,6 +731,15 @@ export default function AdminProjectsPage() {
                         >
                           {project.status}
                         </span>
+                        {project.liveUrl && project.liveUrl.trim().startsWith("http") ? (
+                          <span className="block text-[9px] font-mono text-emerald-400 mt-1">
+                            🟢 Live Site
+                          </span>
+                        ) : (
+                          <span className="block text-[9px] font-mono text-amber-400/80 mt-1">
+                            ⏳ Coming Soon
+                          </span>
+                        )}
                       </td>
                       <td className="px-5 py-4 whitespace-nowrap text-right">
                         <div className="flex items-center justify-end gap-1.5">
