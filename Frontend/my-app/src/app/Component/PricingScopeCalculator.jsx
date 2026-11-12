@@ -285,7 +285,7 @@ Please review my requirements and let me know the next steps!`;
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 text-xs border-y border-white/10 py-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs border-y border-white/10 py-3">
               <div>
                 <span className="text-slate-400 block text-[11px]">Estimated Timeline</span>
                 <span className="font-bold text-white flex items-center gap-1 mt-0.5">

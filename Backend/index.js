@@ -823,11 +823,36 @@ app.get("/api/blogs", async (req, res) => {
   try {
     const blogs = await Blog.findAll({
       where: { status: "Published" },
-      order: [["date", "DESC"]],
+      order: [["date", "DESC"], ["createdAt", "DESC"]],
     });
     return res.json({ ok: true, items: toPlainItems(blogs) });
   } catch {
     return res.json({ ok: true, items: defaultBlogs });
+  }
+});
+
+// Public Single Blog by Slug or ID
+app.get("/api/blogs/:slug", async (req, res) => {
+  try {
+    const { slug } = req.params;
+    let blog = await Blog.findOne({
+      where: { slug, status: "Published" },
+    });
+    if (!blog) {
+      blog = await Blog.findOne({
+        where: { id: slug, status: "Published" },
+      });
+    }
+    if (blog) {
+      return res.json({ ok: true, item: blog.get({ plain: true }) });
+    }
+    const fallback = defaultBlogs.find((b) => b.slug === slug || b.id === slug);
+    if (fallback) {
+      return res.json({ ok: true, item: fallback });
+    }
+    return res.status(404).json({ ok: false, message: "Blog not found" });
+  } catch (err) {
+    return res.status(500).json({ ok: false, message: err.message });
   }
 });
 

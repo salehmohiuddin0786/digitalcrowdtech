@@ -307,4 +307,34 @@ At Digital Crowd Technologies, we operate on complete honesty: no fake claims, n
   },
 ];
 
-export const getBlogPostBySlug = (slug) => BLOG_POSTS.find((b) => b.slug === slug);
+export const getBlogPostBySlug = (slug) => BLOG_POSTS.find((b) => b.slug === slug || b.id === slug);
+
+export async function fetchLiveBlogs() {
+  try {
+    const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+    const res = await fetch(`${apiBase}/api/blogs`, { cache: "no-store" });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.ok && Array.isArray(data.items) && data.items.length > 0) {
+        return data.items;
+      }
+    }
+  } catch {}
+  return BLOG_POSTS;
+}
+
+export async function fetchLiveBlogPostBySlug(slug) {
+  try {
+    const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+    const res = await fetch(`${apiBase}/api/blogs/${encodeURIComponent(slug)}`, { cache: "no-store" });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.ok && data.item) {
+        return data.item;
+      }
+    }
+  } catch {}
+
+  // Fallback to static
+  return BLOG_POSTS.find((b) => b.slug === slug || b.id === slug) || null;
+}

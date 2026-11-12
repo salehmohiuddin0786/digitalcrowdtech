@@ -2,17 +2,21 @@ import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, Clock, Tag, User, Calendar, Share2 } from "lucide-react";
-import { BLOG_POSTS, getBlogPostBySlug } from "../../data/blogs";
+import { BLOG_POSTS, getBlogPostBySlug, fetchLiveBlogPostBySlug, fetchLiveBlogs } from "../../data/blogs";
+
+export const dynamic = "force-dynamic";
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
-  return BLOG_POSTS.map((post) => ({
+  const blogs = await fetchLiveBlogs();
+  return blogs.map((post) => ({
     slug: post.slug,
   }));
 }
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const post = getBlogPostBySlug(slug);
+  const post = await fetchLiveBlogPostBySlug(slug);
 
   if (!post) {
     return { title: "Article Not Found | Digital Crowd Technologies" };
@@ -29,7 +33,7 @@ export async function generateMetadata({ params }) {
 
 export default async function BlogPostPage({ params }) {
   const { slug } = await params;
-  const post = getBlogPostBySlug(slug);
+  const post = await fetchLiveBlogPostBySlug(slug);
 
   if (!post) {
     notFound();
