@@ -50,7 +50,7 @@ const FEATURED_PROJECTS = [
     tagline: "Real-Time SKU Barcode Scanning, Multi-Counter POS & Supplier Ledger",
     image: "https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=800&auto=format&fit=crop&q=80",
     fallback: "/projects/ruchi-logo.png",
-    caseStudyUrl: "/products#ruchi-bazzar-food-delivery",
+    caseStudyUrl: "/products/restaurant-management-system",
     liveUrl: "https://ruchibazzar.com",
     badge: "Retail & Store SaaS",
     tech: ["Next.js", "React", "Express.js", "MySQL"],
@@ -146,7 +146,9 @@ export default function OurWorkShowcase() {
   const [isPaused, setIsPaused] = useState(false);
   const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
   const touchStartX = useRef(null);
+  const touchStartY = useRef(null);
   const touchEndX = useRef(null);
+  const touchEndY = useRef(null);
 
   const total = FEATURED_PROJECTS.length;
 
@@ -167,25 +169,41 @@ export default function OurWorkShowcase() {
     return () => clearInterval(interval);
   }, [isPaused, total]);
 
-  // Touch swipe support for mobile
+  // Touch swipe support for mobile with vertical scroll preservation
   const handleTouchStart = (e) => {
+    setIsPaused(true);
     touchStartX.current = e.targetTouches[0].clientX;
+    touchStartY.current = e.targetTouches[0].clientY;
   };
 
   const handleTouchMove = (e) => {
     touchEndX.current = e.targetTouches[0].clientX;
+    touchEndY.current = e.targetTouches[0].clientY;
   };
 
   const handleTouchEnd = () => {
-    if (!touchStartX.current || !touchEndX.current) return;
-    const distance = touchStartX.current - touchEndX.current;
-    if (distance > 45) {
-      nextSlide();
-    } else if (distance < -45) {
-      prevSlide();
+    if (
+      touchStartX.current !== null &&
+      touchEndX.current !== null &&
+      touchStartY.current !== null &&
+      touchEndY.current !== null
+    ) {
+      const deltaX = touchStartX.current - touchEndX.current;
+      const deltaY = touchStartY.current - touchEndY.current;
+      // Only switch slide if gesture was primarily horizontal
+      if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
+        if (deltaX > 0) {
+          nextSlide();
+        } else {
+          prevSlide();
+        }
+      }
     }
     touchStartX.current = null;
+    touchStartY.current = null;
     touchEndX.current = null;
+    touchEndY.current = null;
+    setTimeout(() => setIsPaused(false), 4000);
   };
 
   // Keyboard navigation
@@ -267,20 +285,20 @@ export default function OurWorkShowcase() {
 
   return (
     <section
-      className="py-20 md:py-28 bg-transparent border-b border-white/5 [html.light_&]:border-slate-200/80 relative overflow-hidden"
+      className="py-20 md:py-28 bg-transparent border-b border-white/5 [html.light_&]:border-slate-200/80 relative overflow-hidden overflow-x-clip max-w-full"
       id="projects"
       onKeyDown={handleKeyDown}
       tabIndex={0}
       aria-label="Our Work 3D Carousel"
     >
       {/* Ambient background glows */}
-      <div className="absolute top-1/4 -left-20 w-[550px] h-[400px] bg-gradient-to-tr from-[#2F7DE1]/15 to-[#1E40AF]/10 blur-[140px] pointer-events-none -z-10 rounded-full" />
-      <div className="absolute bottom-10 -right-20 w-[500px] h-[360px] bg-gradient-to-tl from-[#F87000]/10 to-[#2F7DE1]/10 blur-[130px] pointer-events-none -z-10 rounded-full" />
+      <div className="absolute top-1/4 -left-10 sm:-left-20 w-[260px] sm:w-[550px] h-[260px] sm:h-[400px] bg-gradient-to-tr from-[#2F7DE1]/15 to-[#1E40AF]/10 blur-[140px] pointer-events-none -z-10 rounded-full" />
+      <div className="absolute bottom-10 -right-10 sm:-right-20 w-[240px] sm:w-[500px] h-[240px] sm:h-[360px] bg-gradient-to-tl from-[#F87000]/10 to-[#2F7DE1]/10 blur-[130px] pointer-events-none -z-10 rounded-full" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 overflow-hidden">
         
         {/* Main Floating Elevated Showcase Container */}
-        <div className="rounded-[2.25rem] sm:rounded-[2.75rem] lg:rounded-[3rem] bg-[#0B1220]/95 [html.light_&]:bg-white border border-white/10 [html.light_&]:border-slate-200/90 shadow-[0_25px_70px_rgba(0,0,0,0.65)] [html.light_&]:shadow-[0_25px_70px_rgba(15,23,42,0.08)] backdrop-blur-xl p-6 sm:p-12 lg:p-16 transition-all duration-300 relative overflow-hidden">
+        <div className="rounded-[2rem] sm:rounded-[2.75rem] lg:rounded-[3rem] bg-[#0B1220]/95 [html.light_&]:bg-white border border-white/10 [html.light_&]:border-slate-200/90 shadow-[0_25px_70px_rgba(0,0,0,0.65)] [html.light_&]:shadow-[0_25px_70px_rgba(15,23,42,0.08)] backdrop-blur-xl p-4 sm:p-12 lg:p-16 transition-all duration-300 relative overflow-hidden">
           
           {/* Header Block matching reference mockup */}
           <div className="text-center max-w-3xl mx-auto space-y-3">
@@ -319,22 +337,22 @@ export default function OurWorkShowcase() {
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
           >
-            {/* Previous Arrow Button */}
+            {/* Previous Arrow Button (Desktop/Tablet) */}
             <button
               type="button"
               onClick={prevSlide}
               aria-label="Previous Project"
-              className="absolute left-1 sm:left-4 top-1/2 -translate-y-1/2 z-50 w-11 h-11 rounded-full bg-[#0B1220]/85 [html.light_&]:bg-white/95 border border-white/20 [html.light_&]:border-slate-300 text-white [html.light_&]:text-slate-800 flex items-center justify-center shadow-2xl hover:bg-[#2F7DE1] hover:text-white transition-all transform hover:scale-110 active:scale-95 cursor-pointer backdrop-blur-md"
+              className="hidden sm:flex absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-[#0B1220]/85 [html.light_&]:bg-white/95 border border-white/20 [html.light_&]:border-slate-300 text-white [html.light_&]:text-slate-800 items-center justify-center shadow-2xl hover:bg-[#2F7DE1] hover:text-white transition-all transform hover:scale-110 active:scale-95 cursor-pointer backdrop-blur-md"
             >
               <ChevronLeft size={20} />
             </button>
 
-            {/* Next Arrow Button */}
+            {/* Next Arrow Button (Desktop/Tablet) */}
             <button
               type="button"
               onClick={nextSlide}
               aria-label="Next Project"
-              className="absolute right-1 sm:right-4 top-1/2 -translate-y-1/2 z-50 w-11 h-11 rounded-full bg-[#0B1220]/85 [html.light_&]:bg-white/95 border border-white/20 [html.light_&]:border-slate-300 text-white [html.light_&]:text-slate-800 flex items-center justify-center shadow-2xl hover:bg-[#2F7DE1] hover:text-white transition-all transform hover:scale-110 active:scale-95 cursor-pointer backdrop-blur-md"
+              className="hidden sm:flex absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-[#0B1220]/85 [html.light_&]:bg-white/95 border border-white/20 [html.light_&]:border-slate-300 text-white [html.light_&]:text-slate-800 items-center justify-center shadow-2xl hover:bg-[#2F7DE1] hover:text-white transition-all transform hover:scale-110 active:scale-95 cursor-pointer backdrop-blur-md"
             >
               <ChevronRight size={20} />
             </button>
@@ -471,11 +489,17 @@ export default function OurWorkShowcase() {
             </div>
 
             {/* Mobile / Tablet Horizontal Animated Slider Track */}
-            <div className="flex lg:hidden relative w-full overflow-hidden py-4">
+            <div
+              className="flex lg:hidden relative w-full overflow-hidden py-4"
+              style={{
+                paddingLeft: "calc(50% - 135px)",
+                paddingRight: "calc(50% - 135px)",
+              }}
+            >
               <div
                 className="flex transition-transform duration-500 ease-out will-change-transform"
                 style={{
-                  transform: `translateX(calc(50% - 135px - ${activeIndex * 286}px))`,
+                  transform: `translateX(-${activeIndex * 286}px)`,
                 }}
               >
                 {FEATURED_PROJECTS.map((project, idx) => {
@@ -575,6 +599,35 @@ export default function OurWorkShowcase() {
                   );
                 })}
               </div>
+            </div>
+
+            {/* Mobile-Only Dedicated Prev / Next Navigation Controls Bar */}
+            <div className="flex sm:hidden items-center justify-between mt-3 px-3">
+              <button
+                type="button"
+                onClick={prevSlide}
+                aria-label="Previous Project"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-white text-xs font-semibold border border-white/15 backdrop-blur-md transition-all cursor-pointer shadow-sm"
+              >
+                <ChevronLeft size={14} />
+                <span>Prev</span>
+              </button>
+
+              <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-[#F87000] px-3 py-1 rounded-full bg-white/5 border border-white/10">
+                <span>{activeIndex + 1}</span>
+                <span className="text-slate-500">/</span>
+                <span className="text-slate-400">{total}</span>
+              </div>
+
+              <button
+                type="button"
+                onClick={nextSlide}
+                aria-label="Next Project"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-white text-xs font-semibold border border-white/15 backdrop-blur-md transition-all cursor-pointer shadow-sm"
+              >
+                <span>Next</span>
+                <ChevronRight size={14} />
+              </button>
             </div>
 
             {/* Carousel Pagination Dots Track (8 indicators) */}

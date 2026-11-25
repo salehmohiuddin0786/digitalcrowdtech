@@ -148,10 +148,10 @@ export default function sitemap() {
           prod &&
           prod.slug &&
           prod.status !== "Draft" &&
-          isSecurityCompliantPath(`/products#${prod.slug}`)
+          isSecurityCompliantPath(`/products/${prod.slug}`)
       )
       .map((prod) => ({
-        url: `${BASE_URL}/products#${encodeURIComponent(prod.slug)}`,
+        url: `${BASE_URL}/products/${encodeURIComponent(prod.slug)}`,
         lastModified: currentDate,
         changeFrequency: "monthly",
         priority: 0.85,

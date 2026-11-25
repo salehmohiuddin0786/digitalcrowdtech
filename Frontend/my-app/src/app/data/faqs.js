@@ -46,7 +46,7 @@ export const FAQS = [
     question: "Can you build ERP and business software?",
     category: "Services",
     answer:
-      "Yes. We develop custom ERP software tailored around your exact operational workflows, including inventory tracking, customer relationship management (CRM), staff attendance, invoicing with GST calculations, and management reporting.",
+      "Yes. We develop custom ERP software tailored around your exact operational workflows, including inventory tracking, customer relationship management (CRM), staff attendance, itemized billing and invoicing, and management reporting.",
   },
   {
     id: "school-management",

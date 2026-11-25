@@ -263,8 +263,8 @@ export const SERVICES = [
         desc: "Customer 360 view, contact history, quotation generation, and payment ledger tracking.",
       },
       {
-        title: "Invoicing, Billing & GST",
-        desc: "Tax-compliant invoice generation, automated PDF generation, payment status, and receivables.",
+        title: "Invoicing & Billing Systems",
+        desc: "Itemized invoice generation, automated PDF billing receipts, payment status, and receivables.",
       },
       {
         title: "Staff & Attendance Management",

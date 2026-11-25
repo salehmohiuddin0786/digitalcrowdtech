@@ -18,6 +18,7 @@ import {
   Code2,
 } from "lucide-react";
 import SectionHeading from "../Component/SectionHeading";
+import WhyChooseSection from "../Component/WhyChooseSection";
 import { PRODUCTS } from "../data/products";
 
 function isLogoImage(url) {
@@ -231,33 +232,41 @@ export default async function ProductsPage() {
                       )}
 
                       {/* Action Links */}
-                      <div className="pt-3 flex flex-wrap items-center gap-3">
+                      <div className="pt-4 flex flex-wrap items-center gap-3">
+                        <Link
+                          href={`/products/${product.slug}`}
+                          className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-slate-200 [html.light_&]:text-slate-700 bg-white/[0.05] [html.light_&]:bg-slate-100 hover:bg-white/[0.1] [html.light_&]:hover:bg-slate-200 border border-white/10 [html.light_&]:border-slate-300 rounded-xl transition"
+                        >
+                          <span>Explore Product</span>
+                          <ArrowRight size={14} />
+                        </Link>
+
+                        <Link
+                          href={`/checkout?product=${product.slug}`}
+                          className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-[#F87000] to-orange-600 hover:from-orange-500 hover:to-orange-600 rounded-xl shadow-lg shadow-orange-500/20 transition"
+                        >
+                          <ShoppingBag size={14} />
+                          <span>Buy Now</span>
+                        </Link>
+
                         {product.liveUrl && (
                           <a
                             href={product.liveUrl}
                             target={isExternal ? "_blank" : undefined}
                             rel={isExternal ? "noopener noreferrer" : undefined}
-                            className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-xl shadow-md transition"
+                            className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/25 rounded-xl transition"
                           >
-                            <span>Live Storefront Demo</span>
-                            <ExternalLink size={14} />
+                            <span>Live Demo</span>
+                            <ExternalLink size={13} />
                           </a>
                         )}
-
-                        <Link
-                          href={`/contact?service=${encodeURIComponent(product.title)}`}
-                          className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-[#0B1220] [html.light_&]:text-white bg-[#F87000] hover:bg-[#FF8A24] rounded-xl shadow-lg shadow-orange-500/20 transition"
-                        >
-                          <span>Request Deployment</span>
-                          <ArrowRight size={14} />
-                        </Link>
 
                         {product.caseStudyUrl && (
                           <Link
                             href={product.caseStudyUrl}
                             className="text-xs font-semibold text-blue-400 hover:text-blue-300 inline-flex items-center gap-1 ml-auto"
                           >
-                            <span>Architecture Details</span>
+                            <span>Case Study</span>
                             <ArrowRight size={12} />
                           </Link>
                         )}
@@ -273,48 +282,8 @@ export default async function ProductsPage() {
         </div>
       </section>
 
-      {/* 3. WHY CHOOSE OUR PRODUCTS */}
-      <section className="py-16 md:py-24 bg-transparent border-b border-white/5 [html.light_&]:border-slate-200/80">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            badge="Engineering Integrity"
-            title="Why Our Platforms?"
-            subtitle="Clear advantages over generic templates and recurring SaaS aggregators."
-          />
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-6 rounded-2xl glass-card-premium shadow-md space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold">
-                <ShieldCheck size={20} />
-              </div>
-              <h3 className="text-base font-bold text-white [html.light_&]:text-[#0A2540]">Zero Aggregator Commissions</h3>
-              <p className="text-xs sm:text-sm text-slate-400 [html.light_&]:text-slate-600 leading-relaxed">
-                Take complete ownership of your margins. Stop giving 25-30% of each order to delivery and marketplace aggregators.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl glass-card-premium shadow-md space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-bold">
-                <Database size={20} />
-              </div>
-              <h3 className="text-base font-bold text-white [html.light_&]:text-[#0A2540]">Dedicated Relational DB</h3>
-              <p className="text-xs sm:text-sm text-slate-400 [html.light_&]:text-slate-600 leading-relaxed">
-                Your database runs on an isolated MySQL schema. You retain 100% control over customer records, transaction histories, and private business data.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl glass-card-premium shadow-md space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-[#2F7DE1] flex items-center justify-center font-bold">
-                <Sparkles size={20} />
-              </div>
-              <h3 className="text-base font-bold text-white [html.light_&]:text-[#0A2540]">Customizable Architecture</h3>
-              <p className="text-xs sm:text-sm text-slate-400 [html.light_&]:text-slate-600 leading-relaxed">
-                Need custom tax rules, regional delivery zones, specific ERP integrations, or WhatsApp alerts? We modify the codebase to match your exact business model.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* 3. WHY CHOOSE DIGITAL CROWD TECH */}
+      <WhyChooseSection />
 
       {/* 4. FINAL CTA */}
       <section className="py-20 bg-transparent text-center">

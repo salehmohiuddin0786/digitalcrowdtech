@@ -1,0 +1,91 @@
+<svg width='900' height='550' viewBox='0 0 900 550' fill='none' xmlns='http://www.w3.org/2000/svg'>
+  <defs>
+    <linearGradient id='bgGrad' x1='0%' y1='0%' x2='100%' y2='100%'>
+      <stop offset='0%' stop-color='#0B1220' />
+      <stop offset='100%' stop-color='#07090E' />
+    </linearGradient>
+    <linearGradient id='accentGrad' x1='0%' y1='0%' x2='100%' y2='0%'>
+      <stop offset='0%' stop-color='#2F7DE1' />
+      <stop offset='100%' stop-color='#2F7DE1' />
+    </linearGradient>
+    <filter id='glow' x='-20%' y='-20%' width='140%' height='140%'>
+      <feGaussianBlur stdDeviation='50' result='blur' />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width='900' height='550' rx='16' fill='url(#bgGrad)' />
+  <rect width='900' height='550' rx='16' stroke='rgba(255,255,255,0.08)' stroke-width='2' />
+
+  <!-- Ambient Glow -->
+  <circle cx='800' cy='100' r='180' fill='#2F7DE1' fill-opacity='0.16' filter='url(#glow)' />
+  <circle cx='100' cy='460' r='160' fill='#2F7DE1' fill-opacity='0.12' filter='url(#glow)' />
+
+  <!-- Window Chrome Header -->
+  <rect x='36' y='32' width='828' height='44' rx='10' fill='rgba(255,255,255,0.03)' stroke='rgba(255,255,255,0.08)' />
+  <circle cx='60' cy='54' r='6' fill='#EF4444' opacity='0.8' />
+  <circle cx='78' cy='54' r='6' fill='#F59E0B' opacity='0.8' />
+  <circle cx='96' cy='54' r='6' fill='#10B981' opacity='0.8' />
+  <rect x='124' y='42' width='340' height='24' rx='6' fill='rgba(255,255,255,0.06)' />
+  <text x='140' y='58' fill='rgba(255,255,255,0.5)' font-family='monospace' font-size='12'>https://agency.digitalcrowdtech.in/admin/security</text>
+
+  <rect x='740' y='42' width='104' height='24' rx='6' fill='#2F7DE1' fill-opacity='0.2' stroke='#2F7DE1' stroke-opacity='0.4' />
+  <text x='754' y='58' fill='#2F7DE1' font-family='sans-serif' font-weight='bold' font-size='11'>PRO SUITE</text>
+
+  <!-- Main Canvas Workspace -->
+  <rect x='36' y='92' width='828' height='426' rx='12' fill='rgba(15,23,42,0.65)' stroke='rgba(255,255,255,0.05)' />
+
+  <!-- Sidebar Nav -->
+  <rect x='52' y='108' width='180' height='394' rx='10' fill='rgba(255,255,255,0.02)' stroke='rgba(255,255,255,0.04)' />
+  <circle cx='78' cy='136' r='14' fill='#2F7DE1' fill-opacity='0.3' />
+  <text x='72' y='141' font-size='14'>🛡️</text>
+  <rect x='102' y='132' width='90' height='10' rx='3' fill='rgba(255,255,255,0.6)' />
+
+  <!-- Sidebar Nav Items -->
+  <rect x='64' y='170' width='156' height='28' rx='6' fill='#2F7DE1' fill-opacity='0.15' />
+  <rect x='76' y='178' width='80' height='12' rx='3' fill='#2F7DE1' />
+  
+  <rect x='64' y='210' width='156' height='26' rx='6' fill='rgba(255,255,255,0.02)' />
+  <rect x='76' y='218' width='90' height='10' rx='3' fill='rgba(255,255,255,0.3)' />
+  
+  <rect x='64' y='246' width='156' height='26' rx='6' fill='rgba(255,255,255,0.02)' />
+  <rect x='76' y='254' width='70' height='10' rx='3' fill='rgba(255,255,255,0.3)' />
+  
+  <rect x='64' y='282' width='156' height='26' rx='6' fill='rgba(255,255,255,0.02)' />
+  <rect x='76' y='290' width='110' height='10' rx='3' fill='rgba(255,255,255,0.3)' />
+
+  <rect x='64' y='450' width='156' height='36' rx='8' fill='rgba(255,255,255,0.03)' />
+  <text x='76' y='472' fill='#10B981' font-family='sans-serif' font-weight='bold' font-size='11'>✓ System Online 99.9%</text>
+
+  <!-- Hero Header Banner Inside UI -->
+  <rect x='248' y='108' width='600' height='160' rx='10' fill='rgba(255,255,255,0.02)' stroke='rgba(255,255,255,0.05)' />
+  <text x='276' y='150' fill='#FFFFFF' font-family='sans-serif' font-weight='800' font-size='22'>Role-Based Access Control & Security Suite</text>
+  <rect x='276' y='162' width='210' height='22' rx='5' fill='#2F7DE1' fill-opacity='0.2' />
+  <text x='286' y='177' fill='#2F7DE1' font-family='sans-serif' font-weight='700' font-size='11'>SECURITY & USER GOVERNANCE</text>
+  <text x='276' y='212' fill='rgba(255,255,255,0.65)' font-family='sans-serif' font-size='14'>JWT authentication, bcrypt credential encryption, and rate-limited API endpoints</text>
+  <text x='276' y='240' fill='#10B981' font-family='sans-serif' font-weight='600' font-size='12'>✓ Verified Next.js 16 App Router  ✓ MySQL Relational Pipeline  ✓ Nodemailer Dispatch</text>
+
+  <!-- Metric Badges Row -->
+  <rect x='248' y='284' width='190' height='100' rx='10' fill='rgba(255,255,255,0.02)' stroke='rgba(255,255,255,0.05)' />
+  <text x='268' y='312' fill='rgba(255,255,255,0.45)' font-family='sans-serif' font-size='12'>LEAD CONVERSION</text>
+  <text x='268' y='348' fill='#10B981' font-family='sans-serif' font-weight='bold' font-size='26'>+320%</text>
+  <text x='268' y='370' fill='rgba(255,255,255,0.4)' font-family='sans-serif' font-size='11'>Automated Qualification</text>
+
+  <rect x='453' y='284' width='190' height='100' rx='10' fill='rgba(255,255,255,0.02)' stroke='rgba(255,255,255,0.05)' />
+  <text x='473' y='312' fill='rgba(255,255,255,0.45)' font-family='sans-serif' font-size='12'>LIGHTHOUSE SPEED</text>
+  <text x='473' y='348' fill='#2F7DE1' font-family='sans-serif' font-weight='bold' font-size='26'>98 / 100</text>
+  <text x='473' y='370' fill='rgba(255,255,255,0.4)' font-family='sans-serif' font-size='11'>Server-Rendered SSR</text>
+
+  <rect x='658' y='284' width='190' height='100' rx='10' fill='rgba(255,255,255,0.02)' stroke='rgba(255,255,255,0.05)' />
+  <text x='678' y='312' fill='rgba(255,255,255,0.45)' font-family='sans-serif' font-size='12'>OWNERSHIP MODEL</text>
+  <text x='678' y='348' fill='#2F7DE1' font-family='sans-serif' font-weight='bold' font-size='26'>100%</text>
+  <text x='678' y='370' fill='rgba(255,255,255,0.4)' font-family='sans-serif' font-size='11'>Full Code &amp; DB Control</text>
+
+  <!-- Bottom Interactive Table -->
+  <rect x='248' y='400' width='600' height='102' rx='10' fill='rgba(255,255,255,0.02)' stroke='rgba(255,255,255,0.05)' />
+  <rect x='268' y='420' width='180' height='12' rx='3' fill='rgba(255,255,255,0.4)' />
+  <rect x='268' y='444' width='340' height='10' rx='2' fill='rgba(255,255,255,0.15)' />
+  <rect x='268' y='466' width='280' height='10' rx='2' fill='rgba(255,255,255,0.15)' />
+  <rect x='720' y='435' width='110' height='36' rx='8' fill='#2F7DE1' />
+  <text x='740' y='458' fill='#FFFFFF' font-family='sans-serif' font-weight='bold' font-size='12'>LIVE DEMO</text>
+</svg>

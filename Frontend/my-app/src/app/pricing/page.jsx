@@ -78,7 +78,7 @@ export default function PricingPage() {
               },
               {
                 title: "ERP & Operations Software",
-                desc: "Inventory management across warehouses, CRM ledgers, staff attendance, automated GST invoicing, and financial reporting.",
+                desc: "Inventory management across warehouses, CRM ledgers, staff attendance, automated business invoicing, and financial reporting.",
                 action: "Request a Custom Quote",
               },
               {

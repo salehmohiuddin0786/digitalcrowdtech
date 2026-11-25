@@ -306,7 +306,7 @@ export default function SitemapPage() {
 
                   <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs">
                     <Link
-                      href="/products"
+                      href={`/products/${prod.slug}`}
                       className="inline-flex items-center gap-1 font-semibold text-blue-400 hover:text-blue-300"
                     >
                       <span>Explore Product</span>

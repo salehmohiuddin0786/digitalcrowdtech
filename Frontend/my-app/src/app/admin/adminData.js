@@ -102,7 +102,7 @@ export const getQueries = async (params = {}) => {
         service: "Custom Website / Web Application",
         budget: "Starting from ₹9,999",
         subject: "Custom ERP & Fleet Management System",
-        message: "We need a custom web portal to track driver trips, fuel expenses, and customer billing with GST invoices.",
+        message: "We need a custom web portal to track driver trips, fuel expenses, and customer billing with commercial invoices.",
         source: "Website",
         status: "New",
         mailStatus: "Sent",
@@ -566,4 +566,46 @@ export const deleteProduct = async (id) => {
 };
 
 export const uploadProductImage = uploadProjectImage;
+
+// ==========================================
+// ORDERS & PAYMENT MANAGEMENT
+// ==========================================
+export const getAdminOrders = async (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  const url = query ? `/api/admin/orders?${query}` : "/api/admin/orders";
+  try {
+    const result = await request(url, { auth: true });
+    return result.items || [];
+  } catch (err) {
+    console.warn("Backend orders fetch warning:", err.message);
+    return [];
+  }
+};
+
+export const updateOrderStatus = async (id, status, notes = "") => {
+  return await request(`/api/admin/orders/${id}/status`, {
+    method: "PATCH",
+    auth: true,
+    body: JSON.stringify({ status, adminNotes: notes }),
+  });
+};
+
+export const getAdminPaymentSettings = async () => {
+  try {
+    const result = await request("/api/admin/settings/payment", { auth: true });
+    return result.settings || null;
+  } catch (err) {
+    console.warn("Backend payment settings fetch warning:", err.message);
+    return null;
+  }
+};
+
+export const updateAdminPaymentSettings = async (payload) => {
+  return await request("/api/admin/settings/payment", {
+    method: "PUT",
+    auth: true,
+    body: JSON.stringify(payload),
+  });
+};
+
 

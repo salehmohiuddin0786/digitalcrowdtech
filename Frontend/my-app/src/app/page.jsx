@@ -33,7 +33,10 @@ import FaqSection from "./Component/FaqSection";
 import OurWorkShowcase from "./Component/OurWorkShowcase";
 import ClientProofsSection from "./Component/ClientProofsSection";
 import PricingScopeCalculator from "./Component/PricingScopeCalculator";
+import WhatWeBuildSection from "./Component/WhatWeBuildSection";
+import WhyChooseSection from "./Component/WhyChooseSection";
 import { COMPANY } from "./data/company";
+import { PRODUCTS } from "./data/products";
 import { SERVICES } from "./data/services";
 import { FAQS } from "./data/faqs";
 
@@ -47,45 +50,6 @@ export const metadata = {
 };
 
 export default function HomePage() {
-  const whyPoints = [
-    {
-      title: "Business-Focused Development",
-      description:
-        "We understand your business model, customer workflows, and operational requirements before writing a single line of code.",
-      icon: Zap,
-    },
-    {
-      title: "Modern Technology",
-      description:
-        "We use proven, production-grade frontend, backend, and database technologies (React, Next.js, Node.js, Express, MySQL) built for longevity.",
-      icon: Code2,
-    },
-    {
-      title: "Complete Development",
-      description:
-        "Frontend, backend APIs, relational database schemas, payment integrations, and cloud deployment handled under one unified engineering team.",
-      icon: Layers,
-    },
-    {
-      title: "Responsive by Default",
-      description:
-        "Every website and web application is engineered to perform seamlessly across mobile phones, tablets, laptops, and desktop displays.",
-      icon: Smartphone,
-    },
-    {
-      title: "Transparent Communication",
-      description:
-        "Direct consultation, milestone-based planning, regular staging previews, and clear communication throughout the build lifecycle.",
-      icon: ShieldCheck,
-    },
-    {
-      title: "Post-Launch Support",
-      description:
-        "Comprehensive support for deployment, domain setup, server monitoring, bug fixes, updates, and ongoing improvements.",
-      icon: Clock,
-    },
-  ];
-
   const steps = [
     { num: "01", name: "Discover", desc: "Understand your business, target users, and functional requirements." },
     { num: "02", name: "Plan", desc: "Define feature specifications, architecture, milestones, and deliverable scope." },
@@ -256,230 +220,16 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3. SERVICES: WHAT WE BUILD */}
-      <section className="py-20 md:py-28 bg-transparent border-b border-white/5 [html.light_&]:border-slate-200/80 relative" id="services">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            badge="Solutions & Services"
-            title="What We Build"
-            subtitle="From professional business websites to complete custom software, we build digital solutions around your requirements."
-          />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {SERVICES.map((service) => {
-              const isBusinessSite = service.id === "business-website-development";
-              const isCustomApp = service.id === "custom-web-application-development";
-
-              return (
-                <SpotlightCard
-                  key={service.id}
-                  className="p-7 flex flex-col justify-between group"
-                >
-                  <div>
-                    {/* Card Header: Number & Badge */}
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-xs font-mono font-bold text-blue-400 px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20">
-                        {service.number}
-                      </span>
-                      {service.startingPrice && service.startingPrice.includes("₹") ? (
-                        <span className="text-xs font-bold text-emerald-400 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-                          {service.startingPrice}
-                        </span>
-                      ) : (
-                        <span className="text-[11px] font-medium text-slate-400 px-2 py-0.5 rounded bg-white/5">
-                          Custom Quote
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Title */}
-                    <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors mb-2.5">
-                      {service.title}
-                    </h3>
-
-                    {/* Summary */}
-                    <p className="text-sm text-slate-400 leading-relaxed mb-6">
-                      {service.summary}
-                    </p>
-
-                    {/* Key Technical Bullets */}
-                    <div className="space-y-2 mb-6">
-                      {service.id === "backend-api-development" && (
-                        <div className="flex flex-wrap gap-1.5 text-[11px] text-slate-300">
-                          {[
-                            "Node.js",
-                            "Express.js",
-                            "REST APIs",
-                            "Auth & RBAC",
-                            "Database Integration",
-                            "OTP & Payments",
-                            "Real-Time WebSockets",
-                          ].map((t) => (
-                            <span key={t} className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/5">
-                              {t}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      {service.id === "erp-development" && (
-                        <div className="flex flex-wrap gap-1.5 text-[11px] text-slate-300">
-                          {[
-                            "Inventory",
-                            "Customers",
-                            "Orders",
-                            "Employees",
-                            "Accounts",
-                            "Reports",
-                            "Admin Dashboard",
-                            "Role-Based Access",
-                          ].map((t) => (
-                            <span key={t} className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/5">
-                              {t}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      {service.id === "school-management-software" && (
-                        <div className="flex flex-wrap gap-1.5 text-[11px] text-slate-300">
-                          {[
-                            "Students",
-                            "Teachers",
-                            "Parents",
-                            "Attendance",
-                            "Fees",
-                            "Notices",
-                            "Timetable",
-                            "Reports",
-                            "Admin Dashboard",
-                          ].map((t) => (
-                            <span key={t} className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/5">
-                              {t}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      {isBusinessSite && (
-                        <div className="flex flex-wrap gap-1.5 text-[11px] text-slate-300">
-                          {[
-                            "Responsive Layouts",
-                            "Contact & WhatsApp",
-                            "SEO Semantic HTML",
-                            "Fast Performance",
-                            "VPS / Cloud Setup",
-                          ].map((t) => (
-                            <span key={t} className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/5">
-                              {t}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      {isCustomApp && (
-                        <div className="flex flex-wrap gap-1.5 text-[11px] text-slate-300">
-                          {[
-                            "Frontend + Backend",
-                            "MySQL Relational DB",
-                            "Authentication & RBAC",
-                            "Admin Dashboards",
-                            "Payment APIs",
-                          ].map((t) => (
-                            <span key={t} className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/5">
-                              {t}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      {service.id === "ecommerce-development" && (
-                        <div className="flex flex-wrap gap-1.5 text-[11px] text-slate-300">
-                          {[
-                            "Product Catalog",
-                            "Shopping Cart",
-                            "UPI & Card Checkout",
-                            "Orders & Coupons",
-                            "Merchant Portal",
-                          ].map((t) => (
-                            <span key={t} className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/5">
-                              {t}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Card Bottom CTA */}
-                  <div className="pt-4 border-t border-white/5 flex items-center justify-between">
-                    <span className="text-[11px] text-slate-500">
-                      {service.startingPrice && service.startingPrice.includes("₹")
-                        ? "Starting price"
-                        : "Custom requirements"}
-                    </span>
-                    <Link
-                      href={`/services/${service.slug}`}
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-400 group-hover:text-blue-300 transition-colors"
-                    >
-                      <span>{service.ctaText}</span>
-                      <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform" />
-                    </Link>
-                  </div>
-                </SpotlightCard>
-              );
-            })}
-          </div>
-
-          <div className="mt-10 text-center">
-            <Link
-              href="/services"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-slate-300 hover:text-white px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition"
-            >
-              <span>Explore All Detailed Service Pages</span>
-              <ArrowRight size={15} />
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* 3. SOLUTIONS & SERVICES: WHAT WE BUILD (PRODUCTS + SERVICES) */}
+      <WhatWeBuildSection services={SERVICES} products={PRODUCTS} />
 
       <OurWorkShowcase />
 
       {/* 5. VERIFIED CLIENT PROOFS & DELIVERABLES */}
       <ClientProofsSection />
 
-      {/* 6. WHY CHOOSE US */}
-      <section className="py-20 md:py-28 bg-transparent border-b border-white/5 [html.light_&]:border-slate-200/80 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            badge="Engineering Integrity"
-            title="Why Work With Digital Crowd Technologies?"
-            subtitle="Capable, honest software development built around real client outcomes and clean technical execution."
-          />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {whyPoints.map((point) => {
-              const Icon = point.icon;
-              return (
-                <div
-                  key={point.title}
-                  className="p-7 rounded-2xl glass-card-premium group hover:border-[#2F7DE1]/50 shadow-xl transition-all duration-300"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-[#2F7DE1]/10 border border-[#2F7DE1]/25 text-[#2F7DE1] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
-                    <Icon size={20} />
-                  </div>
-                  <h3 className="text-lg font-bold text-white [html.light_&]:text-[#0A2540] mb-2">
-                    {point.title}
-                  </h3>
-                  <p className="text-sm text-[#8494AD] [html.light_&]:text-[#64748B] leading-relaxed">
-                    {point.description}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      {/* 6. WHY CHOOSE DIGITAL CROWD TECH */}
+      <WhyChooseSection id="why-choose" />
 
       {/* 6. HOW WE WORK: FROM IDEA TO LAUNCH */}
       <section className="py-20 md:py-28 bg-transparent border-b border-white/5 [html.light_&]:border-slate-200/80 relative" id="process">

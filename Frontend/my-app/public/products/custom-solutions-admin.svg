@@ -1,0 +1,69 @@
+<svg width='800' height='500' viewBox='0 0 800 500' fill='none' xmlns='http://www.w3.org/2000/svg'>
+  <defs>
+    <linearGradient id='bgGrad' x1='0%' y1='0%' x2='100%' y2='100%'>
+      <stop offset='0%' stop-color='#0B1220' />
+      <stop offset='100%' stop-color='#07090E' />
+    </linearGradient>
+    <filter id='glow' x='-20%' y='-20%' width='140%' height='140%'>
+      <feGaussianBlur stdDeviation='40' result='blur' />
+    </filter>
+  </defs>
+  
+  <!-- Canvas Background -->
+  <rect width='800' height='500' rx='16' fill='url(#bgGrad)' />
+  <rect width='800' height='500' rx='16' stroke='rgba(255,255,255,0.08)' stroke-width='2' />
+  
+  <!-- Subtle Ambient Glow -->
+  <circle cx='700' cy='80' r='160' fill='#6366F1' fill-opacity='0.15' filter='url(#glow)' />
+  <circle cx='100' cy='420' r='140' fill='#2F7DE1' fill-opacity='0.12' filter='url(#glow)' />
+  
+  <!-- Browser Chrome Header -->
+  <rect x='32' y='32' width='736' height='40' rx='8' fill='rgba(255,255,255,0.03)' stroke='rgba(255,255,255,0.06)' />
+  <circle cx='54' cy='52' r='5' fill='#EF4444' opacity='0.7' />
+  <circle cx='70' cy='52' r='5' fill='#F59E0B' opacity='0.7' />
+  <circle cx='86' cy='52' r='5' fill='#10B981' opacity='0.7' />
+  <rect x='112' y='42' width='260' height='20' rx='4' fill='rgba(255,255,255,0.05)' />
+  <text x='124' y='56' fill='rgba(255,255,255,0.4)' font-family='monospace' font-size='11'>https://digitalcrowdtech.in/products</text>
+  
+  <!-- Mockup UI Body -->
+  <rect x='32' y='88' width='736' height='380' rx='12' fill='rgba(15,23,42,0.6)' stroke='rgba(255,255,255,0.05)' />
+  
+  <!-- Sidebar -->
+  <rect x='48' y='104' width='160' height='348' rx='8' fill='rgba(255,255,255,0.02)' />
+  <circle cx='72' cy='128' r='12' fill='#6366F1' fill-opacity='0.3' />
+  <rect x='92' y='124' width='80' height='10' rx='3' fill='rgba(255,255,255,0.4)' />
+  
+  <rect x='60' y='160' width='136' height='8' rx='2' fill='rgba(255,255,255,0.1)' />
+  <rect x='60' y='180' width='120' height='8' rx='2' fill='rgba(255,255,255,0.1)' />
+  <rect x='60' y='200' width='140' height='8' rx='2' fill='rgba(255,255,255,0.1)' />
+  <rect x='60' y='220' width='110' height='8' rx='2' fill='rgba(255,255,255,0.1)' />
+  
+  <!-- Main Display Card -->
+  <rect x='224' y='104' width='528' height='150' rx='8' fill='rgba(255,255,255,0.02)' stroke='rgba(255,255,255,0.04)' />
+  <text x='252' y='146' font-size='32'>🚀</text>
+  <text x='300' y='142' fill='#FFFFFF' font-family='sans-serif' font-weight='bold' font-size='20'>Custom Web & Mobile (ADMIN)</text>
+  <rect x='300' y='152' width='160' height='18' rx='4' fill='#6366F1' fill-opacity='0.2' />
+  <text x='308' y='165' fill='#6366F1' font-family='sans-serif' font-weight='600' font-size='10'>FULL-STACK ENGINEERING</text>
+  <text x='252' y='200' fill='rgba(255,255,255,0.6)' font-family='sans-serif' font-size='13'>High-fidelity admin view & management interface</text>
+  <text x='252' y='224' fill='#10B981' font-family='sans-serif' font-weight='bold' font-size='12'>✓ Verified Business Architecture  ✓ PhonePe UPI Integration</text>
+  
+  <!-- Metrics Cards Row -->
+  <rect x='224' y='270' width='165' height='90' rx='8' fill='rgba(255,255,255,0.02)' stroke='rgba(255,255,255,0.04)' />
+  <text x='240' y='298' fill='rgba(255,255,255,0.4)' font-family='sans-serif' font-size='11'>AVAILABILITY</text>
+  <text x='240' y='328' fill='#10B981' font-family='sans-serif' font-weight='bold' font-size='18'>99.9% Uptime</text>
+  
+  <rect x='405' y='270' width='165' height='90' rx='8' fill='rgba(255,255,255,0.02)' stroke='rgba(255,255,255,0.04)' />
+  <text x='421' y='298' fill='rgba(255,255,255,0.4)' font-family='sans-serif' font-size='11'>DEPLOYMENT</text>
+  <text x='421' y='328' fill='#2F7DE1' font-family='sans-serif' font-weight='bold' font-size='18'>Turnkey SaaS</text>
+  
+  <rect x='586' y='270' width='166' height='90' rx='8' fill='rgba(255,255,255,0.02)' stroke='rgba(255,255,255,0.04)' />
+  <text x='602' y='298' fill='rgba(255,255,255,0.4)' font-family='sans-serif' font-size='11'>COMPLIANCE</text>
+  <text x='602' y='328' fill='#6366F1' font-family='sans-serif' font-weight='bold' font-size='18'>PhonePe Ready</text>
+  
+  <!-- Bottom Status Bar -->
+  <rect x='224' y='376' width='528' height='76' rx='8' fill='rgba(255,255,255,0.02)' stroke='rgba(255,255,255,0.04)' />
+  <rect x='240' y='394' width='140' height='10' rx='3' fill='rgba(255,255,255,0.2)' />
+  <rect x='240' y='416' width='280' height='8' rx='2' fill='rgba(255,255,255,0.1)' />
+  <rect x='630' y='400' width='106' height='28' rx='6' fill='#6366F1' />
+  <text x='654' y='418' fill='#FFFFFF' font-family='sans-serif' font-weight='bold' font-size='11'>EXPLORE</text>
+</svg>

@@ -43,7 +43,7 @@ export const PROJECTS = [
         {
           name: "SuperAdmin Control Console (mainadmin)",
           tech: "Next.js Enterprise Suite",
-          desc: "Comprehensive platform management for restaurant onboarding, commission settings, GST compliance, service zone mapping, and dispute resolution.",
+          desc: "Comprehensive platform management for restaurant onboarding, commission settings, tax & billing rules, service zone mapping, and dispute resolution.",
         },
       ],
       backend: "Node.js & Express 5 REST API with Sequelize ORM, connection pooling, and Socket.io for live order state transitions.",
@@ -107,7 +107,7 @@ export const PROJECTS = [
     summary:
       "A complete cloud-based store inventory, billing, multi-counter POS, and supplier ledger suite for grocery retailers and supermarkets.",
     description:
-      "Ruchi Store equips retail supermarket merchants with real-time barcode inventory scanning, low-stock threshold triggers, multi-counter Point of Sale (POS) terminals, and vendor purchasing ledgers integrated with GST-compliant invoicing.",
+      "Ruchi Store equips retail supermarket merchants with real-time barcode inventory scanning, low-stock threshold triggers, multi-counter Point of Sale (POS) terminals, and vendor purchasing ledgers integrated with itemized invoicing.",
     technologies: [
       "Next.js",
       "React",
@@ -129,7 +129,7 @@ export const PROJECTS = [
       },
       {
         title: "Inventory & Supplier Ledger",
-        desc: "Automated low-stock threshold triggers, perishable expiry tracking, and GST purchase invoices.",
+        desc: "Automated low-stock threshold triggers, perishable expiry tracking, and vendor purchase invoices.",
       },
     ],
     features: [
@@ -137,7 +137,7 @@ export const PROJECTS = [
       "Multi-counter Point of Sale (POS) with split cash/UPI payment settlement",
       "Automated low-stock threshold alerts and supplier purchase order generation",
       "Batch expiry date tracking for perishables and dairy products",
-      "Daily revenue reports, profit margin analytics, and GST tax filing exports",
+      "Daily revenue reports, profit margin analytics, and financial tax filing exports",
     ],
     challenges: [
       {
@@ -150,7 +150,7 @@ export const PROJECTS = [
       "Sub-50ms product catalog lookups across 20,000+ grocery SKUs",
       "Direct integration with thermal receipt printers and cash drawers",
     ],
-    caseStudyUrl: "/products#ruchi-bazzar-food-delivery",
+    caseStudyUrl: "/products/restaurant-management-system",
     liveDemoAvailable: true,
     liveUrl: "https://ruchibazzar.com",
     imageUrl: "https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=800&auto=format&fit=crop&q=80",
@@ -324,7 +324,7 @@ export const PROJECTS = [
     challenges: [
       {
         challenge: "Managing volatile daily NECC price revisions across bulk contracts",
-        solution: "Engineered an automatic daily price sync service that locks in rate cards at the moment of order placement and generates GST invoices automatically.",
+        solution: "Engineered an automatic daily price sync service that locks in rate cards at the moment of order placement and generates billing invoices automatically.",
       },
     ],
     highlights: [
@@ -350,7 +350,7 @@ export const PROJECTS = [
     summary:
       "A secure multi-tenant clinical operating system with patient electronic health records (EHR), doctor scheduling, telemedicine, and pharmacy billing.",
     description:
-      "Consolidates healthcare operations into a multi-tenant cloud architecture. Supports multi-doctor clinics with appointment booking, OPD/IPD queue tokens, digital prescription pads, diagnostic lab order routing, and GST medical billing.",
+      "Consolidates healthcare operations into a multi-tenant cloud architecture. Supports multi-doctor clinics with appointment booking, OPD/IPD queue tokens, digital prescription pads, diagnostic lab order routing, and medical billing.",
     technologies: [
       "Next.js",
       "TypeScript",

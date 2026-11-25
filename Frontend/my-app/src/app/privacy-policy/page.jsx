@@ -78,7 +78,7 @@ export default function PrivacyPolicyPage() {
               <strong>Handling of Payment Credentials:</strong> All sensitive payment credentials—including full credit/debit card numbers, CVVs, net banking login credentials, and UPI PINs—are submitted directly to and processed securely by the third-party payment processor under their certified bank-grade encryption infrastructure. Digital Crowd Technologies does not receive, store, or process sensitive payment credentials on our servers, and Digital Crowd Technologies does not claim independent PCI-DSS certification.
             </p>
             <p className="text-xs text-slate-300">
-              <strong>Retained Transaction Information:</strong> For statutory accounting, tax compliance (GST), and audit reconciliation, Digital Crowd Technologies retains only non-sensitive transaction records, including: Transaction Reference ID, transaction date and time, amount paid, payment method category (e.g., UPI, Card, Net Banking), client billing name, email, phone number, and invoice/milestone reference.
+              <strong>Retained Transaction Information:</strong> For statutory accounting, legal records, and audit reconciliation, Digital Crowd Technologies retains only non-sensitive transaction records, including: Transaction Reference ID, transaction date and time, amount paid, payment method category (e.g., UPI, Card, Net Banking), client billing name, email, phone number, and invoice/milestone reference.
             </p>
           </div>
 

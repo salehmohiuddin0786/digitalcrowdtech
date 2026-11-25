@@ -30,7 +30,7 @@ export default function ErpDevelopmentPage() {
     { title: "Customer Relationship (CRM)", desc: "Consolidated customer 360 profiles, inquiry status timelines, quotation history, and follow-up reminders." },
     { title: "Employee & Staff Records", desc: "Maintain employee directories, role allocations, departmental structures, and essential documentation." },
     { title: "Order Processing", desc: "Automate sales orders, purchase orders, fulfillment handoffs, delivery statuses, and fulfillment tracking." },
-    { title: "Accounts & GST Invoicing", desc: "Generate tax-compliant invoices with automatic GST calculations, payment ledger tracking, and receivables." },
+    { title: "Accounts & Invoicing", desc: "Generate business-compliant invoices with automated calculations, payment ledger tracking, and receivables." },
     { title: "Business Reports & Export", desc: "Actionable operational dashboards, financial summaries, and one-click data export to Excel and PDF." },
     { title: "Staff Attendance Logging", desc: "Track daily staff shifts, biometric/manual clock-ins, leave request approvals, and monthly attendance ratios." },
     { title: "Automated Notifications", desc: "Trigger email and SMS alerts for pending approvals, low stock warnings, and outstanding customer dues." },

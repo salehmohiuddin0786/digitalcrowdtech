@@ -111,7 +111,7 @@ A website is the ideal, cost-effective solution if:
 You need a full-stack web application if:
 - **Users have personal accounts:** Customers, employees, or vendors must log in securely with usernames, passwords, or OTPs.
 - **Database CRUD operations:** You need to Create, Read, Update, and Delete data (such as products, student records, patient visits, or inventory).
-- **Custom Business Logic:** Your system enforces specific rules, such as approving leaves, calculating GST on mixed orders, or routing delivery partners.
+- **Custom Business Logic:** Your system enforces specific rules, such as approving leaves, calculating discounts on mixed orders, or routing delivery partners.
 - **Role-Based Access Control (RBAC):** Different people see different screens (e.g., an Admin sees company finances, while a Staff member only sees their daily tasks).
 - **Examples:** Food delivery platforms (Ruchi Bazzar), School ERPs, CRM systems, Booking engines, B2B wholesale portals.
 

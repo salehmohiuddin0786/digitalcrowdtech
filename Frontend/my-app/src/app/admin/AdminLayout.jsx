@@ -11,6 +11,7 @@ import {
   MessagesSquare,
   Layers,
   Package,
+  ShoppingBag,
   ArrowLeft,
   ExternalLink,
   ShieldCheck,
@@ -19,6 +20,7 @@ import { logoutAdmin, getQueries } from "./adminData";
 
 const navItems = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
+  { label: "Orders", href: "/admin/orders", icon: ShoppingBag },
   { label: "Inquiries", href: "/admin/queries", icon: MessagesSquare, hasBadge: true },
   { label: "Products", href: "/admin/products", icon: Package },
   { label: "Projects", href: "/admin/projects", icon: Layers },
