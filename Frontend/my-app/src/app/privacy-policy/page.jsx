@@ -28,13 +28,13 @@ export default function PrivacyPolicyPage() {
             Privacy Policy
           </h1>
           <p className="text-xs text-slate-400 font-mono mt-2">
-            Last Updated: June 2026 • Digital Crowd Technologies
+            Last Updated: November 2026 • Digital Crowd Technologies
           </p>
         </div>
 
         <div className="prose prose-invert max-w-none text-slate-300 text-sm sm:text-base leading-relaxed space-y-6">
           <p>
-            At Digital Crowd Technologies (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;), we respect your privacy and are committed to protecting the information you share with us through our website (
+            At <strong>Digital Crowd Technologies</strong> (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;), we respect your privacy and are committed to protecting the information you share with us through our website (
             <a href="https://digitalcrowdtech.in" className="text-blue-400 hover:underline">
               https://digitalcrowdtech.in
             </a>
@@ -43,12 +43,13 @@ export default function PrivacyPolicyPage() {
 
           <h2 className="text-xl font-bold text-white pt-4">1. Information We Collect</h2>
           <p>
-            We only collect personal and business information that you voluntarily provide to us when submitting an inquiry form, calling us, or sending a message on WhatsApp or email. This includes:
+            We only collect personal and business information that you voluntarily provide to us when submitting an inquiry form, booking a consultation, calling us, or sending a message on WhatsApp or email. This includes:
           </p>
           <ul className="list-disc list-inside space-y-1.5 pl-2 text-slate-300">
-            <li>Your full name and company/business name</li>
+            <li>Your full name, job title, and company/business name</li>
             <li>Contact email address and phone number</li>
-            <li>Project specifications, requirements, and estimated budgets</li>
+            <li>Project specifications, architectural requirements, and estimated budgets</li>
+            <li>Billing details required for tax invoices (GSTIN, company billing address)</li>
           </ul>
 
           <h2 className="text-xl font-bold text-white pt-4">2. How We Use Your Information</h2>
@@ -57,31 +58,45 @@ export default function PrivacyPolicyPage() {
             <li>To respond to your inquiries and schedule project consultations</li>
             <li>To prepare accurate technical scope estimates and milestone quotations</li>
             <li>To communicate project status, staging links, and delivery milestones during development</li>
+            <li>To generate statutory tax invoices and reconcile project milestone settlements</li>
           </ul>
           <p>
-            We do not sell, rent, trade, or distribute your contact details to any third-party marketing companies.
+            We do not sell, rent, trade, or distribute your personal data or contact details to any third-party marketing companies.
           </p>
 
-          <h2 className="text-xl font-bold text-white pt-4">3. Data Security & Storage</h2>
+          <h2 className="text-xl font-bold text-white pt-4">3. Data Security &amp; Storage</h2>
           <p>
-            All inquiries submitted through our website are transmitted securely using industry-standard SSL (HTTPS) encryption and stored in our protected database. Access to your contact records is strictly restricted to our internal engineering team.
+            All inquiries and data transmissions on our website are protected using industry-standard SSL (HTTPS) 256-bit encryption and stored in secure, access-controlled databases. Access to client records is strictly limited to authorized engineers and account managers.
           </p>
 
-          <h2 className="text-xl font-bold text-white pt-4">4. Third-Party Links & Services</h2>
+          <h2 className="text-xl font-bold text-white pt-4">4. Online Payments &amp; Payment Gateway Security</h2>
+          <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 text-slate-200 text-sm leading-relaxed space-y-2">
+            <p>
+              When you make an online payment or settle milestone invoices on our website, your transaction is processed securely through <strong>RBI-authorized payment aggregators and payment gateways (such as PhonePe)</strong> compliant with <strong>PCI-DSS (Payment Card Industry Data Security Standard) Level 1</strong>.
+            </p>
+            <p className="text-xs text-slate-300">
+              Digital Crowd Technologies <strong>never captures, stores, or processes</strong> sensitive financial credentials such as complete credit/debit card numbers, CVVs, net banking passwords, or UPI PINs on our servers. All financial authorization takes place on encrypted bank-grade gateway tunnels.
+            </p>
+          </div>
+
+          <h2 className="text-xl font-bold text-white pt-4">5. Third-Party Links &amp; External Services</h2>
           <p>
-            Our website may reference external tools (such as WhatsApp, Google Maps, or hosting providers). When you navigate to third-party services, their respective privacy policies govern your data.
+            Our website may reference external services (such as WhatsApp, Google Maps, or cloud hosting providers). When you navigate to third-party platforms, their respective privacy policies govern your data.
           </p>
 
-          <h2 className="text-xl font-bold text-white pt-4">5. Contact Us</h2>
+          <h2 className="text-xl font-bold text-white pt-4">6. Contact &amp; Grievance Redressal</h2>
           <p>
-            If you have questions regarding this Privacy Policy, you may contact us at:
+            If you have questions, privacy requests, or grievances regarding this Privacy Policy, please contact our designated privacy officer:
           </p>
-          <p className="p-4 rounded-xl bg-white/[0.02] border border-white/10 text-xs sm:text-sm">
-            <strong>Digital Crowd Technologies</strong><br />
-            Email: <a href={`mailto:${COMPANY.email}`} className="text-blue-400">{COMPANY.email}</a><br />
-            Phone: {COMPANY.phoneDisplay}<br />
-            Address: {COMPANY.address}
-          </p>
+          <div className="p-4 rounded-xl bg-white/[0.02] border border-white/10 text-xs sm:text-sm space-y-1.5">
+            <p><strong>Digital Crowd Technologies</strong></p>
+            <p>Email: <a href={`mailto:${COMPANY.email}`} className="text-blue-400 hover:underline">{COMPANY.email}</a></p>
+            <p>Phone: {COMPANY.phoneDisplay}</p>
+            <p>Address: {COMPANY.address}</p>
+            <p className="text-slate-400 pt-1 border-t border-white/5">
+              Support Hours: Monday to Saturday, 9:30 AM to 6:30 PM IST (Response within 24–48 hours)
+            </p>
+          </div>
         </div>
       </div>
     </div>

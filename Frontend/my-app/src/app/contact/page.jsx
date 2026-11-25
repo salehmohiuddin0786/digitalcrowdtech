@@ -458,6 +458,22 @@ export default function ContactPage() {
                       </p>
                     </div>
                   </div>
+
+                  {/* Support Operating Hours & SLA */}
+                  <div className="flex items-start gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0">
+                      <Clock size={18} />
+                    </div>
+                    <div>
+                      <span className="text-xs text-slate-400 [html.light_&]:text-slate-500 block">Support Hours &amp; Response SLA</span>
+                      <p className="font-semibold text-white [html.light_&]:text-[#0A2540]">
+                        Monday – Saturday: 9:30 AM – 6:30 PM IST
+                      </p>
+                      <p className="text-xs text-slate-400 [html.light_&]:text-slate-500 mt-0.5">
+                        Inquiries acknowledged within 24–48 business hours.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
 

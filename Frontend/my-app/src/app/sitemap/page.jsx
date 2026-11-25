@@ -106,6 +106,12 @@ export default function SitemapPage() {
       description: "Connect with our engineering team in Madhapur, Hyderabad or submit a project proposal.",
       badge: "Contact",
     },
+    {
+      title: "Client Milestone Payment Portal",
+      href: "/pay",
+      description: "Secure online payment portal for project milestone settlements, invoice deposits, and retainer clearing via UPI & Cards.",
+      badge: "Payments",
+    },
   ];
 
   const regionalPages = [
@@ -140,7 +146,17 @@ export default function SitemapPage() {
     {
       title: "Refund Policy",
       href: "/refund-policy",
-      description: "Transparent refund terms structured around milestone deliverables and discovery checkpoints.",
+      description: "Transparent refund terms structured around milestone deliverables and 5-7 business days original payment mode crediting.",
+    },
+    {
+      title: "Cancellation Policy",
+      href: "/cancellation-policy",
+      description: "Service contract cancellation windows, pre-kickoff notice procedures, and milestone reconciliation terms.",
+    },
+    {
+      title: "Shipping & Delivery Policy",
+      href: "/shipping-policy",
+      description: "Electronic delivery of digital services, cloud server deployments, staging URLs, and zero shipping charges.",
     },
     {
       title: "Cookie Policy",

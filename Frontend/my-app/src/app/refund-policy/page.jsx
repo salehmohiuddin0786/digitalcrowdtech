@@ -28,44 +28,58 @@ export default function RefundPolicyPage() {
             Refund & Cancellation Policy
           </h1>
           <p className="text-xs text-slate-400 font-mono mt-2">
-            Last Updated: June 2026 • Digital Crowd Technologies
+            Last Updated: November 2026 • Digital Crowd Technologies
           </p>
         </div>
 
         <div className="prose prose-invert max-w-none text-slate-300 text-sm sm:text-base leading-relaxed space-y-6">
           <p>
-            At Digital Crowd Technologies, we strive for complete client satisfaction through clear requirement analysis, transparent milestones, and regular staging previews before final sign-off.
+            At <strong>Digital Crowd Technologies</strong> (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;), we strive for complete client satisfaction through rigorous requirement scoping, transparent milestone tracking, and regular staging previews before final deployment sign-off.
           </p>
 
-          <h2 className="text-xl font-bold text-white pt-4">1. Custom Development & Milestones</h2>
+          <h2 className="text-xl font-bold text-white pt-4">1. Custom Development &amp; Completed Milestones</h2>
           <p>
-            Because web development and software engineering involve dedicated developer hours, custom code creation, and infrastructure configuration, payments made for completed and approved project milestones are non-refundable.
+            Because custom web development, mobile applications, and software engineering involve dedicated engineer hours, bespoke code architecture, and cloud infrastructure setup, payments made for completed and client-approved milestones are non-refundable.
           </p>
 
-          <h2 className="text-xl font-bold text-white pt-4">2. Project Cancellation Prior to Commencement</h2>
+          <h2 className="text-xl font-bold text-white pt-4">2. Refund Timeline &amp; Original Payment Mode</h2>
+          <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-sm">
+            <strong>Mode &amp; Turnaround Time:</strong> All approved refunds are processed and credited strictly to the <strong>original source of payment</strong> (the same Bank Account, Credit/Debit Card, or UPI VPA used during the initial transaction) within <strong>5 to 7 business days</strong> of written refund approval.
+          </div>
+
+          <h2 className="text-xl font-bold text-white pt-4">3. Project Cancellation Prior to Commencement</h2>
           <p>
-            If a client requests cancellation before any design, planning, or code implementation has commenced, any advance deposit minus documented consultation and administrative overhead (up to 15%) will be refunded within 7–10 business days.
+            If a client formally requests cancellation within 48 hours of project agreement and before any technical architecture, design, or coding implementation has commenced, the advance deposit will be refunded in full minus a nominal 10% to 15% administrative and technical consultation overhead within 5 to 7 business days. For detailed cancellation rules, please refer to our dedicated <Link href="/cancellation-policy" className="text-blue-400 hover:underline">Cancellation Policy</Link>.
           </p>
 
-          <h2 className="text-xl font-bold text-white pt-4">3. Cancellation During Active Development</h2>
+          <h2 className="text-xl font-bold text-white pt-4">4. Mid-Development Milestone Reconciliation</h2>
           <p>
-            If a project is halted mid-development by mutual agreement, payment will be reconciled strictly against completed milestones and work delivered to date. Any balance exceeding the work completed will be refunded, and corresponding code developed up to that point will be handed over to the client.
+            If a project is halted mid-development by mutual agreement, payment will be reconciled strictly against completed milestones and work delivered up to the termination notice. Any surplus balance exceeding the completed milestone deliverables will be refunded to the client within 5 to 7 business days, and corresponding code developed up to that milestone will be handed over to the client.
           </p>
 
-          <h2 className="text-xl font-bold text-white pt-4">4. Third-Party Infrastructure Fees</h2>
+          <h2 className="text-xl font-bold text-white pt-4">5. Third-Party Infrastructure Fees</h2>
           <p>
-            Third-party fees paid to external vendors—such as domain registrars, cloud VPS providers, SSL certificate authorities, or payment gateways—are subject to the respective provider&apos;s refund terms and are not refundable by Digital Crowd Technologies.
+            Third-party fees paid to external service providers—such as domain registrars, cloud VPS hosts, SSL certificate authorities, SMS gateways, or payment gateway processing charges—are non-refundable by Digital Crowd Technologies and are subject to the terms of those respective providers.
           </p>
 
-          <h2 className="text-xl font-bold text-white pt-4">5. Inquiries & Assistance</h2>
+          <h2 className="text-xl font-bold text-white pt-4">6. Delivery of Digital Services</h2>
           <p>
-            If you have any questions or require clarification regarding milestone payments, please contact:
+            To understand how digital deliverables, staging URLs, source code repositories, and cloud servers are electronically handed over, please review our <Link href="/shipping-policy" className="text-blue-400 hover:underline">Shipping &amp; Delivery Policy</Link>.
           </p>
-          <p className="p-4 rounded-xl bg-white/[0.02] border border-white/10 text-xs sm:text-sm">
-            <strong>Digital Crowd Technologies</strong><br />
-            Email: <a href={`mailto:${COMPANY.email}`} className="text-blue-400">{COMPANY.email}</a><br />
-            Phone: {COMPANY.phoneDisplay}
+
+          <h2 className="text-xl font-bold text-white pt-4">7. Refund Inquiries &amp; Customer Support</h2>
+          <p>
+            To check the status of an ongoing refund or request clarification regarding milestone invoicing, please reach out to our accounts desk:
           </p>
+          <div className="p-4 rounded-xl bg-white/[0.02] border border-white/10 text-xs sm:text-sm space-y-1.5">
+            <p><strong>Digital Crowd Technologies</strong></p>
+            <p>Email: <a href={`mailto:${COMPANY.email}`} className="text-blue-400 hover:underline">{COMPANY.email}</a></p>
+            <p>Phone: {COMPANY.phoneDisplay}</p>
+            <p>Address: {COMPANY.address}</p>
+            <p className="text-slate-400 pt-1 border-t border-white/5">
+              Support Hours: Monday to Saturday, 9:30 AM to 6:30 PM IST (Response within 24–48 hours)
+            </p>
+          </div>
         </div>
       </div>
     </div>

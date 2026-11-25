@@ -33,12 +33,15 @@ export default function Footer() {
     { label: "Careers", href: "/careers" },
     { label: "FAQ", href: "/faq" },
     { label: "Contact", href: "/contact" },
+    { label: "Pay Online", href: "/pay" },
   ];
 
   const legalLinks = [
     { label: "Privacy Policy", href: "/privacy-policy" },
     { label: "Terms & Conditions", href: "/terms-and-conditions" },
     { label: "Refund Policy", href: "/refund-policy" },
+    { label: "Cancellation Policy", href: "/cancellation-policy" },
+    { label: "Shipping Policy", href: "/shipping-policy" },
     { label: "Cookie Policy", href: "/cookie-policy" },
     { label: "HTML Sitemap", href: "/sitemap" },
   ];
