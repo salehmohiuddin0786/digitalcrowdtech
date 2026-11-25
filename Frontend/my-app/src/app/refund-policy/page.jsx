@@ -42,9 +42,14 @@ export default function RefundPolicyPage() {
             Because custom web development, mobile applications, and software engineering involve dedicated engineer hours, bespoke code architecture, and cloud infrastructure setup, payments made for completed and client-approved milestones are non-refundable.
           </p>
 
-          <h2 className="text-xl font-bold text-white pt-4">2. Refund Timeline &amp; Original Payment Mode</h2>
-          <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-sm">
-            <strong>Mode &amp; Turnaround Time:</strong> All approved refunds are processed and credited strictly to the <strong>original source of payment</strong> (the same Bank Account, Credit/Debit Card, or UPI VPA used during the initial transaction) within <strong>5 to 7 business days</strong> of written refund approval.
+          <h2 className="text-xl font-bold text-white pt-4">2. Refund Eligibility, Mode &amp; Processing Timelines</h2>
+          <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-sm leading-relaxed space-y-2">
+            <p>
+              <strong>Original Payment Source:</strong> All eligible, approved refunds are credited strictly back to the <strong>original payment method</strong> (the same Bank Account, Credit/Debit Card, or UPI VPA used when making the transaction). We do not issue cash refunds or third-party transfers.
+            </p>
+            <p className="text-xs text-slate-300">
+              <strong>Processing Timeline:</strong> Once a refund request is reviewed and approved in writing by Digital Crowd Technologies, refund instructions are submitted to the payment gateway within 2 business days. The funds typically reflect in the customer&apos;s bank account or card balance within <strong>5 to 7 business days</strong>, subject to intermediary payment aggregator and issuing bank settlement cycles.
+            </p>
           </div>
 
           <h2 className="text-xl font-bold text-white pt-4">3. Project Cancellation Prior to Commencement</h2>

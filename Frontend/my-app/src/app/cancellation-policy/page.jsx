@@ -106,8 +106,14 @@ export default function CancellationPolicyPage() {
             In such events, accounts will be reconciled strictly against work delivered.
           </p>
 
-          {/* 6. Customer Support */}
-          <h2 className="text-xl font-bold text-white pt-4">6. Assistance &amp; Escalations</h2>
+          {/* 6. Dispute Resolution */}
+          <h2 className="text-xl font-bold text-white pt-4">6. Dispute Resolution &amp; Jurisdiction</h2>
+          <p>
+            Any disputes, claims, or controversies arising out of or relating to project cancellations, milestone reconciliations, or service contracts shall be governed by and construed in accordance with the laws of India, subject to the exclusive jurisdiction of the competent courts in Hyderabad, Telangana.
+          </p>
+
+          {/* 7. Customer Support */}
+          <h2 className="text-xl font-bold text-white pt-4">7. Assistance &amp; Escalations</h2>
           <p>
             For questions or discussions regarding service contracts and cancellations:
           </p>

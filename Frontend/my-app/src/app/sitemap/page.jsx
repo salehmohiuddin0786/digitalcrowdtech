@@ -106,12 +106,6 @@ export default function SitemapPage() {
       description: "Connect with our engineering team in Madhapur, Hyderabad or submit a project proposal.",
       badge: "Contact",
     },
-    {
-      title: "Client Milestone Payment Portal",
-      href: "/pay",
-      description: "Secure online payment portal for project milestone settlements, invoice deposits, and retainer clearing via UPI & Cards.",
-      badge: "Payments",
-    },
   ];
 
   const regionalPages = [

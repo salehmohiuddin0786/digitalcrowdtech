@@ -33,7 +33,6 @@ export default function Footer() {
     { label: "Careers", href: "/careers" },
     { label: "FAQ", href: "/faq" },
     { label: "Contact", href: "/contact" },
-    { label: "Pay Online", href: "/pay" },
   ];
 
   const legalLinks = [
@@ -41,7 +40,7 @@ export default function Footer() {
     { label: "Terms & Conditions", href: "/terms-and-conditions" },
     { label: "Refund Policy", href: "/refund-policy" },
     { label: "Cancellation Policy", href: "/cancellation-policy" },
-    { label: "Shipping Policy", href: "/shipping-policy" },
+    { label: "Shipping & Delivery Policy", href: "/shipping-policy" },
     { label: "Cookie Policy", href: "/cookie-policy" },
     { label: "HTML Sitemap", href: "/sitemap" },
   ];
@@ -82,6 +81,11 @@ export default function Footer() {
                 {COMPANY.tagline}
               </span>
             </Link>
+
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-xs font-medium text-slate-300">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#2F7DE1]" />
+              <span>A Unit of <strong className="font-semibold text-white">DEW SOLUTIONS</strong></span>
+            </div>
 
             <p className="text-slate-400 text-sm leading-relaxed max-w-md">
               Web development and software solutions for businesses and organizations. We build modern digital solutions using reliable frontend, backend and database technologies, from business websites to complete custom web applications.
@@ -230,7 +234,7 @@ export default function Footer() {
         {/* Bottom Bar: Copyright & Legal */}
         <div className="pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <p>
-            © 2026 {COMPANY.name}. All rights reserved.
+            © {currentYear} {COMPANY.name} • DEW SOLUTIONS. All rights reserved.
           </p>
           <div className="flex flex-wrap items-center gap-4 sm:gap-6">
             {legalLinks.map((item) => (
@@ -242,9 +246,9 @@ export default function Footer() {
                 {item.label}
               </Link>
             ))}
-            <Link href="/admin" className="text-slate-600 hover:text-slate-400 transition-colors">
+            {/* <Link href="/admin" className="text-slate-600 hover:text-slate-400 transition-colors">
               Admin Portal
-            </Link>
+            </Link> */}
           </div>
         </div>
 

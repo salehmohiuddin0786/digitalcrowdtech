@@ -98,6 +98,10 @@ export default function RootLayout({ children }) {
               "telephone": "+91-9985960692",
               "email": "support@digitalcrowdtech.in",
               "priceRange": "₹4,999+",
+              "parentOrganization": {
+                "@type": "Organization",
+                "name": "DEW Solutions",
+              },
               "address": {
                 "@type": "PostalAddress",
                 "streetAddress":

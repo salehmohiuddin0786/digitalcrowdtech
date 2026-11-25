@@ -69,13 +69,16 @@ export default function PrivacyPolicyPage() {
             All inquiries and data transmissions on our website are protected using industry-standard SSL (HTTPS) 256-bit encryption and stored in secure, access-controlled databases. Access to client records is strictly limited to authorized engineers and account managers.
           </p>
 
-          <h2 className="text-xl font-bold text-white pt-4">4. Online Payments &amp; Payment Gateway Security</h2>
-          <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 text-slate-200 text-sm leading-relaxed space-y-2">
+          <h2 className="text-xl font-bold text-white pt-4">4. Third-Party Payment Processing &amp; Transaction Data</h2>
+          <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 text-slate-200 text-sm leading-relaxed space-y-2.5">
             <p>
-              When you make an online payment or settle milestone invoices on our website, your transaction is processed securely through <strong>RBI-authorized payment aggregators and payment gateways (such as PhonePe)</strong> compliant with <strong>PCI-DSS (Payment Card Industry Data Security Standard) Level 1</strong>.
+              When clients settle invoices or milestone fees online, payments are facilitated through <strong>RBI-authorized third-party payment aggregators and payment gateways (such as PhonePe)</strong>.
             </p>
             <p className="text-xs text-slate-300">
-              Digital Crowd Technologies <strong>never captures, stores, or processes</strong> sensitive financial credentials such as complete credit/debit card numbers, CVVs, net banking passwords, or UPI PINs on our servers. All financial authorization takes place on encrypted bank-grade gateway tunnels.
+              <strong>Handling of Payment Credentials:</strong> All sensitive payment credentials—including full credit/debit card numbers, CVVs, net banking login credentials, and UPI PINs—are submitted directly to and processed securely by the third-party payment processor under their certified bank-grade encryption infrastructure. Digital Crowd Technologies does not receive, store, or process sensitive payment credentials on our servers, and Digital Crowd Technologies does not claim independent PCI-DSS certification.
+            </p>
+            <p className="text-xs text-slate-300">
+              <strong>Retained Transaction Information:</strong> For statutory accounting, tax compliance (GST), and audit reconciliation, Digital Crowd Technologies retains only non-sensitive transaction records, including: Transaction Reference ID, transaction date and time, amount paid, payment method category (e.g., UPI, Card, Net Banking), client billing name, email, phone number, and invoice/milestone reference.
             </p>
           </div>
 

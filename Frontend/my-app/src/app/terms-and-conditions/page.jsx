@@ -47,20 +47,29 @@ export default function TermsAndConditionsPage() {
             Projects are structured into sequential milestones (e.g., Requirements &amp; Architecture, Staging Development, Final Deployment). Clients are required to test, review, and formally approve each milestone. Subsequent development stages proceed upon sign-off and milestone clearance. Electronic delivery procedures are governed by our <Link href="/shipping-policy" className="text-blue-400 hover:underline">Shipping &amp; Delivery Policy</Link>.
           </p>
 
-          <h2 className="text-xl font-bold text-white pt-4">3. Payment Terms, Invoicing &amp; Currency</h2>
+          <h2 className="text-xl font-bold text-white pt-4">3. Payment Terms, Milestone Invoicing &amp; Currency</h2>
           <div className="p-4 rounded-xl bg-white/[0.02] border border-white/10 space-y-2 text-sm">
-            <ul className="list-disc list-inside space-y-1.5 pl-1 text-slate-300">
+            <ul className="list-disc list-inside space-y-2 pl-1 text-slate-300">
               <li>
-                <strong>Currency:</strong> All project quotations, scope estimates, and tax invoices are quoted and payable in <strong>Indian National Rupees (INR / ₹)</strong>, inclusive of applicable taxes.
+                <strong>Pricing Currency:</strong> All project quotations, proposals, and commercial invoices are quoted and payable strictly in <strong>Indian National Rupees (INR / ₹)</strong>, inclusive of applicable taxes unless specified otherwise in writing.
               </li>
               <li>
-                <strong>Milestone Payments:</strong> Invoices are linked strictly to approved milestones. Milestone settlements must be cleared prior to live production cutover or repository ownership transfer.
+                <strong>Milestone Payment Structure:</strong> Custom development engagements are divided into sequential milestones (e.g., discovery &amp; architecture kickoff, functional staging review, and final production handover). Work on subsequent milestones proceeds only upon formal approval and settlement of the preceding deliverable.
               </li>
               <li>
-                <strong>Online Payment Gateway:</strong> Online payments are collected via RBI-authorized payment aggregators (such as PhonePe) supporting UPI, Credit Cards, Debit Cards, and Net Banking.
+                <strong>Online Payment Collection:</strong> Online payments are facilitated via RBI-authorized payment aggregators (such as PhonePe) supporting UPI, Credit Cards, Debit Cards, and Net Banking.
               </li>
               <li>
-                <strong>Refunds &amp; Cancellations:</strong> Any cancellations or refund claims are processed in strict accordance with our <Link href="/refund-policy" className="text-blue-400 hover:underline">Refund Policy</Link> and <Link href="/cancellation-policy" className="text-blue-400 hover:underline">Cancellation Policy</Link>.
+                <strong>Failed &amp; Interrupted Transactions:</strong> If an account is debited during a failed or interrupted online transaction, the funds are held by the intermediary banking network and are typically reversed automatically to the customer&apos;s source account within 3 to 7 business days according to standard banking protocols.
+              </li>
+              <li>
+                <strong>Duplicate Charges:</strong> In the rare instance of a duplicate debit for the same invoice, the client should notify <code>support@digitalcrowdtech.in</code> with the transaction reference IDs. Verified duplicate charges will be refunded directly to the original payment source within 5 to 7 business days.
+              </li>
+              <li>
+                <strong>Billing Disputes:</strong> Any billing discrepancies, milestone queries, or transaction concerns must be reported in writing to <code>support@digitalcrowdtech.in</code> within 14 calendar days of the invoice or charge date. Our accounts team will review and respond within 3 business days.
+              </li>
+              <li>
+                <strong>Refunds &amp; Cancellations:</strong> Project cancellations and refunds are governed strictly by our dedicated <Link href="/refund-policy" className="text-blue-400 hover:underline">Refund Policy</Link> and <Link href="/cancellation-policy" className="text-blue-400 hover:underline">Cancellation Policy</Link>.
               </li>
             </ul>
           </div>

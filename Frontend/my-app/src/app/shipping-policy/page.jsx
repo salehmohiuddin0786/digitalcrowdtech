@@ -4,7 +4,7 @@ import { ArrowLeft, Truck, CheckCircle2, Clock, ShieldCheck, Mail, Phone, MapPin
 import { COMPANY } from "../data/company";
 
 export const metadata = {
-  title: "Shipping & Delivery Policy | Digital Crowd Technologies",
+  title: "Shipping & Delivery Policy – Digital Services | Digital Crowd Technologies",
   description:
     "Shipping & Delivery Policy for digital services, software deliverables, milestone deployments, and electronic source code handover by Digital Crowd Technologies.",
   alternates: {
@@ -29,7 +29,7 @@ export default function ShippingPolicyPage() {
             <span>Digital Services & Electronic Delivery</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Shipping &amp; Delivery Policy
+            Shipping &amp; Delivery Policy – Digital Services
           </h1>
           <p className="text-xs text-slate-400 font-mono mt-2">
             Last Updated: November 2026 • Digital Crowd Technologies
@@ -98,14 +98,20 @@ export default function ShippingPolicyPage() {
             * Note: Timelines commence from the date of advance deposit receipt, requirement freezing, and provision of required assets (content, logos, credentials) by the client.
           </p>
 
-          {/* 4. Shipping & Delivery Charges */}
-          <h2 className="text-xl font-bold text-white pt-4">4. Shipping &amp; Delivery Charges</h2>
+          {/* 4. Domain & Hosting Arrangements */}
+          <h2 className="text-xl font-bold text-white pt-4">4. Domain &amp; Hosting Arrangements</h2>
+          <p>
+            Domain registrations and cloud hosting environments (such as Linux VPS, AWS, DigitalOcean, or Hostinger) remain the client&apos;s direct asset. To ensure full client autonomy and eliminate proprietary vendor lock-in, Digital Crowd Technologies configures websites and web applications directly under client-owned infrastructure accounts. The electronic delivery of deployed web systems requires the client to provide appropriate DNS or deployment access credentials.
+          </p>
+
+          {/* 5. Shipping & Delivery Charges */}
+          <h2 className="text-xl font-bold text-white pt-4">5. Shipping &amp; Delivery Charges (Not Applicable)</h2>
           <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-sm">
-            <strong>Zero Delivery Charges (₹0 / Free):</strong> Because all our software code, website deployments, and technical assets are delivered electronically via the internet, there are <strong>zero shipping, handling, or courier charges</strong> levied on your invoices.
+            <strong>Zero Delivery Charges (₹0 / Free):</strong> Shipping and courier charges are <strong>not applicable</strong> to our digital services. Because all software code, web applications, and technical assets are delivered electronically via the internet, there are zero shipping or handling fees.
           </div>
 
-          {/* 5. Proof of Delivery */}
-          <h2 className="text-xl font-bold text-white pt-4">5. Proof of Delivery &amp; Milestone Sign-Off</h2>
+          {/* 6. Proof of Delivery */}
+          <h2 className="text-xl font-bold text-white pt-4">6. Proof of Delivery &amp; Milestone Sign-Off</h2>
           <p>
             Delivery of a milestone or final project is officially documented and confirmed through:
           </p>
@@ -115,8 +121,8 @@ export default function ShippingPolicyPage() {
             <li>Successful deployment and verification of the web service on the client&apos;s specified production domain.</li>
           </ul>
 
-          {/* 6. Delays */}
-          <h2 className="text-xl font-bold text-white pt-4">6. Project Delays &amp; Dependency Bottlenecks</h2>
+          {/* 7. Delays */}
+          <h2 className="text-xl font-bold text-white pt-4">7. Project Delays &amp; Dependency Bottlenecks</h2>
           <p>
             While we make every effort to adhere strictly to agreed milestones, delivery schedules may be adjusted in the event of:
           </p>
@@ -129,8 +135,8 @@ export default function ShippingPolicyPage() {
             In any such event, our project lead will proactively notify you with a revised delivery timeline.
           </p>
 
-          {/* 7. Contact Details */}
-          <h2 className="text-xl font-bold text-white pt-4">7. Contact &amp; Delivery Support</h2>
+          {/* 8. Contact Details */}
+          <h2 className="text-xl font-bold text-white pt-4">8. Contact &amp; Delivery Support</h2>
           <p>
             For inquiries regarding project delivery schedules, staging access, or credential handover, please reach out directly:
           </p>

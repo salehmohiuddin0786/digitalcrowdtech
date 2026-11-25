@@ -47,6 +47,11 @@ export default function ServicesPage() {
             From modern business websites to custom full-stack software, we design, develop, and deploy solutions tailored to your operational requirements.
           </p>
 
+          <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#2F7DE1]/10 border border-[#2F7DE1]/25 text-xs sm:text-sm font-semibold text-[#2F7DE1] [html.light_&]:text-[#0050B0] backdrop-blur-sm shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-[#F87000] animate-pulse shrink-0" />
+            <span>Our services starts from Rs-9,999K - Rs 50000K based on client requirements.</span>
+          </div>
+
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <span className="px-3 py-1.5 rounded-full bg-[#16223A] [html.light_&]:bg-slate-100 text-xs font-medium text-[#C5CEDD] [html.light_&]:text-[#40484C] border border-[#26344F] [html.light_&]:border-slate-200">
               Frontend + Backend + Database
