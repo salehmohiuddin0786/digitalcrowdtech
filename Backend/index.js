@@ -599,14 +599,16 @@ const requireAdmin = async (req, res, next) => {
 };
 
 const createTransporter = () => {
-  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_SECURE } = process.env;
+  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_SECURE } = process.env;
+  const smtpPass = process.env.SMTP_PASSWORD || process.env.SMTP_PASS;
 
   if (
     !SMTP_HOST ||
     !SMTP_PORT ||
     !SMTP_USER ||
-    !SMTP_PASS ||
-    SMTP_PASS === "your_hosting_mail_password_here"
+    !smtpPass ||
+    smtpPass === "your_hosting_mail_password_here" ||
+    smtpPass === "YOUR_HOSTINGER_EMAIL_PASSWORD"
   ) {
     const error = new Error("SMTP is not configured");
     error.code = "SMTP_NOT_CONFIGURED";
@@ -616,22 +618,25 @@ const createTransporter = () => {
   return nodemailer.createTransport({
     host: SMTP_HOST,
     port: Number(SMTP_PORT),
-    secure: SMTP_SECURE === "true",
+    secure: SMTP_SECURE === "true" || SMTP_PORT === "465",
     auth: {
       user: SMTP_USER,
-      pass: SMTP_PASS,
+      pass: smtpPass,
     },
   });
 };
 
-const isMailConfigured = () =>
-  Boolean(
+const isMailConfigured = () => {
+  const pass = process.env.SMTP_PASSWORD || process.env.SMTP_PASS;
+  return Boolean(
     process.env.SMTP_HOST &&
       process.env.SMTP_PORT &&
       process.env.SMTP_USER &&
-      process.env.SMTP_PASS &&
-      process.env.SMTP_PASS !== "your_hosting_mail_password_here"
+      pass &&
+      pass !== "your_hosting_mail_password_here" &&
+      pass !== "YOUR_HOSTINGER_EMAIL_PASSWORD"
   );
+};
 
 const toPlainItems = (items) => items.map((item) => item.get({ plain: true }));
 
@@ -1510,17 +1515,40 @@ let phonePeTokenCache = { token: null, expiresAt: 0, clientId: null };
 
 // Helper: Resolve PhonePe Gateway Configuration (V2 OAuth & V1 Checksum support)
 function getPhonePeConfig(settings) {
-  const isSandbox = settings ? Boolean(settings.sandboxMode) : true;
-  const configuredMid = settings?.merchantId ? String(settings.merchantId).trim() : "";
-  const configuredSalt = settings?.saltKey ? String(settings.saltKey).trim() : "";
-  const saltIndex = settings?.saltIndex ? String(settings.saltIndex).trim() : "1";
-  const clientId = settings?.clientId ? String(settings.clientId).trim() : "";
-  const clientSecret = settings?.clientSecret ? String(settings.clientSecret).trim() : "";
-  const clientVersion = settings?.clientVersion ? String(settings.clientVersion).trim() : "1";
+  const envIsSandbox = process.env.PHONEPE_ENV ? process.env.PHONEPE_ENV.toUpperCase() !== "PRODUCTION" : undefined;
+  const isSandbox = settings?.sandboxMode !== undefined
+    ? Boolean(settings.sandboxMode)
+    : (envIsSandbox !== undefined ? envIsSandbox : false);
 
-  // Active Merchant ID and Salt Key (UUID)
-  const mid = configuredMid || "M23NO5H2OWJEL";
-  const saltKey = configuredSalt || "f87a7724-6a55-4950-8048-6ff120b9b859";
+  const mid =
+    (settings?.merchantId ? String(settings.merchantId).trim() : "") ||
+    process.env.PHONEPE_MERCHANT_ID ||
+    "M23NO5H2OWJEL";
+
+  const clientId =
+    (settings?.clientId ? String(settings.clientId).trim() : "") ||
+    process.env.PHONEPE_CLIENT_ID ||
+    "SU2611261741022390983613";
+
+  const clientSecret =
+    (settings?.clientSecret ? String(settings.clientSecret).trim() : "") ||
+    process.env.PHONEPE_CLIENT_SECRET ||
+    "ccac1eb3-ce42-4713-b24d-606f77ed655b";
+
+  const saltKey =
+    (settings?.saltKey ? String(settings.saltKey).trim() : "") ||
+    process.env.PHONEPE_SALT_KEY ||
+    clientSecret;
+
+  const saltIndex =
+    (settings?.saltIndex ? String(settings.saltIndex).trim() : "") ||
+    process.env.PHONEPE_SALT_INDEX ||
+    "1";
+
+  const clientVersion =
+    (settings?.clientVersion ? String(settings.clientVersion).trim() : "") ||
+    process.env.PHONEPE_CLIENT_VERSION ||
+    "1";
 
   const baseUrl = isSandbox
     ? "https://api-preprod.phonepe.com/apis/pg-sandbox"
@@ -3537,6 +3565,16 @@ app.post("/api/payment/phonepe/callback", async (req, res) => {
     console.error("PhonePe callback handling error:", err.message);
     return res.status(200).json({ ok: true }); // Always 200 to acknowledge webhook
   }
+});
+
+// Webhook Aliases to support multiple endpoint conventions
+app.post("/api/payment/phonepe/webhook", (req, res) => {
+  req.url = "/api/payment/phonepe/callback";
+  app.handle(req, res);
+});
+app.post("/api/payments/phonepe/webhook", (req, res) => {
+  req.url = "/api/payment/phonepe/callback";
+  app.handle(req, res);
 });
 
 // Admin: List All Orders
