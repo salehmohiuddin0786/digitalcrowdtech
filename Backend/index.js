@@ -780,6 +780,18 @@ app.get("/api/health", async (req, res) => {
   });
 });
 
+// Fallback redirect for order confirmation hitting the API backend domain
+app.get("/order-confirmation", (req, res) => {
+  const query = req.url.includes("?") ? req.url.slice(req.url.indexOf("?")) : "";
+  const rawHost = req.headers["x-forwarded-host"] || req.headers.host || "digitalcrowdtech.in";
+  const cleanHost = rawHost.replace(/^api\./, "").replace(":5001", ":3000");
+  const proto = req.headers["x-forwarded-proto"] || (cleanHost.includes("localhost") ? "http" : "https");
+  const targetUrl = process.env.FRONTEND_URL
+    ? `${process.env.FRONTEND_URL.replace(/\/$/, "")}/order-confirmation${query}`
+    : `${proto}://${cleanHost}/order-confirmation${query}`;
+  return res.redirect(302, targetUrl);
+});
+
 // Admin Authentication with Bcrypt & JWT
 app.post("/api/admin/login", authLimiter, async (req, res) => {
   const email = sanitize(req.body.email).toLowerCase();
@@ -1619,9 +1631,10 @@ function sendOrderSuccessEmail(order) {
 // Helper: Call PhonePe Standard Checkout API (Supports V2 OAuth & V1 Fallback)
 async function initiatePhonePePayPage({ order, amount, paymentSettings, req }) {
   const config = getPhonePeConfig(paymentSettings);
-  const hostHeader = req.headers["x-forwarded-host"] || req.headers.host || "localhost:3000";
-  const proto = req.headers["x-forwarded-proto"] || "http";
-  const frontendUrl = `${proto}://${hostHeader.replace(":5001", ":3000")}`;
+  const rawHost = req.headers["x-forwarded-host"] || req.headers.host || "localhost:3000";
+  const cleanHost = rawHost.replace(/^api\./, "").replace(":5001", ":3000");
+  const proto = req.headers["x-forwarded-proto"] || (cleanHost.includes("localhost") ? "http" : "https");
+  const frontendUrl = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, "") : `${proto}://${cleanHost}`;
   const amountInPaise = Math.round(Number(amount) * 100);
   let lastError = null;
 
