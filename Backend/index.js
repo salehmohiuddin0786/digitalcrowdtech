@@ -279,6 +279,7 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
   host: DB_HOST,
   port: DB_PORT,
   dialect: "mysql",
+  timezone: "+05:30",
   logging: false,
   pool: {
     max: 10,
@@ -374,6 +375,10 @@ const Order = sequelize.define(
     productSlug: { type: DataTypes.STRING },
     planName: { type: DataTypes.STRING, defaultValue: "Standard License" },
     amount: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
+    originalAmount: { type: DataTypes.DECIMAL(10, 2) },
+    discountAmount: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0.00 },
+    couponCode: { type: DataTypes.STRING(100) },
+    offerId: { type: DataTypes.STRING },
     currency: { type: DataTypes.STRING, defaultValue: "INR" },
     customerName: { type: DataTypes.STRING, allowNull: false },
     customerEmail: { type: DataTypes.STRING, allowNull: false },
@@ -398,10 +403,13 @@ const PaymentSetting = sequelize.define(
   "PaymentSetting",
   {
     id: { type: DataTypes.STRING, primaryKey: true, defaultValue: "default" },
-    merchantId: { type: DataTypes.STRING, defaultValue: "DIGITALCROWDONLINE" },
+    merchantId: { type: DataTypes.STRING, defaultValue: "M23NO5H2OWJEL" },
+    clientId: { type: DataTypes.STRING, defaultValue: "M23NO5H2OWJEL_2611271819" },
+    clientSecret: { type: DataTypes.STRING, defaultValue: "Zjg3YTc3MjQtNmE1NS00OTUwLTgwNDgtNmZmMTIwYjliODU5" },
+    clientVersion: { type: DataTypes.STRING, defaultValue: "1" },
     merchantName: { type: DataTypes.STRING, defaultValue: "Digital Crowd Technologies" },
     merchantUpiId: { type: DataTypes.STRING, defaultValue: "9985960692@ybl" },
-    saltKey: { type: DataTypes.STRING, defaultValue: "" },
+    saltKey: { type: DataTypes.STRING, defaultValue: "f87a7724-6a55-4950-8048-6ff120b9b859" },
     saltIndex: { type: DataTypes.STRING, defaultValue: "1" },
     sandboxMode: { type: DataTypes.BOOLEAN, defaultValue: true },
     qrImageUrl: { type: DataTypes.STRING, defaultValue: "/payment/phonepe-business-qr.png" },
@@ -411,6 +419,119 @@ const PaymentSetting = sequelize.define(
   },
   { tableName: "payment_settings" }
 );
+
+// OFFERS & COUPONS MODULE MODELS
+const Offer = sequelize.define(
+  "Offer",
+  {
+    id: { type: DataTypes.STRING, primaryKey: true },
+    title: { type: DataTypes.STRING, allowNull: false },
+    description: { type: DataTypes.TEXT },
+    discountType: {
+      type: DataTypes.ENUM("PERCENTAGE", "FIXED", "FREE_SERVICE"),
+      allowNull: false,
+      defaultValue: "PERCENTAGE",
+    },
+    discountValue: { type: DataTypes.DECIMAL(10, 2), allowNull: false, defaultValue: 0.0 },
+    maxDiscountAmount: { type: DataTypes.DECIMAL(10, 2) },
+    minOrderValue: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0.0 },
+    isAutomatic: { type: DataTypes.BOOLEAN, defaultValue: false },
+    customerEligibility: {
+      type: DataTypes.ENUM("ALL", "NEW_CUSTOMERS", "EXISTING_CUSTOMERS"),
+      defaultValue: "ALL",
+    },
+    firstOrderOnly: { type: DataTypes.BOOLEAN, defaultValue: false },
+    totalUsageLimit: { type: DataTypes.INTEGER },
+    perCustomerLimit: { type: DataTypes.INTEGER, defaultValue: 1 },
+    usedCount: { type: DataTypes.INTEGER, defaultValue: 0 },
+    startDate: { type: DataTypes.DATE, allowNull: false },
+    expiryDate: { type: DataTypes.DATE, allowNull: false },
+    isActive: { type: DataTypes.BOOLEAN, defaultValue: true },
+    bannerText: { type: DataTypes.STRING },
+  },
+  { tableName: "offers" }
+);
+
+const Coupon = sequelize.define(
+  "Coupon",
+  {
+    id: { type: DataTypes.STRING, primaryKey: true },
+    offerId: { type: DataTypes.STRING, allowNull: false },
+    code: { type: DataTypes.STRING(50), allowNull: false, unique: true },
+    totalUsageLimit: { type: DataTypes.INTEGER },
+    perCustomerLimit: { type: DataTypes.INTEGER },
+    usedCount: { type: DataTypes.INTEGER, defaultValue: 0 },
+    isActive: { type: DataTypes.BOOLEAN, defaultValue: true },
+    expiryDate: { type: DataTypes.DATE },
+  },
+  { tableName: "coupons" }
+);
+
+const OfferServiceMapping = sequelize.define(
+  "OfferServiceMapping",
+  {
+    id: { type: DataTypes.STRING, primaryKey: true },
+    offerId: { type: DataTypes.STRING, allowNull: false },
+    productId: { type: DataTypes.STRING, allowNull: false },
+    productTitle: { type: DataTypes.STRING },
+  },
+  { tableName: "offer_service_mappings" }
+);
+
+const CouponRedemption = sequelize.define(
+  "CouponRedemption",
+  {
+    id: { type: DataTypes.STRING, primaryKey: true },
+    couponId: { type: DataTypes.STRING },
+    offerId: { type: DataTypes.STRING, allowNull: false },
+    orderId: { type: DataTypes.STRING, allowNull: false },
+    orderNumber: { type: DataTypes.STRING, allowNull: false },
+    customerEmail: { type: DataTypes.STRING, allowNull: false },
+    customerPhone: { type: DataTypes.STRING, allowNull: false },
+    originalAmount: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
+    discountAmount: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
+    finalAmount: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
+    status: {
+      type: DataTypes.ENUM("RESERVED", "COMPLETED", "FAILED", "RELEASED"),
+      defaultValue: "RESERVED",
+    },
+    reservedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+    completedAt: { type: DataTypes.DATE },
+  },
+  { tableName: "coupon_redemptions" }
+);
+
+const PaymentOfferDetail = sequelize.define(
+  "PaymentOfferDetail",
+  {
+    id: { type: DataTypes.STRING, primaryKey: true },
+    orderNumber: { type: DataTypes.STRING, allowNull: false, unique: true },
+    offerId: { type: DataTypes.STRING },
+    couponCode: { type: DataTypes.STRING(100) },
+    discountType: { type: DataTypes.STRING, defaultValue: "PERCENTAGE" },
+    discountValue: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0.0 },
+    originalAmount: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
+    discountAmount: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
+    finalAmount: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
+    phonepeTxnId: { type: DataTypes.STRING },
+    settlementStatus: { type: DataTypes.STRING, defaultValue: "PENDING" },
+    auditNotes: { type: DataTypes.TEXT },
+  },
+  { tableName: "payment_offer_details" }
+);
+
+// Establish Model Associations
+Offer.hasMany(Coupon, { foreignKey: "offerId", as: "coupons", onDelete: "CASCADE" });
+Coupon.belongsTo(Offer, { foreignKey: "offerId", as: "offer" });
+
+Offer.hasMany(OfferServiceMapping, { foreignKey: "offerId", as: "serviceMappings", onDelete: "CASCADE" });
+OfferServiceMapping.belongsTo(Offer, { foreignKey: "offerId", as: "offer" });
+
+Offer.hasMany(CouponRedemption, { foreignKey: "offerId", as: "redemptions", onDelete: "CASCADE" });
+CouponRedemption.belongsTo(Offer, { foreignKey: "offerId", as: "offer" });
+
+Coupon.hasMany(CouponRedemption, { foreignKey: "couponId", as: "redemptions", onDelete: "SET NULL" });
+CouponRedemption.belongsTo(Coupon, { foreignKey: "couponId", as: "coupon" });
 
 const User = sequelize.define(
   "User",
@@ -1372,6 +1493,355 @@ app.get("/api/products/:slugOrId", async (req, res) => {
 // ORDERS & PHONEPE BUSINESS PURCHASE SYSTEM
 // ==========================================
 
+// In-memory token cache for PhonePe V2 Standard Checkout
+let phonePeTokenCache = { token: null, expiresAt: 0, clientId: null };
+
+// Helper: Resolve PhonePe Gateway Configuration (V2 OAuth & V1 Checksum support)
+function getPhonePeConfig(settings) {
+  const isSandbox = settings ? Boolean(settings.sandboxMode) : true;
+  const configuredMid = settings?.merchantId ? String(settings.merchantId).trim() : "";
+  const configuredSalt = settings?.saltKey ? String(settings.saltKey).trim() : "";
+  const saltIndex = settings?.saltIndex ? String(settings.saltIndex).trim() : "1";
+  const clientId = settings?.clientId ? String(settings.clientId).trim() : "";
+  const clientSecret = settings?.clientSecret ? String(settings.clientSecret).trim() : "";
+  const clientVersion = settings?.clientVersion ? String(settings.clientVersion).trim() : "1";
+
+  // Active Merchant ID and Salt Key (UUID)
+  const mid = configuredMid || "M23NO5H2OWJEL";
+  const saltKey = configuredSalt || "f87a7724-6a55-4950-8048-6ff120b9b859";
+
+  const baseUrl = isSandbox
+    ? "https://api-preprod.phonepe.com/apis/pg-sandbox"
+    : "https://api.phonepe.com/apis/pg";
+
+  const isV2 = Boolean(clientId && clientSecret);
+
+  return { isSandbox, mid, saltKey, saltIndex, clientId, clientSecret, clientVersion, baseUrl, isV2 };
+}
+
+// Helper: Obtain OAuth 2.0 Bearer Token from PhonePe V2 Identity Manager
+async function getPhonePeOAuthToken(config) {
+  const now = Date.now();
+  if (
+    phonePeTokenCache.token &&
+    phonePeTokenCache.clientId === config.clientId &&
+    phonePeTokenCache.expiresAt > now + 60000
+  ) {
+    return phonePeTokenCache.token;
+  }
+
+  const bodyParams = new URLSearchParams();
+  bodyParams.append("client_id", config.clientId);
+  bodyParams.append("client_version", config.clientVersion || "1");
+  bodyParams.append("client_secret", config.clientSecret);
+  bodyParams.append("grant_type", "client_credentials");
+
+  const oauthUrl = config.isSandbox
+    ? "https://api-preprod.phonepe.com/apis/pg-sandbox/v1/oauth/token"
+    : "https://api.phonepe.com/apis/identity-manager/v1/oauth/token";
+
+  const res = await fetch(oauthUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      accept: "application/json",
+    },
+    body: bodyParams.toString(),
+  });
+
+  const rawText = await res.text();
+  let data = null;
+  try {
+    data = JSON.parse(rawText);
+  } catch {}
+
+  if (!res.ok || !data?.access_token) {
+    throw new Error(
+      `PhonePe OAuth failed (${res.status}): ${data?.message || data?.code || rawText || "Invalid credentials"}`
+    );
+  }
+
+  const expiresInMs = (Number(data.expires_in) || 3600) * 1000;
+  phonePeTokenCache = {
+    token: data.access_token,
+    clientId: config.clientId,
+    expiresAt: now + expiresInMs,
+  };
+
+  return data.access_token;
+}
+
+// Helper: Send Automated Order Success Email
+function sendOrderSuccessEmail(order) {
+  if (!isMailConfigured()) return;
+  try {
+    const transporter = createTransporter();
+    transporter
+      .sendMail({
+        from: `"Digital Crowd Tech Orders" <${process.env.SMTP_USER}>`,
+        to: order.customerEmail,
+        cc: `${SUPPORT_EMAIL}, ${ADMIN_EMAIL}`,
+        subject: `✅ Payment Verified & Order Confirmed: ${order.orderNumber}`,
+        html: `
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; color: #1e293b; line-height: 1.6;">
+            <div style="background: #0B1220; padding: 24px; border-radius: 12px 12px 0 0; text-align: center;">
+              <h1 style="color: #ffffff; margin: 0; font-size: 22px;">Digital Crowd Tech</h1>
+              <p style="color: #10B981; margin: 8px 0 0 0; font-weight: bold; font-size: 14px;">✓ Payment Verified via PhonePe</p>
+            </div>
+            <div style="border: 1px solid #e2e8f0; border-top: none; padding: 24px; border-radius: 0 0 12px 12px; background: #ffffff;">
+              <h2 style="color: #0A2540; margin-top: 0;">Order Confirmed!</h2>
+              <p>Hi <strong>${escapeHtml(order.customerName)}</strong>,</p>
+              <p>Your payment for <strong>${escapeHtml(order.productTitle)}</strong> (${escapeHtml(order.planName)}) has been verified automatically by PhonePe.</p>
+              
+              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin: 20px 0;">
+                <p style="margin: 4px 0;"><strong>Order Number:</strong> <code style="background: #e2e8f0; padding: 2px 6px; border-radius: 4px;">${escapeHtml(order.orderNumber)}</code></p>
+                <p style="margin: 4px 0;"><strong>PhonePe Transaction ID:</strong> ${escapeHtml(order.transactionId || "Verified")}</p>
+                <p style="margin: 4px 0;"><strong>Amount Paid:</strong> ₹${Number(order.amount).toLocaleString("en-IN")}</p>
+                <p style="margin: 4px 0;"><strong>Payment Status:</strong> <span style="color: #10B981; font-weight: bold;">COMPLETED</span></p>
+              </div>
+
+              <p style="font-size: 14px; color: #475569;">Our engineering team at Madhapur, Hyderabad is now preparing your staging environment, deployment walkthrough, and full source code handover.</p>
+              
+              <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0; font-size: 13px; color: #64748b;">
+                <p style="margin: 2px 0;">Digital Crowd Technologies • Madhapur, Hyderabad - 500081</p>
+                <p style="margin: 2px 0;">Support: <a href="mailto:support@digitalcrowdtech.in" style="color: #2563eb;">support@digitalcrowdtech.in</a> | Phone: <a href="tel:+919985960692" style="color: #2563eb;">+91 9985960692</a></p>
+              </div>
+            </div>
+          </div>
+        `,
+      })
+      .catch((err) => console.warn("Order email send warning:", err.message));
+  } catch (err) {
+    console.warn("Mail transporter error:", err.message);
+  }
+}
+
+// Helper: Call PhonePe Standard Checkout API (Supports V2 OAuth & V1 Fallback)
+async function initiatePhonePePayPage({ order, amount, paymentSettings, req }) {
+  const config = getPhonePeConfig(paymentSettings);
+  const hostHeader = req.headers["x-forwarded-host"] || req.headers.host || "localhost:3000";
+  const proto = req.headers["x-forwarded-proto"] || "http";
+  const frontendUrl = `${proto}://${hostHeader.replace(":5001", ":3000")}`;
+  const amountInPaise = Math.round(Number(amount) * 100);
+  let lastError = null;
+
+  // METHOD 1: PhonePe V2 Standard Checkout via OAuth (Primary when Client ID & Secret present)
+  if (config.isV2) {
+    try {
+      const accessToken = await getPhonePeOAuthToken(config);
+      const v2Payload = {
+        merchantOrderId: order.orderNumber,
+        amount: amountInPaise,
+        expireAfter: 600, // Exactly 10 minutes session validity
+        paymentFlow: {
+          type: "PG_CHECKOUT",
+          message: `Order ${order.orderNumber} - ${order.productTitle.slice(0, 30)}`,
+          merchantUrls: {
+            redirectUrl: `${frontendUrl}/order-confirmation?orderNumber=${encodeURIComponent(order.orderNumber)}`,
+          },
+        },
+      };
+
+      const v2Res = await fetch(`${config.baseUrl}/checkout/v2/pay`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `O-Bearer ${accessToken}`,
+          accept: "application/json",
+        },
+        body: JSON.stringify(v2Payload),
+      });
+
+      const v2Data = await v2Res.json();
+      if (v2Res.ok && v2Data?.redirectUrl) {
+        return {
+          success: true,
+          redirectUrl: v2Data.redirectUrl,
+          phonepeTxnId: v2Data.orderId || null,
+          merchantTransactionId: order.orderNumber,
+          isSandbox: config.isSandbox,
+          version: "v2",
+        };
+      } else {
+        console.warn("PhonePe V2 Pay error, attempting fallback:", v2Data);
+        lastError = v2Data?.message || v2Data?.code || "PhonePe V2 payment initiation rejected.";
+      }
+    } catch (v2Err) {
+      console.warn("PhonePe V2 Checkout Pay exception:", v2Err.message);
+      lastError = v2Err.message;
+    }
+  }
+
+  // METHOD 2: PhonePe V1 Fallback with SHA256 Checksum
+  if (!config.mid || !config.saltKey) {
+    return { success: false, error: lastError || "PhonePe credentials not configured." };
+  }
+
+  // PhonePe requires a valid public HTTPS webhook callback URL
+  const callbackUrl =
+    process.env.PHONEPE_CALLBACK_URL ||
+    (proto === "https" ? `${proto}://${hostHeader}/api/payment/phonepe/callback` : "https://digitalcrowdtech.in/api/payment/phonepe/callback");
+
+  const cleanPhone = String(order.customerPhone).replace(/[^0-9]/g, "").slice(-10) || "9985960692";
+
+  const payload = {
+    merchantId: config.mid,
+    merchantTransactionId: order.orderNumber,
+    merchantUserId: `CUST-${cleanPhone}`,
+    amount: amountInPaise,
+    redirectUrl: `${frontendUrl}/order-confirmation?orderNumber=${encodeURIComponent(order.orderNumber)}`,
+    redirectMode: "REDIRECT",
+    callbackUrl,
+    mobileNumber: cleanPhone,
+    paymentInstrument: {
+      type: "PAY_PAGE",
+    },
+  };
+
+  const base64Payload = Buffer.from(JSON.stringify(payload)).toString("base64");
+  const stringToHash = base64Payload + "/pg/v1/pay" + config.saltKey;
+  const sha256 = crypto.createHash("sha256").update(stringToHash).digest("hex");
+  const xVerify = `${sha256}###${config.saltIndex}`;
+
+  try {
+    const response = await fetch(`${config.baseUrl}/pg/v1/pay`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-VERIFY": xVerify,
+        accept: "application/json",
+      },
+      body: JSON.stringify({ request: base64Payload }),
+    });
+
+    const rawText = await response.text();
+    let data = null;
+    try {
+      data = JSON.parse(rawText);
+    } catch {
+      console.warn("PhonePe Pay API non-JSON response:", response.status, rawText);
+    }
+    if (data && data.success && data.data?.instrumentResponse?.redirectInfo?.url) {
+      return {
+        success: true,
+        redirectUrl: data.data.instrumentResponse.redirectInfo.url,
+        phonepeTxnId: data.data.transactionId || null,
+        merchantTransactionId: order.orderNumber,
+        isSandbox: config.isSandbox,
+        version: "v1",
+      };
+    } else {
+      console.warn("PhonePe Pay API response not successful:", data?.code, data?.message);
+      return { success: false, error: data?.message || data?.code || lastError || "PhonePe gateway session rejected." };
+    }
+  } catch (err) {
+    console.error("PhonePe Pay API call failed:", err.message);
+    return { success: false, error: err.message || lastError || "PhonePe gateway call failed." };
+  }
+}
+
+// Helper: Check PhonePe Status API (Supports V2 OAuth & V1 Fallback)
+async function checkPhonePeOrderStatus(orderNumber, paymentSettings) {
+  const config = getPhonePeConfig(paymentSettings);
+
+  // METHOD 1: V2 Standard Checkout Status Check
+  if (config.isV2) {
+    try {
+      const accessToken = await getPhonePeOAuthToken(config);
+      const res = await fetch(`${config.baseUrl}/checkout/v2/order/${orderNumber}/status?details=false`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `O-Bearer ${accessToken}`,
+          accept: "application/json",
+        },
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const isSuccess = data.state === "COMPLETED";
+        const isExpired =
+          data.state === "EXPIRED" ||
+          data.state === "TIMED_OUT" ||
+          data.detailedErrorCode === "SESSION_EXPIRED" ||
+          data.errorCode === "SESSION_EXPIRED";
+        const isCancelled =
+          data.state === "CANCELLED" ||
+          data.state === "USER_DROPPED" ||
+          data.errorCode === "USER_DROPPED";
+        const isFailed = (data.state === "FAILED" || !isSuccess) && !isExpired && !isCancelled;
+
+        const rawCode =
+          data.detailedErrorCode ||
+          data.errorCode ||
+          data.paymentDetails?.[0]?.detailedErrorCode ||
+          data.paymentDetails?.[0]?.errorCode ||
+          "";
+
+        let failureReason = null;
+        if (rawCode === "INSUFFICIENT_BALANCE" || data.errorCode === "INSUFFICIENT_BALANCE") {
+          failureReason = "Insufficient balance in account";
+        } else if (rawCode === "SESSION_EXPIRED" || isExpired) {
+          failureReason = "Payment session expired";
+        } else if (rawCode === "USER_DROPPED" || isCancelled) {
+          failureReason = "Payment cancelled by user";
+        } else if (rawCode === "BAD_REQUEST" || rawCode === "PAYMENT_DECLINED") {
+          failureReason = "Transaction declined by bank";
+        } else if (isFailed) {
+          failureReason = rawCode && rawCode !== "PAYMENT_ERROR" ? `Payment declined (${rawCode})` : "Payment session timed out or declined";
+        }
+
+        return {
+          ok: true,
+          data,
+          code: isSuccess ? "PAYMENT_SUCCESS" : data.state,
+          state: data.state,
+          isSuccess,
+          isFailed,
+          isExpired,
+          isCancelled,
+          failureReason,
+          transactionId: data.orderId || data.paymentDetails?.[0]?.transactionId,
+          utr: data.paymentDetails?.[0]?.splitInstruments?.[0]?.rail?.utr || data.paymentDetails?.[0]?.transactionId,
+        };
+      }
+    } catch (v2Err) {
+      console.warn("PhonePe V2 status check fallback:", v2Err.message);
+    }
+  }
+
+  // METHOD 2: V1 Status Check fallback
+  if (!config.mid || !config.saltKey) {
+    return { ok: false, message: "Payment gateway credentials not configured." };
+  }
+
+  const statusPath = `/pg/v1/status/${config.mid}/${orderNumber}`;
+  const stringToHash = statusPath + config.saltKey;
+  const sha256 = crypto.createHash("sha256").update(stringToHash).digest("hex");
+  const xVerify = `${sha256}###${config.saltIndex}`;
+
+  try {
+    const res = await fetch(`${config.baseUrl}${statusPath}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "X-VERIFY": xVerify,
+        "X-MERCHANT-ID": config.mid,
+        accept: "application/json",
+      },
+    });
+
+    if (res.status === 204) {
+      return { ok: true, status: "PENDING", code: "PAYMENT_NOT_FOUND" };
+    }
+
+    const data = await res.json();
+    return { ok: true, data, code: data?.code, state: data?.data?.state };
+  } catch (err) {
+    return { ok: false, message: err.message };
+  }
+}
+
 // Public: Get Safe Payment Settings
 app.get("/api/settings/payment", async (req, res) => {
   try {
@@ -1407,6 +1877,805 @@ app.get("/api/settings/payment", async (req, res) => {
   }
 });
 
+// ==========================================
+// OFFERS & COUPON MANAGEMENT ENGINE
+// ==========================================
+
+// Helper: Centralized Backend Discount Calculation & Offer Validation
+async function calculateAndValidateOffer({
+  couponCode = "",
+  productId = "",
+  amount = 0,
+  customerEmail = "",
+  customerPhone = "",
+}) {
+  const numAmount = Number(amount);
+  if (isNaN(numAmount) || numAmount <= 0) {
+    return { valid: false, message: "Invalid order amount for discount calculation." };
+  }
+
+  const cleanCode = couponCode ? String(couponCode).trim().toUpperCase() : "";
+  const cleanEmail = customerEmail ? String(customerEmail).trim().toLowerCase() : "";
+  const cleanPhone = customerPhone ? String(customerPhone).replace(/\D/g, "") : "";
+  const now = new Date();
+
+  let targetOffer = null;
+  let targetCoupon = null;
+
+  if (cleanCode) {
+    targetCoupon = await Coupon.findOne({
+      where: { code: cleanCode },
+      include: [
+        {
+          model: Offer,
+          as: "offer",
+          include: [{ model: OfferServiceMapping, as: "serviceMappings" }],
+        },
+      ],
+    });
+
+    if (!targetCoupon) {
+      return { valid: false, message: `Coupon code "${cleanCode}" is invalid.` };
+    }
+
+    if (!targetCoupon.isActive) {
+      return { valid: false, message: `Coupon code "${cleanCode}" has been disabled.` };
+    }
+
+    if (targetCoupon.expiryDate && new Date(targetCoupon.expiryDate) < now) {
+      return {
+        valid: false,
+        message: `Coupon code "${cleanCode}" expired on ${new Date(targetCoupon.expiryDate).toLocaleDateString("en-IN")}.`,
+      };
+    }
+
+    targetOffer = targetCoupon.offer;
+  } else {
+    // Check for active automatic discount matching productId and amount
+    const activeAutoOffers = await Offer.findAll({
+      where: {
+        isAutomatic: true,
+        isActive: true,
+        startDate: { [Op.lte]: now },
+        expiryDate: { [Op.gte]: now },
+        minOrderValue: { [Op.lte]: numAmount },
+      },
+      include: [{ model: OfferServiceMapping, as: "serviceMappings" }],
+      order: [["discountValue", "DESC"]],
+    });
+
+    for (const autoOff of activeAutoOffers) {
+      const mappings = autoOff.serviceMappings || [];
+      if (mappings.length > 0 && productId) {
+        const resolvedId = BACKEND_SLUG_ALIASES[productId] || productId;
+        const matches = mappings.some(
+          (m) =>
+            m.productId === productId ||
+            m.productId === resolvedId ||
+            m.productId.toLowerCase() === productId.toLowerCase()
+        );
+        if (!matches) continue;
+      }
+      targetOffer = autoOff;
+      break;
+    }
+
+    if (!targetOffer) {
+      return { valid: false, message: "No applicable promotion found." };
+    }
+  }
+
+  if (!targetOffer || !targetOffer.isActive) {
+    return { valid: false, message: "This promotional offer is no longer active." };
+  }
+
+  if (new Date(targetOffer.startDate) > now) {
+    return {
+      valid: false,
+      message: `This promotion starts on ${new Date(targetOffer.startDate).toLocaleDateString("en-IN")}.`,
+    };
+  }
+
+  if (new Date(targetOffer.expiryDate) < now) {
+    return {
+      valid: false,
+      message: `This promotion expired on ${new Date(targetOffer.expiryDate).toLocaleDateString("en-IN")}.`,
+    };
+  }
+
+  // Minimum Order Value
+  if (numAmount < Number(targetOffer.minOrderValue)) {
+    return {
+      valid: false,
+      message: `Minimum order value of ₹${Number(targetOffer.minOrderValue).toLocaleString(
+        "en-IN"
+      )} required for this discount (Current: ₹${numAmount.toLocaleString("en-IN")}).`,
+    };
+  }
+
+  // Service / Product Restriction Check
+  const mappings = targetOffer.serviceMappings || [];
+  if (mappings.length > 0 && productId) {
+    const resolvedProductId = BACKEND_SLUG_ALIASES[productId] || productId;
+    const isServiceAllowed = mappings.some(
+      (m) =>
+        m.productId === productId ||
+        m.productId === resolvedProductId ||
+        m.productId.toLowerCase() === productId.toLowerCase()
+    );
+
+    if (!isServiceAllowed) {
+      const allowedNames = mappings.map((m) => m.productTitle || m.productId).join(", ");
+      return {
+        valid: false,
+        message: `This offer is restricted to: ${allowedNames}. It is not applicable to the selected product.`,
+      };
+    }
+  }
+
+  // Customer Eligibility: First Order Only & New vs Existing Customers
+  if (targetOffer.firstOrderOnly || targetOffer.customerEligibility === "NEW_CUSTOMERS") {
+    if (cleanEmail || cleanPhone) {
+      const priorOrderCount = await Order.count({
+        where: {
+          [Op.or]: [
+            ...(cleanEmail ? [{ customerEmail: cleanEmail }] : []),
+            ...(cleanPhone ? [{ customerPhone: cleanPhone }] : []),
+          ],
+          paymentStatus: "COMPLETED",
+        },
+      });
+
+      if (priorOrderCount > 0) {
+        return {
+          valid: false,
+          message: "This coupon is exclusively reserved for first-time customer orders.",
+        };
+      }
+    }
+  } else if (targetOffer.customerEligibility === "EXISTING_CUSTOMERS") {
+    if (cleanEmail || cleanPhone) {
+      const priorOrderCount = await Order.count({
+        where: {
+          [Op.or]: [
+            ...(cleanEmail ? [{ customerEmail: cleanEmail }] : []),
+            ...(cleanPhone ? [{ customerPhone: cleanPhone }] : []),
+          ],
+          paymentStatus: "COMPLETED",
+        },
+      });
+
+      if (priorOrderCount === 0) {
+        return {
+          valid: false,
+          message: "This special loyalty offer is available only to existing clients.",
+        };
+      }
+    }
+  }
+
+  // Total Usage Limit
+  if (targetOffer.totalUsageLimit && targetOffer.usedCount >= targetOffer.totalUsageLimit) {
+    return {
+      valid: false,
+      message: "This promotional offer has reached its maximum total usage limit.",
+    };
+  }
+
+  if (targetCoupon && targetCoupon.totalUsageLimit && targetCoupon.usedCount >= targetCoupon.totalUsageLimit) {
+    return {
+      valid: false,
+      message: `Coupon code "${cleanCode}" has reached its maximum total redemption limit.`,
+    };
+  }
+
+  // Per-Customer Usage Limit
+  const perCustomerLimit = targetCoupon?.perCustomerLimit || targetOffer.perCustomerLimit || 1;
+  if (cleanEmail || cleanPhone) {
+    const customerRedemptionCount = await CouponRedemption.count({
+      where: {
+        offerId: targetOffer.id,
+        status: "COMPLETED",
+        [Op.or]: [
+          ...(cleanEmail ? [{ customerEmail: cleanEmail }] : []),
+          ...(cleanPhone ? [{ customerPhone: cleanPhone }] : []),
+        ],
+      },
+    });
+
+    if (customerRedemptionCount >= perCustomerLimit) {
+      return {
+        valid: false,
+        message: `You have already redeemed this offer the maximum allowed limit (${perCustomerLimit} time${
+          perCustomerLimit > 1 ? "s" : ""
+        }).`,
+      };
+    }
+  }
+
+  // Calculation Engine
+  let discountAmount = 0;
+  if (targetOffer.discountType === "PERCENTAGE") {
+    const rawDiscount = (numAmount * Number(targetOffer.discountValue)) / 100;
+    if (targetOffer.maxDiscountAmount && Number(targetOffer.maxDiscountAmount) > 0) {
+      discountAmount = Math.min(rawDiscount, Number(targetOffer.maxDiscountAmount));
+    } else {
+      discountAmount = rawDiscount;
+    }
+  } else if (targetOffer.discountType === "FIXED") {
+    discountAmount = Math.min(numAmount, Number(targetOffer.discountValue));
+  } else if (targetOffer.discountType === "FREE_SERVICE") {
+    discountAmount = numAmount;
+  }
+
+  discountAmount = Math.round(discountAmount * 100) / 100;
+  const finalAmount = Math.max(1, Math.round((numAmount - discountAmount) * 100) / 100);
+
+  return {
+    valid: true,
+    offer: targetOffer,
+    coupon: targetCoupon,
+    originalAmount: numAmount,
+    discountAmount,
+    finalAmount,
+    couponCode: targetCoupon ? targetCoupon.code : null,
+    isAutomatic: Boolean(targetOffer.isAutomatic),
+    savingsText: `You save ₹${discountAmount.toLocaleString("en-IN")}${
+      targetCoupon ? ` with coupon ${targetCoupon.code}` : " with promotional discount"
+    }`,
+  };
+}
+
+// 1. Public: Validate Offer / Coupon
+app.post("/api/offers/validate", async (req, res) => {
+  try {
+    const { couponCode, productId, planName, amount, customerEmail, customerPhone } = req.body;
+
+    const result = await calculateAndValidateOffer({
+      couponCode,
+      productId,
+      amount,
+      customerEmail,
+      customerPhone,
+    });
+
+    if (!result.valid) {
+      return res.status(400).json({ ok: false, message: result.message });
+    }
+
+    return res.json({
+      ok: true,
+      valid: true,
+      offer: {
+        id: result.offer.id,
+        title: result.offer.title,
+        description: result.offer.description,
+        discountType: result.offer.discountType,
+        discountValue: Number(result.offer.discountValue),
+        maxDiscountAmount: result.offer.maxDiscountAmount ? Number(result.offer.maxDiscountAmount) : null,
+        minOrderValue: Number(result.offer.minOrderValue),
+        couponCode: result.couponCode,
+        bannerText: result.offer.bannerText,
+        isAutomatic: result.isAutomatic,
+      },
+      breakdown: {
+        originalAmount: result.originalAmount,
+        discountAmount: result.discountAmount,
+        finalAmount: result.finalAmount,
+        savingsText: result.savingsText,
+      },
+    });
+  } catch (err) {
+    return res.status(500).json({ ok: false, message: err.message });
+  }
+});
+
+// 2. Public: Get Active Promotions for Checkout
+app.get("/api/offers/active", async (req, res) => {
+  try {
+    const now = new Date();
+    const offers = await Offer.findAll({
+      where: {
+        isActive: true,
+        startDate: { [Op.lte]: now },
+        expiryDate: { [Op.gte]: now },
+      },
+      include: [
+        { model: Coupon, as: "coupons", where: { isActive: true }, required: false },
+        { model: OfferServiceMapping, as: "serviceMappings", required: false },
+      ],
+      order: [["createdAt", "DESC"]],
+    });
+
+    const formatted = offers.map((off) => ({
+      id: off.id,
+      title: off.title,
+      description: off.description,
+      discountType: off.discountType,
+      discountValue: Number(off.discountValue),
+      maxDiscountAmount: off.maxDiscountAmount ? Number(off.maxDiscountAmount) : null,
+      minOrderValue: Number(off.minOrderValue),
+      isAutomatic: Boolean(off.isAutomatic),
+      firstOrderOnly: Boolean(off.firstOrderOnly),
+      customerEligibility: off.customerEligibility,
+      bannerText: off.bannerText,
+      expiryDate: off.expiryDate,
+      couponCode: off.coupons?.[0]?.code || null,
+      restrictedProducts: (off.serviceMappings || []).map((m) => m.productId),
+    }));
+
+    return res.json({ ok: true, offers: formatted });
+  } catch (err) {
+    return res.status(500).json({ ok: false, message: err.message });
+  }
+});
+
+// 3. Admin: List All Offers
+app.get("/api/admin/offers", requireAdmin, async (req, res) => {
+  try {
+    const offers = await Offer.findAll({
+      include: [
+        { model: Coupon, as: "coupons" },
+        { model: OfferServiceMapping, as: "serviceMappings" },
+        {
+          model: CouponRedemption,
+          as: "redemptions",
+          attributes: ["id", "status", "discountAmount", "finalAmount", "createdAt"],
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+    });
+
+    const enriched = offers.map((off) => {
+      const redemptions = off.redemptions || [];
+      const completedRedemptions = redemptions.filter((r) => r.status === "COMPLETED");
+      const totalDiscountGiven = completedRedemptions.reduce(
+        (sum, r) => sum + Number(r.discountAmount || 0),
+        0
+      );
+      const totalRevenue = completedRedemptions.reduce(
+        (sum, r) => sum + Number(r.finalAmount || 0),
+        0
+      );
+
+      return {
+        id: off.id,
+        title: off.title,
+        description: off.description,
+        discountType: off.discountType,
+        discountValue: Number(off.discountValue),
+        maxDiscountAmount: off.maxDiscountAmount ? Number(off.maxDiscountAmount) : null,
+        minOrderValue: Number(off.minOrderValue),
+        isAutomatic: Boolean(off.isAutomatic),
+        customerEligibility: off.customerEligibility,
+        firstOrderOnly: Boolean(off.firstOrderOnly),
+        totalUsageLimit: off.totalUsageLimit,
+        perCustomerLimit: off.perCustomerLimit,
+        usedCount: off.usedCount,
+        startDate: off.startDate,
+        expiryDate: off.expiryDate,
+        isActive: Boolean(off.isActive),
+        bannerText: off.bannerText,
+        createdAt: off.createdAt,
+        updatedAt: off.updatedAt,
+        coupon: off.coupons?.[0]
+          ? {
+              id: off.coupons[0].id,
+              code: off.coupons[0].code,
+              usedCount: off.coupons[0].usedCount,
+              isActive: off.coupons[0].isActive,
+            }
+          : null,
+        serviceMappings: (off.serviceMappings || []).map((m) => ({
+          productId: m.productId,
+          productTitle: m.productTitle,
+        })),
+        metrics: {
+          totalRedemptions: completedRedemptions.length,
+          totalDiscountGiven: Math.round(totalDiscountGiven * 100) / 100,
+          totalRevenue: Math.round(totalRevenue * 100) / 100,
+        },
+      };
+    });
+
+    return res.json({ ok: true, offers: enriched });
+  } catch (err) {
+    return res.status(500).json({ ok: false, message: err.message });
+  }
+});
+
+// 4. Admin: Create New Offer & Coupon
+app.post("/api/admin/offers", requireAdmin, async (req, res) => {
+  const t = await sequelize.transaction();
+  try {
+    const {
+      title,
+      description = "",
+      discountType = "PERCENTAGE",
+      discountValue = 0,
+      maxDiscountAmount = null,
+      minOrderValue = 0,
+      isAutomatic = false,
+      couponCode = "",
+      customerEligibility = "ALL",
+      firstOrderOnly = false,
+      totalUsageLimit = null,
+      perCustomerLimit = 1,
+      startDate,
+      expiryDate,
+      isActive = true,
+      bannerText = "",
+      restrictedProductIds = [],
+    } = req.body;
+
+    if (!title || !title.trim()) {
+      await t.rollback();
+      return res.status(400).json({ ok: false, message: "Offer title is required." });
+    }
+
+    if (!isAutomatic && (!couponCode || !couponCode.trim())) {
+      await t.rollback();
+      return res.status(400).json({ ok: false, message: "Coupon code is required for non-automatic offers." });
+    }
+
+    const cleanCode = couponCode ? couponCode.trim().toUpperCase() : null;
+
+    if (cleanCode) {
+      const existingCoupon = await Coupon.findOne({ where: { code: cleanCode }, transaction: t });
+      if (existingCoupon) {
+        await t.rollback();
+        return res.status(400).json({ ok: false, message: `Coupon code "${cleanCode}" already exists. Please choose another code.` });
+      }
+    }
+
+    const offerId = createId("offer");
+    const offer = await Offer.create(
+      {
+        id: offerId,
+        title: title.trim(),
+        description: description.trim(),
+        discountType,
+        discountValue: Number(discountValue),
+        maxDiscountAmount: maxDiscountAmount ? Number(maxDiscountAmount) : null,
+        minOrderValue: Number(minOrderValue) || 0,
+        isAutomatic: Boolean(isAutomatic),
+        customerEligibility,
+        firstOrderOnly: Boolean(firstOrderOnly),
+        totalUsageLimit: totalUsageLimit ? Number(totalUsageLimit) : null,
+        perCustomerLimit: Number(perCustomerLimit) || 1,
+        usedCount: 0,
+        startDate: startDate ? new Date(startDate) : new Date(),
+        expiryDate: expiryDate ? new Date(expiryDate) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        isActive: Boolean(isActive),
+        bannerText: bannerText ? bannerText.trim() : null,
+      },
+      { transaction: t }
+    );
+
+    // Create associated coupon if code provided
+    if (cleanCode) {
+      await Coupon.create(
+        {
+          id: createId("coupon"),
+          offerId: offer.id,
+          code: cleanCode,
+          totalUsageLimit: totalUsageLimit ? Number(totalUsageLimit) : null,
+          perCustomerLimit: Number(perCustomerLimit) || 1,
+          usedCount: 0,
+          isActive: Boolean(isActive),
+          expiryDate: expiryDate ? new Date(expiryDate) : null,
+        },
+        { transaction: t }
+      );
+    }
+
+    // Create service restrictions
+    if (Array.isArray(restrictedProductIds) && restrictedProductIds.length > 0) {
+      for (const pId of restrictedProductIds) {
+        const prodMatch = defaultProducts.find((p) => p.id === pId || p.slug === pId);
+        await OfferServiceMapping.create(
+          {
+            id: createId("map"),
+            offerId: offer.id,
+            productId: pId,
+            productTitle: prodMatch ? prodMatch.title : pId,
+          },
+          { transaction: t }
+        );
+      }
+    }
+
+    await t.commit();
+    return res.json({ ok: true, message: "Offer created successfully.", offerId: offer.id });
+  } catch (err) {
+    await t.rollback();
+    return res.status(500).json({ ok: false, message: err.message });
+  }
+});
+
+// 5. Admin: Update Offer
+app.put("/api/admin/offers/:id", requireAdmin, async (req, res) => {
+  const t = await sequelize.transaction();
+  try {
+    const { id } = req.params;
+    const offer = await Offer.findByPk(id, { transaction: t });
+    if (!offer) {
+      await t.rollback();
+      return res.status(404).json({ ok: false, message: "Offer not found." });
+    }
+
+    const {
+      title,
+      description,
+      discountType,
+      discountValue,
+      maxDiscountAmount,
+      minOrderValue,
+      isAutomatic,
+      couponCode,
+      customerEligibility,
+      firstOrderOnly,
+      totalUsageLimit,
+      perCustomerLimit,
+      startDate,
+      expiryDate,
+      isActive,
+      bannerText,
+      restrictedProductIds,
+    } = req.body;
+
+    await offer.update(
+      {
+        ...(title !== undefined ? { title: title.trim() } : {}),
+        ...(description !== undefined ? { description: description.trim() } : {}),
+        ...(discountType !== undefined ? { discountType } : {}),
+        ...(discountValue !== undefined ? { discountValue: Number(discountValue) } : {}),
+        ...(maxDiscountAmount !== undefined ? { maxDiscountAmount: maxDiscountAmount ? Number(maxDiscountAmount) : null } : {}),
+        ...(minOrderValue !== undefined ? { minOrderValue: Number(minOrderValue) || 0 } : {}),
+        ...(isAutomatic !== undefined ? { isAutomatic: Boolean(isAutomatic) } : {}),
+        ...(customerEligibility !== undefined ? { customerEligibility } : {}),
+        ...(firstOrderOnly !== undefined ? { firstOrderOnly: Boolean(firstOrderOnly) } : {}),
+        ...(totalUsageLimit !== undefined ? { totalUsageLimit: totalUsageLimit ? Number(totalUsageLimit) : null } : {}),
+        ...(perCustomerLimit !== undefined ? { perCustomerLimit: Number(perCustomerLimit) || 1 } : {}),
+        ...(startDate !== undefined ? { startDate: new Date(startDate) } : {}),
+        ...(expiryDate !== undefined ? { expiryDate: new Date(expiryDate) } : {}),
+        ...(isActive !== undefined ? { isActive: Boolean(isActive) } : {}),
+        ...(bannerText !== undefined ? { bannerText: bannerText ? bannerText.trim() : null } : {}),
+      },
+      { transaction: t }
+    );
+
+    // Update or Create Coupon Code
+    if (couponCode !== undefined) {
+      const cleanCode = couponCode ? couponCode.trim().toUpperCase() : null;
+      let existingCoupon = await Coupon.findOne({ where: { offerId: offer.id }, transaction: t });
+
+      if (cleanCode) {
+        const codeClash = await Coupon.findOne({
+          where: { code: cleanCode, offerId: { [Op.ne]: offer.id } },
+          transaction: t,
+        });
+        if (codeClash) {
+          await t.rollback();
+          return res.status(400).json({ ok: false, message: `Coupon code "${cleanCode}" is in use by another offer.` });
+        }
+
+        if (existingCoupon) {
+          await existingCoupon.update(
+            {
+              code: cleanCode,
+              isActive: isActive !== undefined ? Boolean(isActive) : existingCoupon.isActive,
+              expiryDate: expiryDate ? new Date(expiryDate) : existingCoupon.expiryDate,
+              totalUsageLimit: totalUsageLimit ? Number(totalUsageLimit) : null,
+              perCustomerLimit: Number(perCustomerLimit) || 1,
+            },
+            { transaction: t }
+          );
+        } else {
+          await Coupon.create(
+            {
+              id: createId("coupon"),
+              offerId: offer.id,
+              code: cleanCode,
+              totalUsageLimit: totalUsageLimit ? Number(totalUsageLimit) : null,
+              perCustomerLimit: Number(perCustomerLimit) || 1,
+              usedCount: 0,
+              isActive: isActive !== undefined ? Boolean(isActive) : true,
+              expiryDate: expiryDate ? new Date(expiryDate) : null,
+            },
+            { transaction: t }
+          );
+        }
+      }
+    }
+
+    // Update Service Restrictions
+    if (restrictedProductIds !== undefined && Array.isArray(restrictedProductIds)) {
+      await OfferServiceMapping.destroy({ where: { offerId: offer.id }, transaction: t });
+      for (const pId of restrictedProductIds) {
+        const prodMatch = defaultProducts.find((p) => p.id === pId || p.slug === pId);
+        await OfferServiceMapping.create(
+          {
+            id: createId("map"),
+            offerId: offer.id,
+            productId: pId,
+            productTitle: prodMatch ? prodMatch.title : pId,
+          },
+          { transaction: t }
+        );
+      }
+    }
+
+    await t.commit();
+    return res.json({ ok: true, message: "Offer updated successfully." });
+  } catch (err) {
+    await t.rollback();
+    return res.status(500).json({ ok: false, message: err.message });
+  }
+});
+
+// 6. Admin: Delete Offer
+app.delete("/api/admin/offers/:id", requireAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const offer = await Offer.findByPk(id);
+    if (!offer) {
+      return res.status(404).json({ ok: false, message: "Offer not found." });
+    }
+
+    await Coupon.destroy({ where: { offerId: id } });
+    await OfferServiceMapping.destroy({ where: { offerId: id } });
+    await offer.destroy();
+
+    return res.json({ ok: true, message: "Offer deleted successfully." });
+  } catch (err) {
+    return res.status(500).json({ ok: false, message: err.message });
+  }
+});
+
+// 7. Admin: Toggle Offer Active Status
+app.patch("/api/admin/offers/:id/status", requireAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { isActive } = req.body;
+    const offer = await Offer.findByPk(id);
+    if (!offer) {
+      return res.status(404).json({ ok: false, message: "Offer not found." });
+    }
+
+    const nextStatus = isActive !== undefined ? Boolean(isActive) : !offer.isActive;
+    await offer.update({ isActive: nextStatus });
+    await Coupon.update({ isActive: nextStatus }, { where: { offerId: id } });
+
+    return res.json({
+      ok: true,
+      message: `Offer ${nextStatus ? "activated" : "deactivated"} successfully.`,
+      isActive: nextStatus,
+    });
+  } catch (err) {
+    return res.status(500).json({ ok: false, message: err.message });
+  }
+});
+
+// 8. Admin: Offers & Coupon Analytics
+app.get("/api/admin/offers/analytics", requireAdmin, async (req, res) => {
+  try {
+    const now = new Date();
+
+    const [
+      totalActiveOffers,
+      totalCouponsCreated,
+      completedRedemptions,
+      allCoupons,
+    ] = await Promise.all([
+      Offer.count({ where: { isActive: true } }),
+      Coupon.count(),
+      CouponRedemption.findAll({
+        where: { status: "COMPLETED" },
+        include: [{ model: Coupon, as: "coupon" }],
+      }),
+      Coupon.findAll({
+        include: [{ model: Offer, as: "offer" }],
+      }),
+    ]);
+
+    const couponsRedeemed = completedRedemptions.length;
+    const totalDiscountGiven = completedRedemptions.reduce(
+      (sum, r) => sum + Number(r.discountAmount || 0),
+      0
+    );
+    const revenueGenerated = completedRedemptions.reduce(
+      (sum, r) => sum + Number(r.finalAmount || 0),
+      0
+    );
+
+    // Ranked most-used coupons
+    const couponUsageMap = {};
+    for (const r of completedRedemptions) {
+      const code = r.coupon?.code || "DIRECT_PROMO";
+      if (!couponUsageMap[code]) {
+        couponUsageMap[code] = {
+          code,
+          count: 0,
+          totalDiscount: 0,
+          totalRevenue: 0,
+        };
+      }
+      couponUsageMap[code].count += 1;
+      couponUsageMap[code].totalDiscount += Number(r.discountAmount || 0);
+      couponUsageMap[code].totalRevenue += Number(r.finalAmount || 0);
+    }
+
+    const mostUsedCoupons = Object.values(couponUsageMap).sort((a, b) => b.count - a.count);
+
+    // Expired and unused coupons
+    const expiredAndUnused = allCoupons.filter((c) => {
+      const isExpired =
+        (c.expiryDate && new Date(c.expiryDate) < now) ||
+        (c.offer?.expiryDate && new Date(c.offer.expiryDate) < now);
+      return isExpired && c.usedCount === 0;
+    });
+
+    return res.json({
+      ok: true,
+      analytics: {
+        totalActiveOffers,
+        totalCouponsCreated,
+        couponsRedeemed,
+        totalDiscountGiven: Math.round(totalDiscountGiven * 100) / 100,
+        revenueGenerated: Math.round(revenueGenerated * 100) / 100,
+        mostUsedCoupons: mostUsedCoupons.slice(0, 10),
+        expiredAndUnusedCoupons: {
+          count: expiredAndUnused.length,
+          items: expiredAndUnused.map((c) => ({
+            id: c.id,
+            code: c.code,
+            offerTitle: c.offer?.title || "N/A",
+            expiryDate: c.expiryDate || c.offer?.expiryDate,
+          })),
+        },
+      },
+    });
+  } catch (err) {
+    return res.status(500).json({ ok: false, message: err.message });
+  }
+});
+
+// 9. Admin: Coupon Redemption History
+app.get("/api/admin/offers/redemptions", requireAdmin, async (req, res) => {
+  try {
+    const redemptions = await CouponRedemption.findAll({
+      include: [
+        { model: Coupon, as: "coupon", attributes: ["code", "id"] },
+        { model: Offer, as: "offer", attributes: ["title", "discountType", "discountValue"] },
+      ],
+      order: [["createdAt", "DESC"]],
+      limit: 200,
+    });
+
+    return res.json({
+      ok: true,
+      redemptions: redemptions.map((r) => ({
+        id: r.id,
+        orderNumber: r.orderNumber,
+        customerEmail: r.customerEmail,
+        customerPhone: r.customerPhone,
+        couponCode: r.coupon?.code || "DIRECT",
+        offerTitle: r.offer?.title || "Promotion",
+        originalAmount: Number(r.originalAmount),
+        discountAmount: Number(r.discountAmount),
+        finalAmount: Number(r.finalAmount),
+        status: r.status,
+        reservedAt: r.reservedAt,
+        completedAt: r.completedAt,
+        createdAt: r.createdAt,
+      })),
+    });
+  } catch (err) {
+    return res.status(500).json({ ok: false, message: err.message });
+  }
+});
+
 // Public: Create Product Purchase Order
 app.post("/api/orders/create", async (req, res) => {
   try {
@@ -1419,6 +2688,7 @@ app.post("/api/orders/create", async (req, res) => {
       companyName = "",
       address = "",
       paymentMethod = "phonepe_upi",
+      couponCode = "",
     } = req.body;
 
     // Strict Validation
@@ -1482,6 +2752,49 @@ app.post("/api/orders/create", async (req, res) => {
       }
     }
 
+    // Calculate final payable amount & validate coupon / promotional discount on backend
+    let originalAmount = chosenAmount;
+    let discountAmount = 0;
+    let payableAmount = chosenAmount;
+    let appliedCouponCode = null;
+    let appliedOfferId = null;
+    let offerValidation = null;
+
+    if (couponCode && String(couponCode).trim()) {
+      offerValidation = await calculateAndValidateOffer({
+        couponCode,
+        productId: productData.id,
+        amount: chosenAmount,
+        customerEmail,
+        customerPhone: cleanPhone,
+      });
+
+      if (!offerValidation.valid) {
+        return res.status(400).json({ ok: false, message: offerValidation.message });
+      }
+
+      discountAmount = offerValidation.discountAmount;
+      payableAmount = offerValidation.finalAmount;
+      appliedCouponCode = offerValidation.couponCode || String(couponCode).trim().toUpperCase();
+      appliedOfferId = offerValidation.offer.id;
+    } else {
+      // Check for active automatic offer
+      const autoOffer = await calculateAndValidateOffer({
+        couponCode: "",
+        productId: productData.id,
+        amount: chosenAmount,
+        customerEmail,
+        customerPhone: cleanPhone,
+      });
+
+      if (autoOffer.valid) {
+        discountAmount = autoOffer.discountAmount;
+        payableAmount = autoOffer.finalAmount;
+        appliedOfferId = autoOffer.offer.id;
+        appliedCouponCode = autoOffer.couponCode;
+      }
+    }
+
     const timestamp = Date.now();
     const orderNumber = `DCT-ORD-${timestamp.toString().slice(-6)}-${Math.floor(1000 + Math.random() * 9000)}`;
     const orderId = createId("order");
@@ -1493,7 +2806,7 @@ app.post("/api/orders/create", async (req, res) => {
     // Encode Standard UPI Intent String
     const upiUri = `upi://pay?pa=${encodeURIComponent(merchantUpi)}&pn=${encodeURIComponent(
       merchantName
-    )}&tr=${encodeURIComponent(orderNumber)}&am=${chosenAmount.toFixed(2)}&cu=INR&tn=${encodeURIComponent(
+    )}&tr=${encodeURIComponent(orderNumber)}&am=${payableAmount.toFixed(2)}&cu=INR&tn=${encodeURIComponent(
       `Order ${orderNumber} - ${productData.title.slice(0, 30)}`
     )}`;
 
@@ -1501,7 +2814,10 @@ app.post("/api/orders/create", async (req, res) => {
       {
         timestamp: new Date().toISOString(),
         action: "ORDER_CREATED",
-        amount: chosenAmount,
+        amount: payableAmount,
+        originalAmount,
+        discountAmount,
+        couponCode: appliedCouponCode,
         customerEmail: sanitize(customerEmail),
         status: "PENDING",
       },
@@ -1514,7 +2830,11 @@ app.post("/api/orders/create", async (req, res) => {
       productTitle: productData.title,
       productSlug: productData.slug,
       planName: selectedPlan ? selectedPlan.name : planName,
-      amount: chosenAmount,
+      amount: payableAmount,
+      originalAmount,
+      discountAmount,
+      couponCode: appliedCouponCode,
+      offerId: appliedOfferId,
       currency: "INR",
       customerName: sanitize(customerName),
       customerEmail: sanitize(customerEmail),
@@ -1526,6 +2846,54 @@ app.post("/api/orders/create", async (req, res) => {
       auditLog: JSON.stringify(initialAudit),
     });
 
+    // Create Coupon Reservation & Payment Offer Details records
+    if (appliedOfferId) {
+      try {
+        await CouponRedemption.create({
+          id: createId("redemption"),
+          couponId: offerValidation?.coupon?.id || null,
+          offerId: appliedOfferId,
+          orderId: order.id,
+          orderNumber: order.orderNumber,
+          customerEmail: sanitize(customerEmail).toLowerCase(),
+          customerPhone: cleanPhone,
+          originalAmount,
+          discountAmount,
+          finalAmount: payableAmount,
+          status: "RESERVED",
+          reservedAt: new Date(),
+        });
+
+        await PaymentOfferDetail.create({
+          id: createId("pod"),
+          orderNumber: order.orderNumber,
+          offerId: appliedOfferId,
+          couponCode: appliedCouponCode,
+          discountType: offerValidation?.offer?.discountType || "PERCENTAGE",
+          discountValue: offerValidation?.offer?.discountValue || 0,
+          originalAmount,
+          discountAmount,
+          finalAmount: payableAmount,
+          settlementStatus: "PENDING",
+          auditNotes: `Reserved during order creation with discount ₹${discountAmount}`,
+        });
+      } catch (reserveErr) {
+        console.warn("Coupon reservation record warning:", reserveErr.message);
+      }
+    }
+
+    // Call PhonePe Payment Gateway to initialize session using final payable amount
+    const pgResult = await initiatePhonePePayPage({
+      order,
+      amount: payableAmount,
+      paymentSettings,
+      req,
+    });
+
+    if (pgResult?.phonepeTxnId) {
+      await order.update({ transactionId: pgResult.phonepeTxnId });
+    }
+
     return res.status(201).json({
       ok: true,
       order: {
@@ -1536,6 +2904,9 @@ app.post("/api/orders/create", async (req, res) => {
         productSlug: order.productSlug,
         planName: order.planName,
         amount: Number(order.amount),
+        originalAmount: Number(originalAmount),
+        discountAmount: Number(discountAmount),
+        couponCode: appliedCouponCode,
         currency: order.currency,
         customerName: order.customerName,
         customerEmail: order.customerEmail,
@@ -1545,10 +2916,17 @@ app.post("/api/orders/create", async (req, res) => {
         createdAt: order.createdAt,
       },
       payment: {
-        method: "phonepe_upi",
+        method: pgResult?.redirectUrl ? "phonepe_pg" : "phonepe_upi",
+        hasPgRedirect: Boolean(pgResult?.redirectUrl),
+        redirectUrl: pgResult?.redirectUrl || null,
+        phonepeTxnId: pgResult?.phonepeTxnId || null,
+        pgError: pgResult?.error || null,
         merchantUpiId: merchantUpi,
         merchantName,
-        payableAmount: chosenAmount,
+        payableAmount,
+        originalAmount,
+        discountAmount,
+        couponCode: appliedCouponCode,
         upiUri,
         qrImageUrl: paymentSettings?.qrImageUrl || "/payment/phonepe-business-qr.png",
         sandbox: Boolean(paymentSettings?.sandboxMode),
@@ -1683,6 +3061,10 @@ app.get("/api/orders/:idOrNumber", async (req, res) => {
         productSlug: order.productSlug,
         planName: order.planName,
         amount: Number(order.amount),
+        originalAmount: order.originalAmount ? Number(order.originalAmount) : Number(order.amount),
+        discountAmount: Number(order.discountAmount || 0),
+        couponCode: order.couponCode || null,
+        offerId: order.offerId || null,
         currency: order.currency,
         customerName: order.customerName,
         customerEmail: order.customerEmail,
@@ -1700,20 +3082,367 @@ app.get("/api/orders/:idOrNumber", async (req, res) => {
   }
 });
 
+// Public: Real-Time PhonePe Order Status & Automated Verification
+app.get("/api/payment/phonepe/status/:orderNumber", async (req, res) => {
+  try {
+    const { orderNumber } = req.params;
+    const order = await Order.findOne({
+      where: {
+        [Op.or]: [{ orderNumber }, { id: orderNumber }],
+      },
+    });
+
+    if (!order) {
+      return res.status(404).json({ ok: false, message: "Order not found." });
+    }
+
+    // If order is already completed, return immediately
+    if (order.paymentStatus === "COMPLETED") {
+      return res.json({
+        ok: true,
+        verified: true,
+        status: "COMPLETED",
+        order: {
+          id: order.id,
+          orderNumber: order.orderNumber,
+          productTitle: order.productTitle,
+          planName: order.planName,
+          amount: Number(order.amount),
+          originalAmount: order.originalAmount ? Number(order.originalAmount) : Number(order.amount),
+          discountAmount: Number(order.discountAmount || 0),
+          couponCode: order.couponCode || null,
+          offerId: order.offerId || null,
+          currency: order.currency,
+          customerName: order.customerName,
+          customerEmail: order.customerEmail,
+          customerPhone: order.customerPhone,
+          companyName: order.companyName,
+          paymentStatus: order.paymentStatus,
+          transactionId: order.transactionId,
+          utrNumber: order.utrNumber,
+          createdAt: order.createdAt,
+          updatedAt: order.updatedAt,
+        },
+      });
+    }
+
+    // Call PhonePe status API directly to verify
+    let settings = await PaymentSetting.findByPk("default");
+    const checkResult = await checkPhonePeOrderStatus(order.orderNumber, settings);
+
+    if (checkResult.ok) {
+      const data = checkResult.data;
+      const isSuccess =
+        Boolean(checkResult.isSuccess) ||
+        data?.state === "COMPLETED" ||
+        data?.code === "PAYMENT_SUCCESS" ||
+        data?.data?.state === "COMPLETED";
+
+      const isExpired =
+        Boolean(checkResult.isExpired) ||
+        data?.state === "EXPIRED" ||
+        data?.state === "TIMED_OUT" ||
+        data?.detailedErrorCode === "SESSION_EXPIRED" ||
+        data?.errorCode === "SESSION_EXPIRED";
+
+      const isCancelled =
+        Boolean(checkResult.isCancelled) ||
+        data?.state === "CANCELLED" ||
+        data?.state === "USER_DROPPED" ||
+        data?.errorCode === "USER_DROPPED";
+
+      const isFailed =
+        (Boolean(checkResult.isFailed) ||
+          data?.state === "FAILED" ||
+          data?.code === "PAYMENT_ERROR" ||
+          data?.code === "PAYMENT_FAILED" ||
+          data?.data?.state === "FAILED") &&
+        !isExpired &&
+        !isCancelled;
+
+      const failureReason =
+        checkResult.failureReason ||
+        (isExpired
+          ? "Payment session expired"
+          : isCancelled
+          ? "Payment cancelled by user"
+          : isFailed
+          ? "Payment failed at bank / UPI"
+          : null);
+
+      if (isSuccess) {
+        let audit = [];
+        try {
+          audit = JSON.parse(order.auditLog || "[]");
+        } catch {}
+
+        const txnId =
+          data?.orderId ||
+          data?.paymentDetails?.[0]?.transactionId ||
+          data?.data?.transactionId ||
+          order.transactionId;
+
+        const utr =
+          data?.paymentDetails?.[0]?.splitInstruments?.[0]?.rail?.utr ||
+          data?.data?.paymentInstrument?.utr ||
+          order.utrNumber;
+
+        audit.push({
+          timestamp: new Date().toISOString(),
+          action: "PHONEPE_AUTO_VERIFIED",
+          transactionId: txnId,
+          code: data?.code || "COMPLETED",
+          status: "COMPLETED",
+        });
+
+        await order.update({
+          paymentStatus: "COMPLETED",
+          transactionId: txnId || `TXN-${Date.now()}`,
+          utrNumber: utr,
+          gatewayResponse: JSON.stringify(data),
+          auditLog: JSON.stringify(audit),
+        });
+
+        // Atomic settlement of coupon redemption & usage count increment
+        try {
+          const redemption = await CouponRedemption.findOne({
+            where: { orderId: order.id, status: "RESERVED" },
+          });
+          if (redemption) {
+            await redemption.update({
+              status: "COMPLETED",
+              completedAt: new Date(),
+            });
+            if (redemption.offerId) {
+              await Offer.increment("usedCount", { by: 1, where: { id: redemption.offerId } });
+            }
+            if (redemption.couponId) {
+              await Coupon.increment("usedCount", { by: 1, where: { id: redemption.couponId } });
+            }
+          }
+          await PaymentOfferDetail.update(
+            { settlementStatus: "COMPLETED", verifiedAt: new Date() },
+            { where: { orderId: order.id } }
+          );
+        } catch (offerErr) {
+          console.warn("Coupon redemption completion hook warning:", offerErr.message);
+        }
+
+        sendOrderSuccessEmail(order);
+      } else if (isFailed || isExpired || isCancelled) {
+        const newStatus = isExpired ? "EXPIRED" : isCancelled ? "CANCELLED" : "FAILED";
+        let audit = [];
+        try {
+          audit = JSON.parse(order.auditLog || "[]");
+        } catch {}
+
+        audit.push({
+          timestamp: new Date().toISOString(),
+          action: `PHONEPE_${newStatus}`,
+          reason: failureReason,
+          status: newStatus,
+        });
+
+        await order.update({
+          paymentStatus: newStatus,
+          gatewayResponse: JSON.stringify(data),
+          auditLog: JSON.stringify(audit),
+          adminNotes: failureReason,
+        });
+
+        // Release reserved coupon redemption so quota is not locked
+        try {
+          const redemption = await CouponRedemption.findOne({
+            where: { orderId: order.id, status: "RESERVED" },
+          });
+          if (redemption) {
+            await redemption.update({
+              status: isExpired ? "EXPIRED" : isCancelled ? "CANCELLED" : "FAILED",
+            });
+          }
+          await PaymentOfferDetail.update(
+            { settlementStatus: isExpired ? "EXPIRED" : isCancelled ? "CANCELLED" : "FAILED" },
+            { where: { orderId: order.id } }
+          );
+        } catch (releaseErr) {
+          console.warn("Coupon reservation release warning:", releaseErr.message);
+        }
+      }
+    }
+
+    const currentFailureReason =
+      order.paymentStatus === "FAILED" ||
+      order.paymentStatus === "EXPIRED" ||
+      order.paymentStatus === "CANCELLED"
+        ? checkResult.failureReason || order.adminNotes
+        : null;
+
+    return res.json({
+      ok: true,
+      verified: order.paymentStatus === "COMPLETED",
+      status: order.paymentStatus,
+      failureReason: currentFailureReason,
+      order: {
+        id: order.id,
+        orderNumber: order.orderNumber,
+        productId: order.productId,
+        productTitle: order.productTitle,
+        productSlug: order.productSlug,
+        planName: order.planName,
+        amount: Number(order.amount),
+        originalAmount: order.originalAmount ? Number(order.originalAmount) : Number(order.amount),
+        discountAmount: Number(order.discountAmount || 0),
+        couponCode: order.couponCode || null,
+        offerId: order.offerId || null,
+        currency: order.currency,
+        customerName: order.customerName,
+        customerEmail: order.customerEmail,
+        customerPhone: order.customerPhone,
+        companyName: order.companyName,
+        paymentStatus: order.paymentStatus,
+        failureReason: currentFailureReason,
+        transactionId: order.transactionId,
+        utrNumber: order.utrNumber,
+        createdAt: order.createdAt,
+        updatedAt: order.updatedAt,
+      },
+    });
+  } catch (err) {
+    return res.status(500).json({ ok: false, message: err.message });
+  }
+});
+
+// Public: Retry Payment for Failed / Expired Order (with 10-Minute Validity)
+app.post("/api/payment/phonepe/retry/:orderNumber", async (req, res) => {
+  try {
+    const { orderNumber } = req.params;
+    const existingOrder = await Order.findOne({
+      where: {
+        [Op.or]: [{ orderNumber }, { id: orderNumber }],
+      },
+    });
+
+    if (!existingOrder) {
+      return res.status(404).json({ ok: false, message: "Original order not found." });
+    }
+
+    const timestamp = Date.now();
+    const newOrderNumber = `DCT-ORD-${timestamp.toString().slice(-6)}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const newOrderId = createId("order");
+
+    let paymentSettings = await PaymentSetting.findByPk("default");
+
+    const newOrder = await Order.create({
+      id: newOrderId,
+      orderNumber: newOrderNumber,
+      productId: existingOrder.productId,
+      productTitle: existingOrder.productTitle,
+      productSlug: existingOrder.productSlug,
+      planName: existingOrder.planName,
+      amount: existingOrder.amount,
+      originalAmount: existingOrder.originalAmount || existingOrder.amount,
+      discountAmount: existingOrder.discountAmount || 0,
+      couponCode: existingOrder.couponCode || null,
+      offerId: existingOrder.offerId || null,
+      currency: "INR",
+      customerName: existingOrder.customerName,
+      customerEmail: existingOrder.customerEmail,
+      customerPhone: existingOrder.customerPhone,
+      companyName: existingOrder.companyName,
+      address: existingOrder.address,
+      paymentMethod: "phonepe_upi",
+      paymentStatus: "PENDING",
+      adminNotes: `Retried from ${existingOrder.orderNumber}`,
+      auditLog: JSON.stringify([
+        {
+          timestamp: new Date().toISOString(),
+          action: "ORDER_RETRIED",
+          fromOrder: existingOrder.orderNumber,
+          amount: existingOrder.amount,
+        },
+      ]),
+    });
+
+    if (existingOrder.couponCode) {
+      try {
+        const coupon = await Coupon.findOne({ where: { code: existingOrder.couponCode.toUpperCase() } });
+        if (coupon) {
+          await CouponRedemption.create({
+            id: createId("redemption"),
+            couponId: coupon.id,
+            offerId: coupon.offerId,
+            orderId: newOrderId,
+            customerEmail: existingOrder.customerEmail,
+            customerPhone: existingOrder.customerPhone,
+            discountAmount: existingOrder.discountAmount,
+            orderAmount: existingOrder.amount,
+            status: "RESERVED",
+          });
+        }
+      } catch (retryCouponErr) {
+        console.warn("Retry coupon reservation warning:", retryCouponErr.message);
+      }
+    }
+
+    const payResult = await initiatePhonePePayPage({
+      order: newOrder,
+      amount: newOrder.amount,
+      paymentSettings,
+      req,
+    });
+
+    return res.json({
+      ok: true,
+      message: "New 10-minute PhonePe payment session initialized.",
+      order: {
+        id: newOrder.id,
+        orderNumber: newOrder.orderNumber,
+        productTitle: newOrder.productTitle,
+        productSlug: newOrder.productSlug,
+        planName: newOrder.planName,
+        amount: Number(newOrder.amount),
+        customerName: newOrder.customerName,
+        customerEmail: newOrder.customerEmail,
+        customerPhone: newOrder.customerPhone,
+        paymentStatus: newOrder.paymentStatus,
+      },
+      payment: {
+        redirectUrl: payResult?.redirectUrl || null,
+        phonepeTxnId: payResult?.phonepeTxnId || null,
+        merchantTransactionId: newOrder.orderNumber,
+        expiresInSeconds: 600, // 10 minutes
+      },
+    });
+  } catch (err) {
+    return res.status(500).json({ ok: false, message: err.message });
+  }
+});
+
 // Public: PhonePe Official Server-to-Server Webhook / Callback Handler
 app.post("/api/payment/phonepe/callback", async (req, res) => {
   try {
     const rawBody = req.body;
     const xVerify = req.headers["x-verify"];
 
-    // Log incoming webhook securely
     console.log("PhonePe Webhook Event Received:", { hasVerify: Boolean(xVerify) });
 
     let settings = await PaymentSetting.findByPk("default");
-    const saltKey = settings?.saltKey || "";
-    const saltIndex = settings?.saltIndex || "1";
+    const config = getPhonePeConfig(settings);
 
     if (rawBody && rawBody.response) {
+      // Validate signature if configured
+      if (config.saltKey && xVerify) {
+        const expectedHash = crypto
+          .createHash("sha256")
+          .update(rawBody.response + config.saltKey)
+          .digest("hex");
+        const expectedXVerify = `${expectedHash}###${config.saltIndex}`;
+        if (xVerify !== expectedXVerify) {
+          console.warn("PhonePe Webhook X-VERIFY signature mismatch. Ignoring untrusted payload.");
+          return res.status(400).json({ ok: false, message: "Invalid signature" });
+        }
+      }
+
       const decodedStr = Buffer.from(rawBody.response, "base64").toString("utf-8");
       const data = JSON.parse(decodedStr);
 
@@ -1722,7 +3451,7 @@ app.post("/api/payment/phonepe/callback", async (req, res) => {
         const order = await Order.findOne({ where: { orderNumber } });
 
         if (order) {
-          const success = data.code === "PAYMENT_SUCCESS";
+          const success = data.code === "PAYMENT_SUCCESS" || data.data?.state === "COMPLETED";
           const newStatus = success ? "COMPLETED" : "FAILED";
 
           let audit = [];
@@ -1744,6 +3473,48 @@ app.post("/api/payment/phonepe/callback", async (req, res) => {
             gatewayResponse: decodedStr,
             auditLog: JSON.stringify(audit),
           });
+
+          if (success) {
+            try {
+              const redemption = await CouponRedemption.findOne({
+                where: { orderId: order.id, status: "RESERVED" },
+              });
+              if (redemption) {
+                await redemption.update({
+                  status: "COMPLETED",
+                  completedAt: new Date(),
+                });
+                if (redemption.offerId) {
+                  await Offer.increment("usedCount", { by: 1, where: { id: redemption.offerId } });
+                }
+                if (redemption.couponId) {
+                  await Coupon.increment("usedCount", { by: 1, where: { id: redemption.couponId } });
+                }
+              }
+              await PaymentOfferDetail.update(
+                { settlementStatus: "COMPLETED", verifiedAt: new Date() },
+                { where: { orderId: order.id } }
+              );
+            } catch (whErr) {
+              console.warn("Webhook coupon settlement error:", whErr.message);
+            }
+            sendOrderSuccessEmail(order);
+          } else {
+            try {
+              const redemption = await CouponRedemption.findOne({
+                where: { orderId: order.id, status: "RESERVED" },
+              });
+              if (redemption) {
+                await redemption.update({ status: "FAILED" });
+              }
+              await PaymentOfferDetail.update(
+                { settlementStatus: "FAILED" },
+                { where: { orderId: order.id } }
+              );
+            } catch (whErr) {
+              console.warn("Webhook coupon release error:", whErr.message);
+            }
+          }
         }
       }
     }
@@ -1751,7 +3522,7 @@ app.post("/api/payment/phonepe/callback", async (req, res) => {
     return res.status(200).json({ ok: true, status: "CALLBACK_PROCESSED" });
   } catch (err) {
     console.error("PhonePe callback handling error:", err.message);
-    return res.status(200).json({ ok: true }); // Always 200 to prevent webhook retries on parse issues
+    return res.status(200).json({ ok: true }); // Always 200 to acknowledge webhook
   }
 });
 
@@ -1852,6 +3623,9 @@ app.put("/api/admin/settings/payment", requireAdmin, async (req, res) => {
 
     const payload = {
       merchantId: sanitize(req.body.merchantId) || settings.merchantId,
+      clientId: sanitize(req.body.clientId) !== undefined ? sanitize(req.body.clientId) : settings.clientId,
+      clientSecret: sanitize(req.body.clientSecret) !== undefined ? sanitize(req.body.clientSecret) : settings.clientSecret,
+      clientVersion: sanitize(req.body.clientVersion) || settings.clientVersion || "1",
       merchantName: sanitize(req.body.merchantName) || settings.merchantName,
       merchantUpiId: sanitize(req.body.merchantUpiId) || settings.merchantUpiId,
       saltKey: sanitize(req.body.saltKey) !== undefined ? sanitize(req.body.saltKey) : settings.saltKey,
@@ -1864,9 +3638,96 @@ app.put("/api/admin/settings/payment", requireAdmin, async (req, res) => {
     };
 
     await settings.update(payload);
+    // Clear token cache on settings change
+    phonePeTokenCache = { token: null, expiresAt: 0, clientId: null };
     return res.json({ ok: true, settings: settings.get({ plain: true }) });
   } catch (err) {
     return res.status(500).json({ ok: false, message: err.message });
+  }
+});
+
+// Admin: Test PhonePe Payment Gateway Connectivity
+app.post("/api/admin/settings/payment/test", requireAdmin, async (req, res) => {
+  try {
+    let settings = await PaymentSetting.findByPk("default");
+    const config = getPhonePeConfig(settings);
+
+    // TEST V2: Standard Checkout OAuth Handshake
+    if (config.isV2) {
+      try {
+        const token = await getPhonePeOAuthToken(config);
+        if (token) {
+          return res.json({
+            ok: true,
+            authenticated: true,
+            protocol: "PhonePe Standard Checkout (V2 OAuth 2.0)",
+            environment: config.isSandbox ? "Sandbox (UAT Testing)" : "Live (Production)",
+            merchantId: config.mid,
+            clientId: config.clientId,
+            message: `Successfully authenticated with PhonePe ${
+              config.isSandbox ? "Sandbox (UAT)" : "Live (Production)"
+            } via OAuth 2.0! Client ID and Client Secret verified.`,
+          });
+        }
+      } catch (v2Err) {
+        return res.status(400).json({
+          ok: false,
+          authenticated: false,
+          protocol: "PhonePe Standard Checkout (V2 OAuth 2.0)",
+          message: `PhonePe OAuth authentication failed: ${v2Err.message}`,
+        });
+      }
+    }
+
+    // TEST V1: Checksum Handshake
+    if (!config.mid || !config.saltKey) {
+      return res.status(400).json({
+        ok: false,
+        message: "Merchant ID and Salt Key (or Client ID & Secret) must be configured before testing.",
+      });
+    }
+
+    const testTxn = `DCT-PROBE-${Date.now()}`;
+    const statusPath = `/pg/v1/status/${config.mid}/${testTxn}`;
+    const stringToHash = statusPath + config.saltKey;
+    const sha256 = crypto.createHash("sha256").update(stringToHash).digest("hex");
+    const xVerify = `${sha256}###${config.saltIndex}`;
+
+    const phonepeRes = await fetch(`${config.baseUrl}${statusPath}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "X-VERIFY": xVerify,
+        "X-MERCHANT-ID": config.mid,
+        accept: "application/json",
+      },
+    });
+
+    const httpStatus = phonepeRes.status;
+    let data = null;
+    try {
+      data = await phonepeRes.json();
+    } catch {}
+
+    const isAuthed =
+      httpStatus === 200 ||
+      httpStatus === 204 ||
+      (data && data.code !== "KEY_NOT_CONFIGURED" && data.code !== "UNAUTHORIZED" && data.code !== "BAD_REQUEST");
+
+    return res.json({
+      ok: true,
+      authenticated: isAuthed,
+      protocol: "PhonePe PG (V1 Checksum)",
+      httpStatus,
+      environment: config.isSandbox ? "Sandbox (UAT Testing)" : "Live (Production)",
+      merchantId: config.mid,
+      message: isAuthed
+        ? `Successfully connected to PhonePe ${config.isSandbox ? "Sandbox (UAT)" : "Live (Production)"} Gateway! Authentication handshake verified.`
+        : `PhonePe API responded with error: ${data?.message || data?.code || "Authentication failed"}. Please check your credentials.`,
+      details: data,
+    });
+  } catch (err) {
+    return res.status(500).json({ ok: false, message: `Failed to connect to PhonePe: ${err.message}` });
   }
 });
 

@@ -566,6 +566,7 @@ export const deleteProduct = async (id) => {
 };
 
 export const uploadProductImage = uploadProjectImage;
+export const getProducts = getAdminProducts;
 
 // ==========================================
 // ORDERS & PAYMENT MANAGEMENT
@@ -605,6 +606,77 @@ export const updateAdminPaymentSettings = async (payload) => {
     method: "PUT",
     auth: true,
     body: JSON.stringify(payload),
+  });
+};
+
+export const testAdminPaymentSettings = async () => {
+  return await request("/api/admin/settings/payment/test", {
+    method: "POST",
+    auth: true,
+  });
+};
+
+// ==========================================
+// OFFERS & COUPONS MANAGEMENT
+// ==========================================
+export const getAdminOffers = async () => {
+  try {
+    const result = await request("/api/admin/offers", { auth: true });
+    return result.offers || result.items || [];
+  } catch (err) {
+    console.warn("Backend offers fetch warning:", err.message);
+    return [];
+  }
+};
+
+export const getAdminOfferAnalytics = async () => {
+  try {
+    const result = await request("/api/admin/offers/analytics", { auth: true });
+    return result.analytics || null;
+  } catch (err) {
+    console.warn("Backend offer analytics warning:", err.message);
+    return null;
+  }
+};
+
+export const getAdminOfferRedemptions = async () => {
+  try {
+    const result = await request("/api/admin/offers/redemptions", { auth: true });
+    return result.redemptions || result.items || [];
+  } catch (err) {
+    console.warn("Backend offer redemptions warning:", err.message);
+    return [];
+  }
+};
+
+export const createAdminOffer = async (payload) => {
+  return await request("/api/admin/offers", {
+    method: "POST",
+    auth: true,
+    body: JSON.stringify(payload),
+  });
+};
+
+export const updateAdminOffer = async (id, payload) => {
+  return await request(`/api/admin/offers/${id}`, {
+    method: "PUT",
+    auth: true,
+    body: JSON.stringify(payload),
+  });
+};
+
+export const deleteAdminOffer = async (id) => {
+  return await request(`/api/admin/offers/${id}`, {
+    method: "DELETE",
+    auth: true,
+  });
+};
+
+export const toggleAdminOfferStatus = async (id, isActive) => {
+  return await request(`/api/admin/offers/${id}/status`, {
+    method: "PATCH",
+    auth: true,
+    body: JSON.stringify({ isActive }),
   });
 };
 

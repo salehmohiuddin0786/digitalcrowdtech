@@ -3,23 +3,24 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import QRCode from "qrcode";
 import {
   ShieldCheck,
   Lock,
   ArrowRight,
   CheckCircle2,
   AlertCircle,
-  Copy,
-  Check,
   ShoppingBag,
   Package,
   Phone,
   Mail,
-  QrCode,
-  Smartphone,
-  ExternalLink,
   RotateCw,
+  Clock,
+  Tag,
+  Ticket,
+  Percent,
+  Check,
+  X,
+  Sparkles,
 } from "lucide-react";
 
 export default function CheckoutClient({ initialProducts = [] }) {
@@ -42,21 +43,40 @@ export default function CheckoutClient({ initialProducts = [] }) {
   const [address, setAddress] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
 
+  // Offers & Coupons state
+  const [availableOffers, setAvailableOffers] = useState([]);
+  const [couponInput, setCouponInput] = useState("");
+  const [appliedOffer, setAppliedOffer] = useState(null);
+  const [discountBreakdown, setDiscountBreakdown] = useState(null);
+  const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
+  const [couponError, setCouponError] = useState("");
+  const [couponSuccess, setCouponSuccess] = useState("");
+
   // Checkout flow state
-  const [step, setStep] = useState(1); // 1 = Details, 2 = PhonePe UPI Payment
+  const [step, setStep] = useState(1); // 1 = Details, 2 = PhonePe Payment
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [activeOrder, setActiveOrder] = useState(null);
   const [paymentData, setPaymentData] = useState(null);
 
-  // Dynamic QR code data URL
-  const [qrDataUrl, setQrDataUrl] = useState("");
-  const [copiedVpa, setCopiedVpa] = useState(false);
+  const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
 
-  // UTR submission state
-  const [utrNumber, setUtrNumber] = useState("");
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [utrError, setUtrError] = useState("");
+  // Fetch active offers
+  useEffect(() => {
+    let isMounted = true;
+    fetch(`${apiBase}/api/offers/active`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (isMounted && data.ok && Array.isArray(data.offers)) {
+          setAvailableOffers(data.offers);
+        }
+      })
+      .catch((err) => console.warn("Failed to load active offers:", err.message));
+
+    return () => {
+      isMounted = false;
+    };
+  }, [apiBase]);
 
   // Initialize selected product and plan
   useEffect(() => {
@@ -72,13 +92,14 @@ export default function CheckoutClient({ initialProducts = [] }) {
     setSelectedProduct(prod);
 
     if (prod) {
-      const plans = Array.isArray(prod.pricingPlans) && prod.pricingPlans.length > 0
-        ? prod.pricingPlans
-        : [
-            { name: "Starter Solution", price: prod.price || "₹9,999", numericPrice: 9999 },
-            { name: "Business Growth", price: "₹18,999", numericPrice: 18999, popular: true },
-            { name: "Enterprise Custom", price: "₹34,999", numericPrice: 34999 },
-          ];
+      const plans =
+        Array.isArray(prod.pricingPlans) && prod.pricingPlans.length > 0
+          ? prod.pricingPlans
+          : [
+              { name: "Starter Solution", price: prod.price || "₹9,999", numericPrice: 9999 },
+              { name: "Business Growth", price: "₹18,999", numericPrice: 18999, popular: true },
+              { name: "Enterprise Custom", price: "₹34,999", numericPrice: 34999 },
+            ];
 
       let matchPlan = null;
       if (planParam) {
@@ -91,26 +112,77 @@ export default function CheckoutClient({ initialProducts = [] }) {
     }
   }, [productSlugParam, planParam, initialProducts]);
 
-  // Generate dynamic QR code image when payment data arrives
-  useEffect(() => {
-    if (paymentData && paymentData.upiUri) {
-      QRCode.toDataURL(paymentData.upiUri, {
-        color: { dark: "#5F259F", light: "#FFFFFF" },
-        width: 400,
-        margin: 2,
-      })
-        .then((url) => setQrDataUrl(url))
-        .catch(() => setQrDataUrl("/payment/phonepe-business-qr.png"));
-    }
-  }, [paymentData]);
+  // Base raw amount from selected plan
+  const originalAmount = selectedPlan?.numericPrice || 9999;
 
-  const copyToClipboard = (text) => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(text);
-      setCopiedVpa(true);
-      setTimeout(() => setCopiedVpa(false), 2500);
+  // Re-validate coupon if plan / amount changes
+  useEffect(() => {
+    if (appliedOffer && appliedOffer.couponCode) {
+      handleValidateCoupon(appliedOffer.couponCode, false);
+    }
+  }, [selectedPlan?.numericPrice, selectedProduct?.id]);
+
+  // Handle Server-Side Coupon Validation
+  const handleValidateCoupon = async (codeToValidate, showSuccessMsg = true) => {
+    const code = (codeToValidate || couponInput).trim().toUpperCase();
+    if (!code) {
+      setCouponError("Please enter a coupon code.");
+      return;
+    }
+
+    setIsValidatingCoupon(true);
+    setCouponError("");
+    setCouponSuccess("");
+
+    try {
+      const res = await fetch(`${apiBase}/api/offers/validate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          couponCode: code,
+          amount: originalAmount,
+          productId: selectedProduct?.id || selectedProduct?.slug,
+          customerEmail: customerEmail.trim() || undefined,
+          customerPhone: customerPhone.replace(/\D/g, "") || undefined,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        throw new Error(data.message || "Invalid or ineligible coupon code.");
+      }
+
+      setAppliedOffer(data.offer);
+      setDiscountBreakdown(data.breakdown);
+      setCouponInput(code);
+      if (showSuccessMsg) {
+        setCouponSuccess(
+          data.breakdown?.savingsText || `Coupon "${code}" applied successfully!`
+        );
+      }
+    } catch (err) {
+      setAppliedOffer(null);
+      setDiscountBreakdown(null);
+      setCouponError(err.message || "Could not apply coupon.");
+    } finally {
+      setIsValidatingCoupon(false);
     }
   };
+
+  // Remove Applied Coupon
+  const handleRemoveCoupon = () => {
+    setAppliedOffer(null);
+    setDiscountBreakdown(null);
+    setCouponInput("");
+    setCouponError("");
+    setCouponSuccess("");
+  };
+
+  // Calculate final payable amount
+  const finalPayableAmount = discountBreakdown
+    ? discountBreakdown.finalAmount
+    : originalAmount;
+  const discountAmount = discountBreakdown ? discountBreakdown.discountAmount : 0;
 
   const handleCreateOrder = async (e) => {
     e.preventDefault();
@@ -143,9 +215,6 @@ export default function CheckoutClient({ initialProducts = [] }) {
     setIsLoading(true);
 
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
-      const amount = selectedPlan?.numericPrice || 9999;
-
       const res = await fetch(`${apiBase}/api/orders/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -154,12 +223,13 @@ export default function CheckoutClient({ initialProducts = [] }) {
           productTitle: selectedProduct?.title,
           productSlug: selectedProduct?.slug,
           planName: selectedPlan?.name,
-          amount,
+          amount: originalAmount,
           customerName: customerName.trim(),
           customerEmail: customerEmail.trim(),
           customerPhone: phoneClean,
           companyName: companyName.trim() || undefined,
           address: address.trim(),
+          couponCode: appliedOffer?.couponCode || undefined,
         }),
       });
 
@@ -170,7 +240,14 @@ export default function CheckoutClient({ initialProducts = [] }) {
 
       setActiveOrder(data.order);
       setPaymentData(data.payment);
-      setStep(2); // Advance to PhonePe UPI payment view
+
+      // Direct Automated Redirection to Official PhonePe Gateway
+      if (data.payment?.redirectUrl) {
+        window.location.href = data.payment.redirectUrl;
+        return;
+      }
+
+      setStep(2);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
       setErrorMsg(err.message || "Unable to proceed to payment. Please check your connection.");
@@ -178,46 +255,6 @@ export default function CheckoutClient({ initialProducts = [] }) {
       setIsLoading(false);
     }
   };
-
-  const handleVerifyPayment = async (e) => {
-    e.preventDefault();
-    setUtrError("");
-
-    const cleanUtr = utrNumber.trim();
-    if (!cleanUtr || cleanUtr.length < 6) {
-      setUtrError("Please enter a valid 12-digit UTR or transaction reference number.");
-      return;
-    }
-
-    setIsVerifying(true);
-
-    try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
-      const res = await fetch(`${apiBase}/api/orders/verify-payment`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          orderNumber: activeOrder?.orderNumber,
-          utrNumber: cleanUtr,
-          transactionId: cleanUtr,
-        }),
-      });
-
-      const data = await res.json();
-      if (!res.ok || !data.ok) {
-        throw new Error(data.message || "Verification submission failed.");
-      }
-
-      // Success -> Redirect to order confirmation page
-      router.push(`/order-confirmation?orderNumber=${encodeURIComponent(activeOrder.orderNumber)}`);
-    } catch (err) {
-      setUtrError(err.message || "Error submitting payment reference. Please try again.");
-    } finally {
-      setIsVerifying(false);
-    }
-  };
-
-  const payableAmount = selectedPlan?.numericPrice || 9999;
 
   return (
     <div className="py-12 md:py-20 bg-transparent text-slate-100 min-h-screen">
@@ -315,14 +352,14 @@ export default function CheckoutClient({ initialProducts = [] }) {
 
                     <div>
                       <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider font-mono">
-                        Phone (WhatsApp) *
+                        Phone / WhatsApp (10 digits) *
                       </label>
                       <input
                         type="tel"
                         required
                         value={customerPhone}
                         onChange={(e) => setCustomerPhone(e.target.value)}
-                        placeholder="10-digit mobile number"
+                        placeholder="9876543210"
                         className="w-full px-4 py-3 rounded-xl bg-white/[0.04] [html.light_&]:bg-slate-100 border border-white/10 [html.light_&]:border-slate-300 text-sm text-white [html.light_&]:text-slate-900 focus:outline-none focus:border-blue-500 transition"
                       />
                     </div>
@@ -337,90 +374,87 @@ export default function CheckoutClient({ initialProducts = [] }) {
                       type="text"
                       value={companyName}
                       onChange={(e) => setCompanyName(e.target.value)}
-                      placeholder="e.g. Apex Retail Pvt Ltd"
+                      placeholder="e.g. Apex Enterprises Pvt Ltd"
                       className="w-full px-4 py-3 rounded-xl bg-white/[0.04] [html.light_&]:bg-slate-100 border border-white/10 [html.light_&]:border-slate-300 text-sm text-white [html.light_&]:text-slate-900 focus:outline-none focus:border-blue-500 transition"
                     />
                   </div>
 
-                  {/* Billing Address */}
+                  {/* Complete Billing Address */}
                   <div>
                     <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wider font-mono">
-                      Billing Address *
+                      Complete Billing Address *
                     </label>
                     <textarea
                       required
-                      rows={3}
+                      rows={2}
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
-                      placeholder="Street, City, State, PIN Code"
-                      className="w-full px-4 py-3 rounded-xl bg-white/[0.04] [html.light_&]:bg-slate-100 border border-white/10 [html.light_&]:border-slate-300 text-sm text-white [html.light_&]:text-slate-900 focus:outline-none focus:border-blue-500 transition resize-none"
+                      placeholder="Flat/Door No., Building, Street, Area, City, State, PIN Code"
+                      className="w-full px-4 py-3 rounded-xl bg-white/[0.04] [html.light_&]:bg-slate-100 border border-white/10 [html.light_&]:border-slate-300 text-sm text-white [html.light_&]:text-slate-900 focus:outline-none focus:border-blue-500 transition"
                     />
                   </div>
 
                   {/* Terms & Policies Checkbox */}
-                  <div className="pt-2">
-                    <label className="flex items-start gap-3 cursor-pointer group">
+                  <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-2">
+                    <label className="flex items-start gap-3 cursor-pointer text-xs text-slate-300">
                       <input
                         type="checkbox"
                         checked={termsAccepted}
                         onChange={(e) => setTermsAccepted(e.target.checked)}
-                        className="mt-1 w-4 h-4 rounded border-white/20 bg-white/5 text-[#F87000] focus:ring-0 cursor-pointer"
+                        className="mt-0.5 rounded border-white/20 bg-white/5 text-blue-600 focus:ring-0"
                       />
-                      <span className="text-xs text-slate-400 group-hover:text-slate-300 leading-relaxed">
-                        I agree to the{" "}
-                        <Link href="/terms-conditions" target="_blank" className="text-blue-400 hover:underline">
+                      <span>
+                        I acknowledge and agree to the{" "}
+                        <Link href="/terms-and-conditions" target="_blank" className="text-blue-400 underline">
                           Terms &amp; Conditions
                         </Link>
                         ,{" "}
-                        <Link href="/cancellation-policy" target="_blank" className="text-blue-400 hover:underline">
-                          Cancellation Policy
+                        <Link href="/cancellation-and-refund" target="_blank" className="text-blue-400 underline">
+                          Cancellation &amp; Refund Policy
                         </Link>
                         , and{" "}
-                        <Link href="/shipping-policy" target="_blank" className="text-blue-400 hover:underline">
-                          Shipping &amp; Delivery Policy
+                        <Link href="/shipping-and-delivery" target="_blank" className="text-blue-400 underline">
+                          Electronic Delivery Policy
                         </Link>
-                        . I understand that digital products are delivered electronically with milestone verification.
+                        .
                       </span>
                     </label>
                   </div>
 
-                  {/* Submit CTA */}
-                  <div className="pt-4">
-                    <button
-                      type="submit"
-                      disabled={isLoading}
-                      className="w-full py-4 px-6 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-[#F87000] to-orange-600 hover:from-orange-500 hover:to-orange-600 shadow-xl shadow-orange-500/25 transition-all inline-flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-                    >
-                      {isLoading ? (
-                        <>
-                          <RotateCw size={16} className="animate-spin" />
-                          <span>Generating Secure Order...</span>
-                        </>
-                      ) : (
-                        <>
-                          <span>Proceed to PhonePe Payment</span>
-                          <ArrowRight size={16} />
-                        </>
-                      )}
-                    </button>
-                  </div>
+                  {/* Proceed to Payment Button */}
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full py-4 px-6 rounded-2xl text-base font-bold text-white bg-gradient-to-r from-[#F87000] to-orange-500 hover:from-orange-500 hover:to-orange-600 shadow-xl shadow-orange-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                  >
+                    {isLoading ? (
+                      <>
+                        <RotateCw size={18} className="animate-spin" />
+                        <span>Initializing PhonePe Session...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Proceed to Pay ₹{finalPayableAmount.toLocaleString("en-IN")}</span>
+                        <ArrowRight size={18} />
+                      </>
+                    )}
+                  </button>
                 </form>
               </div>
             ) : (
-              /* STEP 2: PHONEPE BUSINESS PAYMENT VIEW */
-              <div className="p-6 sm:p-8 rounded-3xl glass-card-premium border-2 border-purple-500/40 shadow-2xl space-y-6 animate-in fade-in duration-300">
-                {/* Header */}
-                <div className="flex items-center justify-between pb-5 border-b border-white/10">
+              /* STEP 2: PHONEPE OFFICIAL PAYMENT GATEWAY SCREEN */
+              <div className="p-6 sm:p-8 rounded-3xl glass-card-premium border border-purple-500/30 shadow-2xl space-y-6">
+                <div className="flex items-center justify-between pb-5 border-b border-purple-500/20">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#5F259F]/20 border border-[#5F259F]/40 flex items-center justify-center text-purple-400 font-bold">
-                      <QrCode size={20} />
+                    <div className="w-10 h-10 rounded-2xl bg-[#5F259F]/30 border border-purple-500/40 text-purple-300 flex items-center justify-center font-bold">
+                      <ShieldCheck size={22} />
                     </div>
                     <div>
                       <h2 className="text-lg font-bold text-white">
-                        PhonePe Business UPI Payment
+                        PhonePe Business Gateway
                       </h2>
                       <p className="text-xs text-slate-400">
-                        Scan the dynamic QR code or use the UPI ID to complete payment.
+                        Official PhonePe Merchant Gateway with instant automated verification.
                       </p>
                     </div>
                   </div>
@@ -432,138 +466,118 @@ export default function CheckoutClient({ initialProducts = [] }) {
                 {/* Order ID Banner */}
                 <div className="p-4 rounded-xl bg-purple-950/30 border border-purple-500/30 flex flex-wrap items-center justify-between gap-3 text-xs">
                   <div>
-                    <span className="text-slate-400 block font-mono">ORDER ID:</span>
+                    <span className="text-slate-400 block font-mono">OFFICIAL ORDER REFERENCE:</span>
                     <span className="font-mono font-bold text-white text-sm">
                       {activeOrder?.orderNumber}
                     </span>
                   </div>
                   <div className="text-right">
                     <span className="text-slate-400 block font-mono">PAYABLE AMOUNT:</span>
-                    <span className="font-bold text-emerald-400 text-lg">
-                      ₹{payableAmount.toLocaleString("en-IN")}
-                    </span>
+                    <div className="flex items-baseline gap-2">
+                      {discountAmount > 0 && (
+                        <span className="text-xs text-slate-400 line-through">
+                          ₹{originalAmount.toLocaleString("en-IN")}
+                        </span>
+                      )}
+                      <span className="font-bold text-emerald-400 text-lg">
+                        ₹{finalPayableAmount.toLocaleString("en-IN")}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                {/* QR Code Presentation Box */}
-                <div className="p-6 rounded-2xl bg-[#07090E] border border-white/10 flex flex-col items-center text-center">
-                  <div className="p-3 bg-white rounded-2xl shadow-2xl mb-4 max-w-[260px] aspect-square flex items-center justify-center">
-                    {qrDataUrl ? (
-                      <img
-                        src={qrDataUrl}
-                        alt="PhonePe UPI QR Code"
-                        className="w-full h-full object-contain"
-                      />
-                    ) : (
-                      <div className="w-48 h-48 flex items-center justify-center text-slate-800 text-xs font-mono">
-                        Loading QR...
+                {/* 10-Minute Session Notice Banner */}
+                <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 flex items-center gap-2.5 text-xs text-slate-300">
+                  <Clock size={16} className="text-purple-400 shrink-0" />
+                  <span>
+                    Payment session is reserved for <strong>10 minutes</strong>. Transaction will be verified automatically upon completion.
+                  </span>
+                </div>
+
+                {/* PRIMARY OPTION: Official PhonePe Payment Gateway Redirection */}
+                {paymentData?.redirectUrl ? (
+                  <div className="p-6 rounded-2xl bg-gradient-to-b from-[#5F259F]/20 to-[#0A0D17] border border-purple-500/30 space-y-4">
+                    <div>
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-bold mb-2">
+                        <CheckCircle2 size={13} />
+                        <span>Instant Automated PhonePe Verification</span>
+                      </div>
+                      <h3 className="text-base font-bold text-white">
+                        Pay Securely with PhonePe
+                      </h3>
+                      <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+                        Complete your payment on PhonePe’s official merchant checkout. Supports all UPI apps (PhonePe, GPay, Paytm, BHIM), Credit &amp; Debit Cards, and 50+ Net Banking options.
+                      </p>
+                    </div>
+
+                    {/* Supported Methods Badges */}
+                    <div className="flex flex-wrap gap-2 text-[11px] font-mono text-slate-300 pt-1">
+                      <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10">PhonePe UPI</span>
+                      <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10">GPay / Paytm / BHIM</span>
+                      <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10">All Bank Cards</span>
+                      <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10">50+ Net Banking</span>
+                    </div>
+
+                    {/* Big Action Button */}
+                    <div className="pt-2">
+                      <a
+                        href={paymentData.redirectUrl}
+                        className="w-full py-4 px-6 rounded-2xl text-base font-bold text-white bg-gradient-to-r from-[#5F259F] to-[#7B2CBF] hover:from-[#521e8a] hover:to-[#6a24a6] shadow-xl shadow-purple-950/60 transition-all inline-flex items-center justify-center gap-3 border border-purple-400/40 group"
+                      >
+                        <ShieldCheck size={20} className="text-purple-200 group-hover:scale-110 transition-transform" />
+                        <span>Proceed to Pay ₹{finalPayableAmount.toLocaleString("en-IN")} on PhonePe</span>
+                        <ArrowRight size={18} className="text-purple-200 group-hover:translate-x-1 transition-transform" />
+                      </a>
+                      <p className="text-[11px] text-center text-slate-400 mt-2">
+                        🔒 256-bit encrypted official checkout. No manual UTR entry needed.
+                      </p>
+                    </div>
+                  </div>
+                ) : paymentData ? (
+                  <div className="p-6 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-center space-y-4">
+                    <div className="w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 mx-auto flex items-center justify-center">
+                      <AlertCircle size={24} />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-white">PhonePe Gateway Not Ready</h3>
+                      <p className="text-xs text-amber-200/80 mt-1.5 leading-relaxed max-w-md mx-auto">
+                        {paymentData.pgError || "Could not initialize PhonePe Payment Gateway session. Please verify your Merchant Credentials in Admin Settings."}
+                      </p>
+                    </div>
+
+                    {paymentData.upiUri && (
+                      <div className="pt-2 space-y-2">
+                        <a
+                          href={paymentData.upiUri}
+                          className="w-full py-3.5 px-6 rounded-xl text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-500 shadow-lg shadow-emerald-950/50 transition-all inline-flex items-center justify-center gap-2"
+                        >
+                          <ShieldCheck size={18} />
+                          <span>Pay ₹{finalPayableAmount.toLocaleString("en-IN")} via PhonePe / UPI App</span>
+                        </a>
+                        <p className="text-[11px] text-slate-400">
+                          Direct payment to verified Business UPI: <span className="font-mono text-purple-300">{paymentData.merchantUpiId || "9985960692@ybl"}</span>
+                        </p>
                       </div>
                     )}
                   </div>
-
-                  <span className="text-xs font-semibold text-slate-300 mb-1">
-                    Scan with PhonePe, Google Pay, Paytm, or any UPI App
-                  </span>
-                  <span className="text-[11px] font-mono text-purple-400">
-                    Official Merchant: Digital Crowd Technologies
-                  </span>
-
-                  {/* Copy UPI ID Bar */}
-                  <div className="mt-4 flex items-center gap-2 p-2 px-3 rounded-xl bg-white/[0.04] border border-white/10">
-                    <span className="text-xs font-mono text-slate-300">
-                      {paymentData?.merchantUpiId || "9985960692@ybl"}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        copyToClipboard(paymentData?.merchantUpiId || "9985960692@ybl")
-                      }
-                      className="p-1 rounded text-purple-400 hover:text-purple-300 hover:bg-white/5 transition cursor-pointer"
-                      title="Copy UPI ID"
-                    >
-                      {copiedVpa ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
-                    </button>
-                    {copiedVpa && (
-                      <span className="text-[10px] text-emerald-400 font-bold">
-                        Copied!
-                      </span>
-                    )}
+                ) : (
+                  <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 text-center space-y-3">
+                    <RotateCw size={24} className="animate-spin text-purple-400 mx-auto" />
+                    <p className="text-sm text-slate-300">
+                      Connecting to PhonePe Business Gateway...
+                    </p>
                   </div>
+                )}
 
-                  {/* Mobile Direct UPI Intent Link */}
-                  {paymentData?.upiUri && (
-                    <div className="mt-4 sm:hidden w-full">
-                      <a
-                        href={paymentData.upiUri}
-                        className="w-full py-3 px-4 rounded-xl text-xs font-bold text-white bg-[#5F259F] hover:bg-[#722ebc] shadow-lg transition inline-flex items-center justify-center gap-2"
-                      >
-                        <Smartphone size={15} />
-                        <span>Open in PhonePe / UPI App</span>
-                        <ExternalLink size={13} />
-                      </a>
-                    </div>
-                  )}
-                </div>
-
-                {/* UTR / Transaction Reference Submission Box */}
-                <div className="p-5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-4">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <h3 className="text-sm font-bold text-white">
-                      After Payment: Submit 12-Digit UTR / Ref Number
-                    </h3>
-                  </div>
-
-                  <p className="text-xs text-slate-400 leading-relaxed">
-                    Once you approve the payment in PhonePe or your UPI app, enter the 12-digit UTR / UPI Reference Number below to initiate immediate automated verification and dispatch.
-                  </p>
-
-                  {utrError && (
-                    <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-xs text-red-300">
-                      {utrError}
-                    </div>
-                  )}
-
-                  <form onSubmit={handleVerifyPayment} className="space-y-3">
-                    <div>
-                      <input
-                        type="text"
-                        required
-                        value={utrNumber}
-                        onChange={(e) => setUtrNumber(e.target.value)}
-                        placeholder="Enter 12-digit UPI UTR number (e.g. 432819283741)"
-                        className="w-full px-4 py-3 rounded-xl bg-white/[0.05] border border-white/10 text-sm font-mono text-white focus:outline-none focus:border-purple-500 transition"
-                      />
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <button
-                        type="submit"
-                        disabled={isVerifying}
-                        className="flex-1 py-3.5 px-4 rounded-xl text-xs sm:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-500 shadow-lg shadow-emerald-600/20 transition-all inline-flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-                      >
-                        {isVerifying ? (
-                          <>
-                            <RotateCw size={14} className="animate-spin" />
-                            <span>Submitting Verification...</span>
-                          </>
-                        ) : (
-                          <>
-                            <CheckCircle2 size={16} />
-                            <span>Confirm &amp; Complete Order</span>
-                          </>
-                        )}
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setStep(1)}
-                        className="py-3.5 px-4 rounded-xl text-xs text-slate-400 hover:text-white bg-white/5 border border-white/10 transition"
-                      >
-                        Back
-                      </button>
-                    </div>
-                  </form>
+                {/* Back to Step 1 Button */}
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setStep(1)}
+                    className="py-2.5 px-4 rounded-xl text-xs text-slate-400 hover:text-white bg-white/5 border border-white/10 transition cursor-pointer"
+                  >
+                    ← Edit Customer &amp; Billing Details
+                  </button>
                 </div>
               </div>
             )}
@@ -601,28 +615,143 @@ export default function CheckoutClient({ initialProducts = [] }) {
                   </div>
 
                   {/* Plan Switcher if in Step 1 */}
-                  {step === 1 && Array.isArray(selectedProduct.pricingPlans) && selectedProduct.pricingPlans.length > 1 && (
-                    <div>
-                      <label className="block text-[11px] font-mono text-slate-400 mb-1.5 uppercase font-semibold">
-                        Change Plan Tier:
-                      </label>
-                      <div className="grid grid-cols-3 gap-1.5">
-                        {selectedProduct.pricingPlans.map((pl) => (
-                          <button
-                            key={pl.name}
-                            type="button"
-                            onClick={() => setSelectedPlan(pl)}
-                            className={`p-2 rounded-lg text-xs font-semibold text-center transition cursor-pointer border ${
-                              selectedPlan?.name === pl.name
-                                ? "bg-orange-500/20 text-[#F87000] border-orange-500/50"
-                                : "bg-white/[0.03] text-slate-400 border-white/5 hover:text-white"
-                            }`}
-                          >
-                            <span className="block truncate text-[11px]">{pl.name.split(" ")[0]}</span>
-                            <span className="font-bold text-[11px] block">{pl.price}</span>
-                          </button>
-                        ))}
+                  {step === 1 &&
+                    Array.isArray(selectedProduct.pricingPlans) &&
+                    selectedProduct.pricingPlans.length > 1 && (
+                      <div>
+                        <label className="block text-[11px] font-mono text-slate-400 mb-1.5 uppercase font-semibold">
+                          Change Plan Tier:
+                        </label>
+                        <div className="grid grid-cols-3 gap-1.5">
+                          {selectedProduct.pricingPlans.map((pl) => (
+                            <button
+                              key={pl.name}
+                              type="button"
+                              onClick={() => setSelectedPlan(pl)}
+                              className={`p-2 rounded-lg text-xs font-semibold text-center transition cursor-pointer border ${
+                                selectedPlan?.name === pl.name
+                                  ? "bg-orange-500/20 text-[#F87000] border-orange-500/50"
+                                  : "bg-white/[0.03] text-slate-400 border-white/5 hover:text-white"
+                              }`}
+                            >
+                              <span className="block truncate text-[11px]">{pl.name.split(" ")[0]}</span>
+                              <span className="font-bold text-[11px] block">{pl.price}</span>
+                            </button>
+                          ))}
+                        </div>
                       </div>
+                    )}
+
+                  {/* Available Promotional Offers Chips */}
+                  {availableOffers.length > 0 && !appliedOffer && step === 1 && (
+                    <div className="p-3 rounded-xl bg-orange-500/5 border border-orange-500/20 space-y-2">
+                      <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#F87000]">
+                        <Sparkles size={13} />
+                        <span>Available Special Promotions</span>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {availableOffers.map((off) => {
+                          const code = off.couponCode;
+                          if (!code) return null;
+                          return (
+                            <button
+                              key={off.id}
+                              type="button"
+                              onClick={() => handleValidateCoupon(code)}
+                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold bg-[#101A2E] text-orange-400 border border-orange-500/30 hover:bg-orange-500/15 hover:border-orange-500/60 transition cursor-pointer"
+                              title={`Click to apply ${code}`}
+                            >
+                              <Ticket size={11} />
+                              <span>{code}</span>
+                              <span className="text-[10px] text-slate-400 font-sans font-normal">
+                                ({off.discountType === "PERCENTAGE" ? `${off.discountValue}% off` : `₹${off.discountValue} off`})
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Apply Coupon Input / Applied Badge (Step 1 only) */}
+                  {step === 1 && (
+                    <div className="pt-2">
+                      {appliedOffer ? (
+                        <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between text-xs">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 size={16} className="text-emerald-400 shrink-0" />
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="font-mono font-bold text-emerald-300">
+                                  {appliedOffer.couponCode}
+                                </span>
+                                <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-bold">
+                                  APPLIED
+                                </span>
+                              </div>
+                              <p className="text-[11px] text-emerald-400/90 mt-0.5">
+                                {discountBreakdown?.savingsText || `Discount: -₹${discountAmount.toLocaleString("en-IN")}`}
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={handleRemoveCoupon}
+                            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition"
+                            title="Remove coupon"
+                          >
+                            <X size={15} />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="space-y-2">
+                          <label className="block text-[11px] font-mono text-slate-400 uppercase font-semibold">
+                            Have a Coupon Code?
+                          </label>
+                          <div className="flex gap-2">
+                            <div className="relative flex-1">
+                              <Tag size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                              <input
+                                type="text"
+                                placeholder="Enter coupon code"
+                                value={couponInput}
+                                onChange={(e) => {
+                                  setCouponInput(e.target.value.toUpperCase());
+                                  setCouponError("");
+                                }}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") {
+                                    e.preventDefault();
+                                    handleValidateCoupon();
+                                  }
+                                }}
+                                className="w-full pl-9 pr-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs font-mono uppercase text-white placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"
+                              />
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => handleValidateCoupon()}
+                              disabled={isValidatingCoupon || !couponInput.trim()}
+                              className="px-4 py-2 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 text-white border border-white/15 transition disabled:opacity-50 cursor-pointer"
+                            >
+                              {isValidatingCoupon ? "Checking..." : "Apply"}
+                            </button>
+                          </div>
+
+                          {couponError && (
+                            <p className="text-[11px] text-rose-400 flex items-center gap-1 pt-0.5">
+                              <AlertCircle size={12} className="shrink-0" />
+                              <span>{couponError}</span>
+                            </p>
+                          )}
+                          {couponSuccess && (
+                            <p className="text-[11px] text-emerald-400 flex items-center gap-1 pt-0.5">
+                              <CheckCircle2 size={12} className="shrink-0" />
+                              <span>{couponSuccess}</span>
+                            </p>
+                          )}
+                        </div>
+                      )}
                     </div>
                   )}
 
@@ -630,8 +759,19 @@ export default function CheckoutClient({ initialProducts = [] }) {
                   <div className="pt-4 border-t border-white/10 space-y-2.5 text-xs text-slate-300">
                     <div className="flex justify-between">
                       <span className="text-slate-400">License Subtotal</span>
-                      <span className="font-mono">₹{payableAmount.toLocaleString("en-IN")}</span>
+                      <span className="font-mono">₹{originalAmount.toLocaleString("en-IN")}</span>
                     </div>
+
+                    {discountAmount > 0 && (
+                      <div className="flex justify-between text-emerald-400 font-semibold animate-in fade-in">
+                        <span className="flex items-center gap-1">
+                          <Tag size={12} />
+                          <span>Promotional Discount ({appliedOffer?.couponCode})</span>
+                        </span>
+                        <span className="font-mono">-₹{discountAmount.toLocaleString("en-IN")}</span>
+                      </div>
+                    )}
+
                     <div className="flex justify-between">
                       <span className="text-slate-400">Setup &amp; Deployment</span>
                       <span className="text-emerald-400 font-semibold font-mono">₹0 (Included)</span>
@@ -646,15 +786,22 @@ export default function CheckoutClient({ initialProducts = [] }) {
                   <div className="pt-4 border-t border-white/10 flex items-baseline justify-between">
                     <div>
                       <span className="text-xs uppercase font-mono tracking-wider text-slate-400 block">
-                        Total Payable
+                        Final Payable Amount
                       </span>
                       <span className="text-[11px] text-emerald-400 font-semibold">
                         One-Time Perpetual Ownership
                       </span>
                     </div>
-                    <span className="text-2xl font-extrabold text-[#F87000] font-mono">
-                      ₹{payableAmount.toLocaleString("en-IN")}
-                    </span>
+                    <div className="text-right">
+                      {discountAmount > 0 && (
+                        <span className="text-xs text-slate-500 line-through block font-mono">
+                          ₹{originalAmount.toLocaleString("en-IN")}
+                        </span>
+                      )}
+                      <span className="text-2xl font-extrabold text-[#F87000] font-mono">
+                        ₹{finalPayableAmount.toLocaleString("en-IN")}
+                      </span>
+                    </div>
                   </div>
 
                   {/* Security Guarantees */}
