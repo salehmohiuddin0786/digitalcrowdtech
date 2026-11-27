@@ -6,6 +6,7 @@
 
 "use strict";
 
+require("dotenv").config({ override: true });
 const path = require("path");
 const fs = require("fs");
 const nodemailer = require("nodemailer");
@@ -593,9 +594,10 @@ async function processPaymentSuccess(order, transactionId, utr) {
   // 5. Send customer email
   if (isMailReady()) {
     try {
+      const fromEmail = process.env.SMTP_FROM || process.env.SMTP_USER || "support@digitalcrowdtech.in";
       const transporter = getTransporter();
       const mailOpts = {
-        from:    `"${BRAND.company}" <${process.env.SMTP_USER}>`,
+        from:    `"${BRAND.company}" <${fromEmail}>`,
         to:      order.customerEmail,
         subject: `✅ Payment Confirmed – Receipt ${receiptNumber} | ${order.orderNumber}`,
         html:    buildCustomerEmailHTML(order, receipt),
@@ -621,9 +623,10 @@ async function processPaymentSuccess(order, transactionId, utr) {
   const adminTo = process.env.CONTACT_TO_EMAIL || process.env.ADMIN_EMAIL || "support@digitalcrowdtech.in";
   if (isMailReady()) {
     try {
+      const fromEmail = process.env.SMTP_FROM || process.env.SMTP_USER || "support@digitalcrowdtech.in";
       const transporter = getTransporter();
       const adminOpts = {
-        from:    `"${BRAND.company} Payments" <${process.env.SMTP_USER}>`,
+        from:    `"${BRAND.company} Payments" <${fromEmail}>`,
         to:      adminTo,
         subject: `💰 New Payment: ${fmtCurrency(order.amount)} – ${order.orderNumber}`,
         html:    buildAdminEmailHTML(order, receipt),
@@ -697,9 +700,10 @@ async function resendReceiptEmail(receiptId, type, adminUser) {
     by: adminUser?.email || "admin",
   };
 
+  const fromEmail = process.env.SMTP_FROM || process.env.SMTP_USER || "support@digitalcrowdtech.in";
   if (type === "customer") {
     await transporter.sendMail({
-      from:    `"${BRAND.company}" <${process.env.SMTP_USER}>`,
+      from:    `"${BRAND.company}" <${fromEmail}>`,
       to:      receipt.customerEmail,
       subject: `✅ Payment Receipt – ${receipt.receiptNumber} | ${receipt.orderNumber}`,
       html:    buildCustomerEmailHTML(order, receipt),
@@ -710,7 +714,7 @@ async function resendReceiptEmail(receiptId, type, adminUser) {
   } else {
     const adminTo = process.env.CONTACT_TO_EMAIL || process.env.ADMIN_EMAIL || "support@digitalcrowdtech.in";
     await transporter.sendMail({
-      from:    `"${BRAND.company} Payments" <${process.env.SMTP_USER}>`,
+      from:    `"${BRAND.company} Payments" <${fromEmail}>`,
       to:      adminTo,
       subject: `💰 Payment Receipt (Resend): ${receipt.orderNumber}`,
       html:    buildAdminEmailHTML(order, receipt),

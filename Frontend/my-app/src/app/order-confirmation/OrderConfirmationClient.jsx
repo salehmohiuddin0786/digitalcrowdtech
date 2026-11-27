@@ -23,6 +23,17 @@ import {
   Download,
 } from "lucide-react";
 
+const getApiBase = () => {
+  if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
+  if (typeof window !== "undefined") {
+    if (window.location.hostname.includes("digitalcrowdtech.in")) {
+      return "https://api.digitalcrowdtech.in";
+    }
+    return `http://${window.location.hostname}:5001`;
+  }
+  return "https://api.digitalcrowdtech.in";
+};
+
 export default function OrderConfirmationClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -33,6 +44,7 @@ export default function OrderConfirmationClient() {
   const [error, setError] = useState("");
   const [isCheckingStatus, setIsCheckingStatus] = useState(false);
   const [pollCount, setPollCount] = useState(0);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
 
   // 10-Minute Retry Window & Actions
   const [timeLeft, setTimeLeft] = useState(600);
@@ -172,18 +184,46 @@ export default function OrderConfirmationClient() {
   };
 
   const handlePrint = () => {
-    if (typeof window !== "undefined") {
-      window.print();
-    }
-  };
-
-  const handleDownloadPdfReceipt = () => {
     if (!order) return;
-    const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
-    const downloadUrl = `${apiBase}/api/receipts/download/${encodeURIComponent(
+    // Open the official PDF receipt directly in a new tab so the browser renders the clean, print-ready PDF
+    const apiBase = getApiBase();
+    const pdfUrl = `${apiBase}/api/receipts/download/${encodeURIComponent(
       order.orderNumber
     )}?email=${encodeURIComponent(order.customerEmail)}`;
-    window.open(downloadUrl, "_blank");
+    window.open(pdfUrl, "_blank");
+  };
+
+  const handleDownloadPdfReceipt = async () => {
+    if (!order) return;
+    setDownloadingPdf(true);
+    try {
+      const apiBase = getApiBase();
+      const downloadUrl = `${apiBase}/api/receipts/download/${encodeURIComponent(
+        order.orderNumber
+      )}?email=${encodeURIComponent(order.customerEmail)}`;
+
+      const res = await fetch(downloadUrl);
+      if (!res.ok) {
+        throw new Error("Unable to download PDF. Please try again or check your email.");
+      }
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `DCT-RECEIPT-${order.orderNumber}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.warn("Direct blob download failed, falling back to direct navigation:", err);
+      const apiBase = getApiBase();
+      window.location.href = `${apiBase}/api/receipts/download/${encodeURIComponent(
+        order.orderNumber
+      )}?email=${encodeURIComponent(order.customerEmail)}`;
+    } finally {
+      setDownloadingPdf(false);
+    }
   };
 
   if (loading) {
@@ -592,20 +632,22 @@ export default function OrderConfirmationClient() {
               <div className="flex flex-wrap items-center gap-2.5">
                 <button
                   type="button"
+                  disabled={downloadingPdf}
                   onClick={handleDownloadPdfReceipt}
-                  className="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 shadow-md transition inline-flex items-center gap-2 cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 shadow-md transition inline-flex items-center gap-2 cursor-pointer disabled:opacity-60"
                 >
-                  <Download size={14} />
-                  <span>Download PDF Receipt</span>
+                  <Download size={14} className={downloadingPdf ? "animate-spin" : ""} />
+                  <span>{downloadingPdf ? "Downloading Receipt..." : "Download PDF Receipt"}</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={handlePrint}
                   className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-200 bg-white/5 hover:bg-white/10 border border-white/10 transition inline-flex items-center gap-2 cursor-pointer"
+                  title="Open official PDF receipt in new tab"
                 >
                   <Printer size={14} />
-                  <span>Print Receipt</span>
+                  <span>View / Print PDF</span>
                 </button>
               </div>
             )}
@@ -675,6 +717,33 @@ export default function OrderConfirmationClient() {
           </div>
         </div>
       </div>
+
+      {/* Print-specific style isolating the receipt and hiding website chrome */}
+      <style>{`
+        @media print {
+          header, nav, footer, button, a[href], .no-print {
+            display: none !important;
+          }
+          body, html {
+            background: #ffffff !important;
+            color: #000000 !important;
+          }
+          .glass-card-premium {
+            background: #ffffff !important;
+            color: #000000 !important;
+            border: 1px solid #cbd5e1 !important;
+            box-shadow: none !important;
+            padding: 16px !important;
+          }
+          .text-white, .text-slate-100, .text-slate-200, .text-slate-300, .text-slate-400 {
+            color: #1e293b !important;
+          }
+          .bg-white\\/\\[0\\.03\\], .bg-white\\/\\[0\\.02\\] {
+            background-color: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
