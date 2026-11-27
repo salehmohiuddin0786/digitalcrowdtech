@@ -680,4 +680,63 @@ export const toggleAdminOfferStatus = async (id, isActive) => {
   });
 };
 
+// ==========================================
+// RECEIPT MANAGEMENT
+// ==========================================
+export const getAdminReceipts = async (params = {}) => {
+  try {
+    const query = new URLSearchParams(params).toString();
+    const path = `/api/admin/receipts${query ? `?${query}` : ""}`;
+    const result = await request(path, { auth: true });
+    return result;
+  } catch (err) {
+    console.warn("Backend receipts fetch warning:", err.message);
+    return { ok: false, receipts: [], total: 0 };
+  }
+};
+
+export const getAdminReceipt = async (id) => {
+  return await request(`/api/admin/receipts/${id}`, { auth: true });
+};
+
+export const resendAdminReceipt = async (id, type = "customer") => {
+  return await request(`/api/admin/receipts/${id}/resend`, {
+    method: "POST",
+    auth: true,
+    body: JSON.stringify({ type }),
+  });
+};
+
+export const regenerateAdminReceipt = async (id) => {
+  return await request(`/api/admin/receipts/${id}/regenerate`, {
+    method: "POST",
+    auth: true,
+  });
+};
+
+export const downloadAdminReceiptPdf = async (id, filename = "receipt.pdf") => {
+  const apiBase = getApiBaseUrl();
+  const fullUrl = `${apiBase}/api/admin/receipts/${id}/download`;
+  const response = await fetch(fullUrl, {
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to download receipt PDF.");
+  }
+
+  const blob = await response.blob();
+  const downloadUrl = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = downloadUrl;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(downloadUrl);
+};
+
+
 

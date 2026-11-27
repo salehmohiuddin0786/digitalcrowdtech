@@ -13,6 +13,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config({ override: true });
 
 const { defaultBlogs, defaultCareers, defaultProjects, defaultProducts } = require("./defaultData");
+const receiptSystem = require("./receiptSystem");
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -3269,7 +3270,10 @@ app.get("/api/payment/phonepe/status/:orderNumber", async (req, res) => {
           console.warn("Coupon redemption completion hook warning:", offerErr.message);
         }
 
-        sendOrderSuccessEmail(order);
+        // Generate receipt, send confirmation emails (idempotent)
+        receiptSystem.processPaymentSuccess(order, txnId, utr).catch((e) =>
+          console.warn("[receipts] processPaymentSuccess error (status route):", e.message)
+        );
       } else if (isFailed || isExpired || isCancelled) {
         const newStatus = isExpired ? "EXPIRED" : isCancelled ? "CANCELLED" : "FAILED";
         let audit = [];
@@ -3539,7 +3543,14 @@ app.post("/api/payment/phonepe/callback", async (req, res) => {
             } catch (whErr) {
               console.warn("Webhook coupon settlement error:", whErr.message);
             }
-            sendOrderSuccessEmail(order);
+            // Generate receipt, send confirmation emails (idempotent)
+            receiptSystem.processPaymentSuccess(
+              order,
+              data.data.transactionId || order.transactionId,
+              data.data.utr || order.utrNumber
+            ).catch((e) =>
+              console.warn("[receipts] processPaymentSuccess error (webhook):", e.message)
+            );
           } else {
             try {
               const redemption = await CouponRedemption.findOne({
@@ -3870,6 +3881,180 @@ app.delete("/api/admin/products/:id", requireAdmin, async (req, res) => {
   }
 });
 
+// ==========================================
+// RECEIPT SYSTEM ROUTES
+// ==========================================
+
+// Public: Get receipt info by order number (requires matching email for security)
+app.get("/api/receipts/order/:orderNumber", async (req, res) => {
+  try {
+    const { orderNumber } = req.params;
+    const emailParam = String(req.query.email || "").toLowerCase().trim();
+    const PaymentReceiptModel = receiptSystem.model;
+    if (!PaymentReceiptModel) return res.status(503).json({ ok: false, message: "Receipt system not ready." });
+
+    const receipt = await PaymentReceiptModel.findOne({ where: { orderNumber } });
+    if (!receipt) return res.status(404).json({ ok: false, message: "Receipt not found." });
+
+    if (emailParam && receipt.customerEmail && receipt.customerEmail.toLowerCase() !== emailParam) {
+      return res.status(403).json({ ok: false, message: "Email does not match order." });
+    }
+
+    const plain = receipt.get({ plain: true });
+    delete plain.pdfPath;
+    delete plain.customerEmailError;
+    delete plain.adminEmailError;
+    delete plain.resendLog;
+    return res.json({ ok: true, receipt: plain });
+  } catch (err) {
+    return res.status(500).json({ ok: false, message: err.message });
+  }
+});
+
+// Public: Download receipt PDF (requires email verification)
+app.get("/api/receipts/download/:orderNumber", async (req, res) => {
+  try {
+    const { orderNumber } = req.params;
+    const emailParam = String(req.query.email || "").toLowerCase().trim();
+    const PaymentReceiptModel = receiptSystem.model;
+    if (!PaymentReceiptModel) return res.status(503).json({ ok: false, message: "Receipt system not ready." });
+
+    const receipt = await PaymentReceiptModel.findOne({ where: { orderNumber } });
+    if (!receipt) return res.status(404).json({ ok: false, message: "Receipt not found." });
+
+    if (!emailParam || !receipt.customerEmail || receipt.customerEmail.toLowerCase() !== emailParam) {
+      return res.status(403).json({ ok: false, message: "Invalid or missing email verification." });
+    }
+
+    if (!receipt.pdfPath || !fs.existsSync(receipt.pdfPath)) {
+      // Try to regenerate
+      try {
+        await receiptSystem.regeneratePDF(receipt.id);
+        await receipt.reload();
+      } catch (regen) {
+        return res.status(404).json({ ok: false, message: "PDF not available yet. Please try again later." });
+      }
+    }
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `attachment; filename="${receipt.pdfFilename}"`);
+    return fs.createReadStream(receipt.pdfPath).pipe(res);
+  } catch (err) {
+    return res.status(500).json({ ok: false, message: err.message });
+  }
+});
+
+// Admin: List all receipts with optional search/filter
+app.get("/api/admin/receipts", requireAdmin, async (req, res) => {
+  try {
+    const PaymentReceiptModel = receiptSystem.model;
+    if (!PaymentReceiptModel) return res.status(503).json({ ok: false, message: "Receipt system not ready." });
+
+    const { search, status, page = 1, limit = 20 } = req.query;
+    const where = {};
+    if (status) where.status = status;
+    if (search) {
+      const { Op: Op2 } = require("sequelize");
+      where[Op2.or] = [
+        { orderNumber: { [Op2.like]: `%${search}%` } },
+        { receiptNumber: { [Op2.like]: `%${search}%` } },
+        { customerEmail: { [Op2.like]: `%${search}%` } },
+        { customerName: { [Op2.like]: `%${search}%` } },
+      ];
+    }
+
+    const offset = (Number(page) - 1) * Number(limit);
+    const { count, rows } = await PaymentReceiptModel.findAndCountAll({
+      where,
+      order: [["createdAt", "DESC"]],
+      limit: Number(limit),
+      offset,
+    });
+
+    return res.json({
+      ok: true,
+      total: count,
+      page: Number(page),
+      pages: Math.ceil(count / Number(limit)),
+      receipts: rows.map((r) => {
+        const p = r.get({ plain: true });
+        delete p.pdfPath;
+        return p;
+      }),
+    });
+  } catch (err) {
+    return res.status(500).json({ ok: false, message: err.message });
+  }
+});
+
+// Admin: Get single receipt
+app.get("/api/admin/receipts/:id", requireAdmin, async (req, res) => {
+  try {
+    const PaymentReceiptModel = receiptSystem.model;
+    if (!PaymentReceiptModel) return res.status(503).json({ ok: false, message: "Receipt system not ready." });
+    const receipt = await PaymentReceiptModel.findByPk(req.params.id);
+    if (!receipt) return res.status(404).json({ ok: false, message: "Receipt not found." });
+    const p = receipt.get({ plain: true });
+    delete p.pdfPath;
+    return res.json({ ok: true, receipt: p });
+  } catch (err) {
+    return res.status(500).json({ ok: false, message: err.message });
+  }
+});
+
+// Admin: Download receipt PDF
+app.get("/api/admin/receipts/:id/download", requireAdmin, async (req, res) => {
+  try {
+    const PaymentReceiptModel = receiptSystem.model;
+    if (!PaymentReceiptModel) return res.status(503).json({ ok: false, message: "Receipt system not ready." });
+    const receipt = await PaymentReceiptModel.findByPk(req.params.id);
+    if (!receipt) return res.status(404).json({ ok: false, message: "Receipt not found." });
+
+    if (!receipt.pdfPath || !fs.existsSync(receipt.pdfPath)) {
+      try {
+        await receiptSystem.regeneratePDF(receipt.id);
+        await receipt.reload();
+      } catch (regen) {
+        return res.status(404).json({ ok: false, message: "PDF could not be generated: " + regen.message });
+      }
+    }
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `attachment; filename="${receipt.pdfFilename}"`);
+    return fs.createReadStream(receipt.pdfPath).pipe(res);
+  } catch (err) {
+    return res.status(500).json({ ok: false, message: err.message });
+  }
+});
+
+// Admin: Resend email (customer or admin)
+app.post("/api/admin/receipts/:id/resend", requireAdmin, async (req, res) => {
+  try {
+    const PaymentReceiptModel = receiptSystem.model;
+    if (!PaymentReceiptModel) return res.status(503).json({ ok: false, message: "Receipt system not ready." });
+    const type = String(req.body.type || "customer");
+    if (!["customer", "admin"].includes(type)) {
+      return res.status(400).json({ ok: false, message: "type must be 'customer' or 'admin'" });
+    }
+    const receipt = await receiptSystem.resendReceiptEmail(req.params.id, type, req.admin);
+    return res.json({ ok: true, message: `Email resent to ${type}.`, receipt: receipt.get({ plain: true }) });
+  } catch (err) {
+    return res.status(500).json({ ok: false, message: err.message });
+  }
+});
+
+// Admin: Regenerate PDF
+app.post("/api/admin/receipts/:id/regenerate", requireAdmin, async (req, res) => {
+  try {
+    const PaymentReceiptModel = receiptSystem.model;
+    if (!PaymentReceiptModel) return res.status(503).json({ ok: false, message: "Receipt system not ready." });
+    const receipt = await receiptSystem.regeneratePDF(req.params.id);
+    return res.json({ ok: true, message: "PDF regenerated.", receipt: receipt.get({ plain: true }) });
+  } catch (err) {
+    return res.status(500).json({ ok: false, message: err.message });
+  }
+});
+
 // Start Server
 const server = http.createServer(app);
 
@@ -3883,6 +4068,40 @@ const startServer = async () => {
     await sequelize.query("ALTER TABLE `products` ADD COLUMN `screenshots` TEXT;").catch(() => {});
     await sequelize.query("ALTER TABLE `products` ADD COLUMN `pricingPlans` TEXT;").catch(() => {});
     await sequelize.query("ALTER TABLE `products` ADD COLUMN `overview` TEXT;").catch(() => {});
+    // Initialize receipt system model and sync table
+    receiptSystem.init(sequelize, DataTypes);
+    await sequelize.sync({ alter: false }).catch(() => {});
+    // Add payment_receipts table if missing
+    await sequelize.query(`CREATE TABLE IF NOT EXISTS \`payment_receipts\` (
+      \`id\` VARCHAR(255) NOT NULL PRIMARY KEY,
+      \`receiptNumber\` VARCHAR(255) NOT NULL UNIQUE,
+      \`orderId\` VARCHAR(255) NOT NULL UNIQUE,
+      \`orderNumber\` VARCHAR(255) NOT NULL,
+      \`customerEmail\` VARCHAR(255),
+      \`customerName\` VARCHAR(255),
+      \`productTitle\` VARCHAR(255),
+      \`planName\` VARCHAR(255),
+      \`amount\` DECIMAL(10,2),
+      \`originalAmount\` DECIMAL(10,2),
+      \`discountAmount\` DECIMAL(10,2) DEFAULT 0,
+      \`couponCode\` VARCHAR(255),
+      \`currency\` VARCHAR(10) DEFAULT 'INR',
+      \`transactionId\` VARCHAR(255),
+      \`utrNumber\` VARCHAR(255),
+      \`pdfPath\` VARCHAR(1024),
+      \`pdfFilename\` VARCHAR(512),
+      \`status\` ENUM('PENDING','GENERATED','FAILED') DEFAULT 'PENDING',
+      \`customerEmailStatus\` ENUM('PENDING','SENT','FAILED') DEFAULT 'PENDING',
+      \`customerEmailSentAt\` DATETIME,
+      \`customerEmailError\` TEXT,
+      \`adminEmailStatus\` ENUM('PENDING','SENT','FAILED') DEFAULT 'PENDING',
+      \`adminEmailSentAt\` DATETIME,
+      \`adminEmailError\` TEXT,
+      \`emailRetryCount\` INT DEFAULT 0,
+      \`resendLog\` TEXT,
+      \`createdAt\` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      \`updatedAt\` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`).catch(() => {});
     await seedDatabase();
     console.log(`Sequelize connected to MySQL (${DB_NAME})`);
   } catch (err) {

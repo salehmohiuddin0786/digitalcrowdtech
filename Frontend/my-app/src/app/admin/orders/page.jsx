@@ -23,6 +23,9 @@ import {
   Mail,
   Building,
   RotateCw,
+  Download,
+  Send,
+  FileCheck,
 } from "lucide-react";
 import AdminLayout from "../AdminLayout";
 import {
@@ -31,6 +34,10 @@ import {
   getAdminPaymentSettings,
   updateAdminPaymentSettings,
   verifyAdmin,
+  getAdminReceipts,
+  downloadAdminReceiptPdf,
+  resendAdminReceipt,
+  regenerateAdminReceipt,
 } from "../adminData";
 
 const formatDate = (value) => {
@@ -60,6 +67,11 @@ export default function AdminOrdersPage() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [message, setMessage] = useState("");
   const [copiedText, setCopiedText] = useState("");
+
+  // Receipt management state
+  const [orderReceipt, setOrderReceipt] = useState(null);
+  const [receiptLoading, setReceiptLoading] = useState(false);
+  const [receiptActionLoading, setReceiptActionLoading] = useState(false);
 
   // Payment settings state
   const [showSettingsModal, setShowSettingsModal] = useState(false);
@@ -127,9 +139,69 @@ export default function AdminOrdersPage() {
     });
   }, [orders, search, statusFilter]);
 
+  const fetchReceiptForOrder = async (orderNumber) => {
+    setReceiptLoading(true);
+    setOrderReceipt(null);
+    try {
+      const res = await getAdminReceipts({ search: orderNumber, limit: 1 });
+      if (res && res.receipts && res.receipts.length > 0) {
+        setOrderReceipt(res.receipts[0]);
+      }
+    } catch (e) {
+      console.warn("Could not load receipt for order:", e.message);
+    } finally {
+      setReceiptLoading(false);
+    }
+  };
+
   const handleOpenDetail = (ord) => {
     setViewingOrder(ord);
     setAdminNotes(ord.adminNotes || "");
+    fetchReceiptForOrder(ord.orderNumber);
+  };
+
+  const handleDownloadReceipt = async () => {
+    if (!orderReceipt) return;
+    try {
+      await downloadAdminReceiptPdf(
+        orderReceipt.id,
+        orderReceipt.pdfFilename || `Receipt-${orderReceipt.receiptNumber}.pdf`
+      );
+    } catch (e) {
+      alert(e.message || "Failed to download receipt PDF");
+    }
+  };
+
+  const handleResendReceiptEmail = async (type) => {
+    if (!orderReceipt) return;
+    setReceiptActionLoading(true);
+    try {
+      const res = await resendAdminReceipt(orderReceipt.id, type);
+      if (res.ok && res.receipt) {
+        setOrderReceipt(res.receipt);
+        setMessage(`Receipt email resent to ${type} successfully.`);
+      }
+    } catch (e) {
+      alert(e.message || `Failed to resend receipt to ${type}`);
+    } finally {
+      setReceiptActionLoading(false);
+    }
+  };
+
+  const handleRegeneratePdf = async () => {
+    if (!orderReceipt) return;
+    setReceiptActionLoading(true);
+    try {
+      const res = await regenerateAdminReceipt(orderReceipt.id);
+      if (res.ok && res.receipt) {
+        setOrderReceipt(res.receipt);
+        setMessage("Receipt PDF regenerated successfully.");
+      }
+    } catch (e) {
+      alert(e.message || "Failed to regenerate receipt PDF");
+    } finally {
+      setReceiptActionLoading(false);
+    }
   };
 
   const handleUpdateStatus = async (newStatus) => {
@@ -489,6 +561,95 @@ export default function AdminOrdersPage() {
                 {viewingOrder.address && (
                   <div className="pt-2 text-slate-400 text-[11px] border-t border-white/5">
                     <strong>Address:</strong> {viewingOrder.address}
+                  </div>
+                )}
+              </div>
+
+              {/* Payment Receipt & Automated Email Card */}
+              <div className="p-4 rounded-xl bg-white/[0.03] border border-blue-500/20 space-y-3 text-xs">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <FileCheck className="text-blue-400" size={16} />
+                    <span className="font-mono text-white font-bold uppercase tracking-wider text-[11px]">
+                      Automated Receipt &amp; Email System
+                    </span>
+                  </div>
+                  {orderReceipt && (
+                    <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                      {orderReceipt.receiptNumber}
+                    </span>
+                  )}
+                </div>
+
+                {receiptLoading ? (
+                  <div className="py-2 text-slate-400 font-mono text-[11px] flex items-center gap-2">
+                    <RotateCw className="animate-spin text-blue-400" size={12} />
+                    <span>Checking receipt status...</span>
+                  </div>
+                ) : orderReceipt ? (
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px]">
+                      <div className="bg-black/30 p-2.5 rounded-lg border border-white/5">
+                        <span className="text-slate-500 block text-[10px] uppercase font-mono">PDF STATUS</span>
+                        <span className={`font-semibold ${orderReceipt.status === 'GENERATED' ? 'text-emerald-400' : 'text-amber-400'}`}>
+                          {orderReceipt.status}
+                        </span>
+                      </div>
+                      <div className="bg-black/30 p-2.5 rounded-lg border border-white/5">
+                        <span className="text-slate-500 block text-[10px] uppercase font-mono">CUSTOMER EMAIL</span>
+                        <span className={`font-semibold ${orderReceipt.customerEmailStatus === 'SENT' ? 'text-emerald-400' : orderReceipt.customerEmailStatus === 'FAILED' ? 'text-red-400' : 'text-slate-400'}`}>
+                          {orderReceipt.customerEmailStatus}
+                        </span>
+                      </div>
+                      <div className="bg-black/30 p-2.5 rounded-lg border border-white/5">
+                        <span className="text-slate-500 block text-[10px] uppercase font-mono">ADMIN NOTIFICATION</span>
+                        <span className={`font-semibold ${orderReceipt.adminEmailStatus === 'SENT' ? 'text-emerald-400' : orderReceipt.adminEmailStatus === 'FAILED' ? 'text-red-400' : 'text-slate-400'}`}>
+                          {orderReceipt.adminEmailStatus}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2 pt-1">
+                      <button
+                        onClick={handleDownloadReceipt}
+                        className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-[11px] flex items-center gap-1.5 transition cursor-pointer"
+                      >
+                        <Download size={13} />
+                        <span>Download PDF Receipt</span>
+                      </button>
+
+                      <button
+                        disabled={receiptActionLoading}
+                        onClick={() => handleResendReceiptEmail("customer")}
+                        className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 font-semibold text-[11px] flex items-center gap-1.5 transition cursor-pointer border border-white/10 disabled:opacity-50"
+                      >
+                        <Send size={13} />
+                        <span>Resend to Customer</span>
+                      </button>
+
+                      <button
+                        disabled={receiptActionLoading}
+                        onClick={() => handleResendReceiptEmail("admin")}
+                        className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 font-semibold text-[11px] flex items-center gap-1.5 transition cursor-pointer border border-white/10 disabled:opacity-50"
+                      >
+                        <Send size={13} />
+                        <span>Resend to Admin</span>
+                      </button>
+
+                      <button
+                        disabled={receiptActionLoading}
+                        onClick={handleRegeneratePdf}
+                        className="px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 font-semibold text-[11px] flex items-center gap-1 transition cursor-pointer border border-white/5 disabled:opacity-50"
+                        title="Regenerate PDF from latest data"
+                      >
+                        <RefreshCw size={12} className={receiptActionLoading ? "animate-spin" : ""} />
+                        <span>Regen PDF</span>
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-slate-500 text-[11px]">
+                    No receipt record yet. (Receipts are automatically generated when PhonePe marks payment as COMPLETED).
                   </div>
                 )}
               </div>

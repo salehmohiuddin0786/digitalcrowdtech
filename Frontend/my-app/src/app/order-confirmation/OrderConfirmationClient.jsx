@@ -20,6 +20,7 @@ import {
   MessageCircle,
   Tag,
   Ticket,
+  Download,
 } from "lucide-react";
 
 export default function OrderConfirmationClient() {
@@ -174,6 +175,15 @@ export default function OrderConfirmationClient() {
     if (typeof window !== "undefined") {
       window.print();
     }
+  };
+
+  const handleDownloadPdfReceipt = () => {
+    if (!order) return;
+    const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+    const downloadUrl = `${apiBase}/api/receipts/download/${encodeURIComponent(
+      order.orderNumber
+    )}?email=${encodeURIComponent(order.customerEmail)}`;
+    window.open(downloadUrl, "_blank");
   };
 
   if (loading) {
@@ -579,14 +589,25 @@ export default function OrderConfirmationClient() {
           {/* Action Buttons */}
           <div className="pt-4 flex flex-wrap items-center justify-between gap-4">
             {isVerified && (
-              <button
-                type="button"
-                onClick={handlePrint}
-                className="px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-200 bg-white/5 hover:bg-white/10 border border-white/10 transition inline-flex items-center gap-2 cursor-pointer"
-              >
-                <Printer size={14} />
-                <span>Print / Save Receipt</span>
-              </button>
+              <div className="flex flex-wrap items-center gap-2.5">
+                <button
+                  type="button"
+                  onClick={handleDownloadPdfReceipt}
+                  className="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 shadow-md transition inline-flex items-center gap-2 cursor-pointer"
+                >
+                  <Download size={14} />
+                  <span>Download PDF Receipt</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handlePrint}
+                  className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-200 bg-white/5 hover:bg-white/10 border border-white/10 transition inline-flex items-center gap-2 cursor-pointer"
+                >
+                  <Printer size={14} />
+                  <span>Print Receipt</span>
+                </button>
+              </div>
             )}
 
             {isUnsuccessful && (
